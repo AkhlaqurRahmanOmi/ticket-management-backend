@@ -12,5 +12,6 @@ export default () => ({
     port: toNumber(process.env[env.port], 3000),
     apiPrefix: process.env[env.apiPrefix] ?? 'api',
     apiVersion: process.env[env.apiVersion] ?? '1',
+    apiDocsPath: process.env[env.apiDocsPath] ?? 'docs',
   },
 });

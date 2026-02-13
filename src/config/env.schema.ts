@@ -25,6 +25,10 @@ export const validateEnv = (config: EnvRecord): EnvRecord => {
   if (apiVersionValue !== undefined && apiVersionValue.trim().length === 0) {
     throw new Error(`${env.apiVersion} cannot be empty.`);
   }
+  const apiDocsPathValue = config[env.apiDocsPath];
+  if (apiDocsPathValue !== undefined && apiDocsPathValue.trim().length === 0) {
+    throw new Error(`${env.apiDocsPath} cannot be empty.`);
+  }
 
   return config;
 };
