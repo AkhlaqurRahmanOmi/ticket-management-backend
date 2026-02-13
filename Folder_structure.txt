@@ -1,0 +1,171 @@
+ticketing-backend/
+├─ src/
+│  ├─ main.ts
+│  ├─ app.module.ts
+│  │
+│  ├─ config/
+│  │  ├─ configuration.ts
+│  │  ├─ env.schema.ts                 # Joi schema
+│  │  └─ env.ts                        # typed env helpers (optional)
+│  │
+│  ├─ common/
+│  │  ├─ constants/
+│  │  │  ├─ tokens.ts
+│  │  │  └─ headers.ts
+│  │  ├─ decorators/
+│  │  │  ├─ request-id.decorator.ts
+│  │  │  └─ ip.decorator.ts
+│  │  ├─ exceptions/
+│  │  │  ├─ domain.exception.ts
+│  │  │  ├─ prisma.exception.map.ts
+│  │  │  └─ http-exception.filter.ts
+│  │  ├─ interceptors/
+│  │  │  ├─ logging.interceptor.ts      # (optional if using nestjs-pino)
+│  │  │  └─ request-id.interceptor.ts
+│  │  ├─ pipes/
+│  │  │  └─ validation.pipe.ts          # wrapper around Nest ValidationPipe config
+│  │  └─ utils/
+│  │     ├─ time.ts
+│  │     ├─ idempotency.ts
+│  │     └─ crypto.ts
+│  │
+│  ├─ infra/
+│  │  ├─ logger/
+│  │  │  ├─ logger.module.ts            # Pino setup (nestjs-pino)
+│  │  │  └─ logger.options.ts
+│  │  ├─ prisma/
+│  │  │  ├─ prisma.module.ts
+│  │  │  └─ prisma.service.ts
+│  │  ├─ redis/
+│  │  │  ├─ redis.module.ts
+│  │  │  ├─ redis.service.ts
+│  │  │  ├─ redis.pubsub.ts
+│  │  │  └─ redis.rate-limit.ts
+│  │  ├─ kafka/
+│  │  │  ├─ kafka.module.ts
+│  │  │  ├─ kafka.producer.ts
+│  │  │  ├─ kafka.consumer.base.ts
+│  │  │  ├─ kafka.topics.ts
+│  │  │  └─ kafka.types.ts
+│  │  └─ outbox/
+│  │     ├─ outbox.module.ts
+│  │     ├─ outbox.repository.ts
+│  │     ├─ outbox.publisher.worker.ts
+│  │     └─ outbox.types.ts
+│  │
+│  ├─ modules/
+│  │  ├─ iam/                           # AuthN + AuthZ (RBAC + ACL + policies)
+│  │  │  ├─ iam.module.ts
+│  │  │  ├─ current-user.decorator.ts
+│  │  │  ├─ auth/
+│  │  │  │  ├─ auth.controller.ts
+│  │  │  │  ├─ auth.service.ts
+│  │  │  │  ├─ jwt.strategy.ts
+│  │  │  │  ├─ password.service.ts
+│  │  │  │  └─ dto/
+│  │  │  │     ├─ login.dto.ts
+│  │  │  │     └─ register.dto.ts
+│  │  │  ├─ rbac/
+│  │  │  │  ├─ roles.ts
+│  │  │  │  ├─ roles.decorator.ts
+│  │  │  │  └─ roles.guard.ts
+│  │  │  ├─ acl/
+│  │  │  │  ├─ membership.service.ts
+│  │  │  │  └─ ownership.service.ts
+│  │  │  ├─ policies/
+│  │  │  │  ├─ policy.types.ts
+│  │  │  │  ├─ policy.decorator.ts
+│  │  │  │  ├─ policy.guard.ts
+│  │  │  │  └─ handlers/
+│  │  │  │     ├─ event.policy.ts
+│  │  │  │     ├─ seat.policy.ts
+│  │  │  │     ├─ reservation.policy.ts
+│  │  │  │     └─ ticket.policy.ts
+│  │  │  └─ types/
+│  │  │     └─ user.claims.ts
+│  │  │
+│  │  ├─ organizations/
+│  │  │  ├─ organizations.module.ts
+│  │  │  ├─ organizations.controller.ts
+│  │  │  ├─ organizations.service.ts
+│  │  │  └─ dto/
+│  │  │     ├─ create-org.dto.ts
+│  │  │     └─ add-member.dto.ts
+│  │  │
+│  │  ├─ events/
+│  │  │  ├─ events.module.ts
+│  │  │  ├─ events.controller.ts
+│  │  │  ├─ events.service.ts
+│  │  │  └─ dto/
+│  │  │     ├─ create-event.dto.ts
+│  │  │     └─ update-event.dto.ts
+│  │  │
+│  │  ├─ reservations/
+│  │  │  ├─ reservations.module.ts
+│  │  │  ├─ reservations.controller.ts
+│  │  │  ├─ reservations.service.ts
+│  │  │  ├─ seats.service.ts
+│  │  │  ├─ finalizer.service.ts
+│  │  │  ├─ expiry.worker.ts
+│  │  │  ├─ domain/
+│  │  │  │  ├─ seat.state.ts
+│  │  │  │  ├─ reservation.state.ts
+│  │  │  │  └─ reservation.events.ts
+│  │  │  └─ dto/
+│  │  │     ├─ create-reservation.dto.ts
+│  │  │     └─ cancel-reservation.dto.ts
+│  │  │
+│  │  ├─ payments/
+│  │  │  ├─ payments.module.ts
+│  │  │  ├─ payments.controller.ts
+│  │  │  ├─ payments.service.ts
+│  │  │  ├─ webhook.controller.ts
+│  │  │  ├─ providers/
+│  │  │  │  ├─ payment-provider.interface.ts
+│  │  │  │  └─ stripe.provider.ts       # optional
+│  │  │  ├─ domain/
+│  │  │  │  └─ payment.events.ts
+│  │  │  └─ dto/
+│  │  │     ├─ create-payment.dto.ts
+│  │  │     └─ webhook.dto.ts
+│  │  │
+│  │  ├─ tickets/
+│  │  │  ├─ tickets.module.ts
+│  │  │  ├─ tickets.controller.ts
+│  │  │  ├─ tickets.service.ts
+│  │  │  ├─ consumers/
+│  │  │  │  ├─ payment-succeeded.consumer.ts
+│  │  │  │  └─ payment-failed.consumer.ts
+│  │  │  ├─ domain/
+│  │  │  │  └─ ticket.events.ts
+│  │  │  └─ dto/
+│  │  │     └─ get-ticket.dto.ts
+│  │  │
+│  │  └─ realtime/
+│  │     ├─ realtime.module.ts
+│  │     ├─ sse.controller.ts
+│  │     ├─ realtime.service.ts
+│  │     └─ realtime.types.ts
+│  │
+│  ├─ workers/
+│  │  ├─ worker.module.ts
+│  │  ├─ outbox.worker.main.ts
+│  │  ├─ expiry.worker.main.ts
+│  │  └─ consumers.worker.main.ts
+│  │
+│  └─ health/
+│     ├─ health.module.ts
+│     └─ health.controller.ts
+│
+├─ prisma/
+│  ├─ schema.prisma
+│  ├─ migrations/
+│  └─ seed.ts
+│
+├─ docker-compose.yml
+├─ .env.example
+├─ .eslintrc.cjs
+├─ .prettierrc
+├─ nest-cli.json
+├─ tsconfig.json
+└─ package.json

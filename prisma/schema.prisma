@@ -1,0 +1,711 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/**
+ * =========================
+ * ENUMS
+ * =========================
+ */
+
+enum GlobalRole {
+  USER
+  SUPPORT
+  SUPER_ADMIN
+}
+
+enum OrgRole {
+  ORG_STAFF
+  ORG_ADMIN
+}
+
+enum EventStatus {
+  DRAFT
+  PUBLISHED
+  CANCELLED
+}
+
+enum SeatInventoryStatus {
+  AVAILABLE
+  RESERVED
+  SOLD
+  BLOCKED
+}
+
+enum ReservationStatus {
+  ACTIVE
+  CONFIRMED
+  EXPIRED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+  REFUNDED
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  CANCELLED
+  REFUNDED
+}
+
+enum TicketStatus {
+  ISSUED
+  VOIDED
+  REFUNDED
+}
+
+enum OutboxStatus {
+  PENDING
+  SENT
+  FAILED
+}
+
+enum WebhookStatus {
+  RECEIVED
+  VERIFIED
+  PROCESSED
+  FAILED
+}
+
+enum AuditActorType {
+  USER
+  SYSTEM
+  API_KEY
+}
+
+/**
+ * =========================
+ * IAM / TENANCY
+ * =========================
+ */
+
+model User {
+  id           String     @id @default(uuid()) @db.Uuid
+  email        String     @unique
+  passwordHash String
+  displayName  String?
+  globalRole   GlobalRole @default(USER)
+  isActive     Boolean    @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  memberships     OrganizationMember[]
+  sessions        AuthSession[]
+  apiKeys         ApiKey[]
+  reservations    Reservation[]
+  orders          Order[]
+  tickets         Ticket[]
+  idempotencyKeys IdempotencyKey[]
+  auditLogs       AuditLog[]           @relation("AuditLogUser")
+
+  @@index([globalRole])
+}
+
+model AuthSession {
+  id     String @id @default(uuid()) @db.Uuid
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  refreshToken String   @unique
+  userAgent    String?
+  ip           String?
+  expiresAt    DateTime
+
+  createdAt DateTime  @default(now())
+  revokedAt DateTime?
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model ApiKey {
+  id     String  @id @default(uuid()) @db.Uuid
+  userId String? @db.Uuid
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  name       String
+  keyHash    String    @unique
+  lastUsedAt DateTime?
+  expiresAt  DateTime?
+  isActive   Boolean   @default(true)
+
+  createdAt DateTime  @default(now())
+  revokedAt DateTime?
+
+  auditLogs AuditLog[] @relation("AuditLogApiKey")
+
+  @@index([userId])
+  @@index([isActive])
+}
+
+model Organization {
+  id   String @id @default(uuid()) @db.Uuid
+  name String
+  slug String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  members OrganizationMember[]
+  venues  Venue[]
+  events  Event[]
+  orders  Order[]
+
+  @@index([name])
+}
+
+model OrganizationMember {
+  id     String  @id @default(uuid()) @db.Uuid
+  orgId  String  @db.Uuid
+  userId String  @db.Uuid
+  role   OrgRole
+
+  org  Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  user User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([orgId, userId])
+  @@index([userId])
+  @@index([orgId, role])
+}
+
+/**
+ * =========================
+ * VENUES / SEAT MAP (Normalized)
+ * =========================
+ */
+
+model Venue {
+  id    String       @id @default(uuid()) @db.Uuid
+  orgId String       @db.Uuid
+  org   Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  name     String
+  address1 String?
+  address2 String?
+  city     String?
+  state    String?
+  country  String?
+  timezone String? // e.g., "Asia/Dhaka"
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sections VenueSection[]
+  rows     VenueRow[]
+  seats    VenueSeat[]
+  events   Event[]
+
+  @@index([orgId])
+  @@index([name])
+}
+
+model VenueSection {
+  id      String @id @default(uuid()) @db.Uuid
+  venueId String @db.Uuid
+  venue   Venue  @relation(fields: [venueId], references: [id], onDelete: Cascade)
+
+  name String // "Section A", "Balcony"
+  code String? // optional short code
+
+  createdAt DateTime @default(now())
+
+  rows  VenueRow[]
+  seats VenueSeat[]
+
+  @@unique([venueId, name])
+  @@index([venueId])
+}
+
+model VenueRow {
+  id        String @id @default(uuid()) @db.Uuid
+  venueId   String @db.Uuid
+  sectionId String @db.Uuid
+
+  venue   Venue        @relation(fields: [venueId], references: [id], onDelete: Cascade)
+  section VenueSection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+
+  name      String // "Row 1", "A"
+  sortOrder Int    @default(0)
+
+  createdAt DateTime @default(now())
+
+  seats VenueSeat[]
+
+  @@unique([sectionId, name])
+  @@index([venueId])
+  @@index([sectionId])
+}
+
+model VenueSeat {
+  id        String  @id @default(uuid()) @db.Uuid
+  venueId   String  @db.Uuid
+  sectionId String? @db.Uuid
+  rowId     String? @db.Uuid
+
+  venue   Venue         @relation(fields: [venueId], references: [id], onDelete: Cascade)
+  section VenueSection? @relation(fields: [sectionId], references: [id], onDelete: SetNull)
+  row     VenueRow?     @relation(fields: [rowId], references: [id], onDelete: SetNull)
+
+  seatNumber String // e.g., "12"
+  label      String? // display label
+  code       String // stable seat key, e.g. "A-01-12" (section-row-seat)
+
+  x Int? // optional for UI maps
+  y Int?
+
+  createdAt DateTime @default(now())
+
+  eventSeats EventSeat[]
+
+  @@unique([venueId, code])
+  @@index([venueId])
+  @@index([sectionId])
+  @@index([rowId])
+}
+
+/**
+ * =========================
+ * EVENTS / INVENTORY
+ * =========================
+ */
+
+model Event {
+  id      String @id @default(uuid()) @db.Uuid
+  orgId   String @db.Uuid
+  venueId String @db.Uuid
+
+  org   Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  venue Venue        @relation(fields: [venueId], references: [id], onDelete: Restrict)
+
+  title       String
+  description String?
+  startsAt    DateTime
+  endsAt      DateTime?
+  status      EventStatus @default(DRAFT)
+
+  currency String @default("USD") // ISO currency code, can change per org/event
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Inventory
+  seatInventory EventSeat[]
+  ticketTypes   EventTicketType[]
+
+  // Commerce
+  reservations Reservation[]
+  orders       Order[]
+  tickets      Ticket[]
+
+  @@index([orgId])
+  @@index([venueId])
+  @@index([status, startsAt])
+}
+
+/// GA / category-based ticket types for an event (e.g., "VIP", "General Admission").
+/// Seats can optionally attach to a ticket type too.
+model EventTicketType {
+  id      String @id @default(uuid()) @db.Uuid
+  eventId String @db.Uuid
+  event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  name String
+  code String? // optional short code
+
+  // Price for this type (base price); seats may override price if needed
+  priceCents Int
+  feesCents  Int @default(0)
+
+  // For GA: totalCapacity is used; for seat-based, keep null
+  totalCapacity Int?
+  soldCount     Int  @default(0) // maintained via transactions/consumers if used
+
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  reservationItems ReservationItem[]
+  orderItems       OrderItem[]
+  tickets          Ticket[]
+  eventSeats       EventSeat[]
+
+  @@unique([eventId, name])
+  @@index([eventId, isActive])
+}
+
+/// Seat inventory for a specific event.
+/// Generated from VenueSeat when event is published (or whenever you want).
+model EventSeat {
+  id          String @id @default(uuid()) @db.Uuid
+  eventId     String @db.Uuid
+  venueSeatId String @db.Uuid
+
+  event     Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  venueSeat VenueSeat @relation(fields: [venueSeatId], references: [id], onDelete: Restrict)
+
+  // Optional: bind a seat to a ticket type (VIP section, etc.)
+  ticketTypeId String?          @db.Uuid
+  ticketType   EventTicketType? @relation(fields: [ticketTypeId], references: [id], onDelete: SetNull)
+
+  status        SeatInventoryStatus @default(AVAILABLE)
+  reservedUntil DateTime?
+  version       Int                 @default(0) // optimistic concurrency
+
+  // Optional seat-specific pricing override
+  priceCents Int?
+  feesCents  Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  reservationItems ReservationItem[]
+  orderItems       OrderItem[]
+  ticket           Ticket?
+
+  @@unique([eventId, venueSeatId])
+  @@index([eventId, status])
+  @@index([reservedUntil])
+  @@index([eventId, ticketTypeId])
+}
+
+/**
+ * =========================
+ * RESERVATIONS
+ * =========================
+ */
+
+model Reservation {
+  id      String @id @default(uuid()) @db.Uuid
+  eventId String @db.Uuid
+  userId  String @db.Uuid
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  status    ReservationStatus @default(ACTIVE)
+  expiresAt DateTime
+
+  // Client-supplied idempotency key for reserve endpoint
+  idempotencyKey String
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  cancelledAt DateTime?
+
+  items        ReservationItem[]
+  paymentLinks Payment[] // payments associated with this reservation (attempts)
+
+  @@unique([userId, idempotencyKey])
+  @@index([eventId, status])
+  @@index([status, expiresAt])
+  @@index([userId])
+}
+
+/// Reservation can contain multiple items.
+/// Each item MUST reference exactly ONE of:
+/// - eventSeatId (seat-based)
+/// - ticketTypeId (GA/category-based) with quantity
+/// Enforce via application logic or DB CHECK constraints (recommended).
+model ReservationItem {
+  id            String      @id @default(uuid()) @db.Uuid
+  reservationId String      @db.Uuid
+  reservation   Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+
+  // Seat-based item
+  eventSeatId String?    @db.Uuid
+  eventSeat   EventSeat? @relation(fields: [eventSeatId], references: [id], onDelete: SetNull)
+
+  // Ticket-type item (GA/category)
+  ticketTypeId String?          @db.Uuid
+  ticketType   EventTicketType? @relation(fields: [ticketTypeId], references: [id], onDelete: SetNull)
+
+  quantity Int @default(1)
+
+  // Pricing snapshot at reservation time (important for later audits)
+  priceCents Int
+  feesCents  Int @default(0)
+
+  createdAt DateTime @default(now())
+
+  orderItems OrderItem[]
+
+  // Seat uniqueness per reservation (a seat should not appear twice within same reservation)
+  @@unique([reservationId, eventSeatId])
+  @@index([reservationId])
+  @@index([eventSeatId])
+  @@index([ticketTypeId])
+}
+
+/**
+ * =========================
+ * ORDERS / PAYMENTS / TICKETS
+ * =========================
+ */
+
+model Order {
+  id      String @id @default(uuid()) @db.Uuid
+  eventId String @db.Uuid
+  userId  String @db.Uuid
+  orgId   String @db.Uuid
+
+  event Event        @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user  User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  org   Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  status OrderStatus @default(PENDING)
+
+  subtotalCents Int
+  feesCents     Int @default(0)
+  totalCents    Int
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  paidAt      DateTime?
+  cancelledAt DateTime?
+  refundedAt  DateTime?
+
+  items    OrderItem[]
+  payments Payment[]
+  tickets  Ticket[]
+
+  @@index([eventId])
+  @@index([userId])
+  @@index([orgId])
+  @@index([status, createdAt])
+}
+
+/// Normalized order lines.
+/// Links back to ReservationItem for traceability.
+model OrderItem {
+  id      String @id @default(uuid()) @db.Uuid
+  orderId String @db.Uuid
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  reservationItemId String?          @db.Uuid
+  reservationItem   ReservationItem? @relation(fields: [reservationItemId], references: [id], onDelete: SetNull)
+
+  // Purchased item identity
+  eventSeatId String?    @db.Uuid
+  eventSeat   EventSeat? @relation(fields: [eventSeatId], references: [id], onDelete: SetNull)
+
+  ticketTypeId String?          @db.Uuid
+  ticketType   EventTicketType? @relation(fields: [ticketTypeId], references: [id], onDelete: SetNull)
+
+  quantity Int @default(1)
+
+  priceCents     Int
+  feesCents      Int @default(0)
+  lineTotalCents Int
+
+  createdAt DateTime @default(now())
+
+  tickets Ticket[]
+
+  @@index([orderId])
+  @@index([eventSeatId])
+  @@index([ticketTypeId])
+}
+
+model Payment {
+  id            String  @id @default(uuid()) @db.Uuid
+  orderId       String? @db.Uuid
+  reservationId String? @db.Uuid
+
+  order       Order?       @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  reservation Reservation? @relation(fields: [reservationId], references: [id], onDelete: SetNull)
+
+  provider    String // "stripe", "sslcommerz", etc.
+  providerRef String // payment intent id / transaction id
+
+  status      PaymentStatus @default(PENDING)
+  amountCents Int
+  currency    String
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  succeededAt DateTime?
+  failedAt    DateTime?
+  refundedAt  DateTime?
+
+  webhookEvents PaymentWebhookEvent[]
+
+  @@unique([provider, providerRef])
+  @@index([orderId])
+  @@index([reservationId])
+  @@index([status, createdAt])
+}
+
+/// Stores raw webhook events for audit/debug and idempotency.
+/// The handler should be idempotent using providerEventId (or derived unique hash).
+model PaymentWebhookEvent {
+  id        String   @id @default(uuid()) @db.Uuid
+  paymentId String?  @db.Uuid
+  payment   Payment? @relation(fields: [paymentId], references: [id], onDelete: SetNull)
+
+  provider        String
+  providerEventId String // webhook event id (unique per provider)
+  status          WebhookStatus @default(RECEIVED)
+
+  signatureValid Boolean @default(false)
+
+  payload     Json
+  receivedAt  DateTime  @default(now())
+  processedAt DateTime?
+
+  errorMessage String?
+
+  @@unique([provider, providerEventId])
+  @@index([paymentId])
+  @@index([status, receivedAt])
+}
+
+model Ticket {
+  id      String @id @default(uuid()) @db.Uuid
+  eventId String @db.Uuid
+  orderId String @db.Uuid
+  userId  String @db.Uuid
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // What this ticket represents (seat or GA type)
+  eventSeatId String?    @unique @db.Uuid
+  eventSeat   EventSeat? @relation(fields: [eventSeatId], references: [id], onDelete: SetNull)
+
+  ticketTypeId String?          @db.Uuid
+  ticketType   EventTicketType? @relation(fields: [ticketTypeId], references: [id], onDelete: SetNull)
+
+  orderItemId String?    @db.Uuid
+  orderItem   OrderItem? @relation(fields: [orderItemId], references: [id], onDelete: SetNull)
+
+  status TicketStatus @default(ISSUED)
+
+  // Unique code used for QR / check-in (do NOT store plain secret if you can store hash instead)
+  code       String    @unique
+  issuedAt   DateTime  @default(now())
+  voidedAt   DateTime?
+  refundedAt DateTime?
+
+  // Check-in tracking (optional v1, ready for future)
+  checkedInAt DateTime?
+  checkedInBy String?   @db.Uuid
+
+  @@index([eventId])
+  @@index([orderId])
+  @@index([userId])
+  @@index([eventSeatId])
+  @@index([ticketTypeId])
+}
+
+/**
+ * =========================
+ * IDEMPOTENCY (optional but future-proof)
+ * =========================
+ */
+
+/// Generic idempotency store to support safe retries across endpoints.
+/// You can use this for reserve/payment/create-order/etc.
+/// (If you prefer only per-domain idempotency, you can remove this model.)
+model IdempotencyKey {
+  id     String  @id @default(uuid()) @db.Uuid
+  userId String? @db.Uuid
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  key         String
+  scope       String // e.g., "POST:/reservations"
+  requestHash String?
+
+  // Optional: store response snapshot to return on retry
+  response Json?
+  status   String @default("COMPLETED") // or enum if you want
+
+  createdAt DateTime  @default(now())
+  expiresAt DateTime?
+
+  @@unique([userId, scope, key])
+  @@index([scope])
+  @@index([expiresAt])
+}
+
+/**
+ * =========================
+ * OUTBOX (Kafka)
+ * =========================
+ */
+
+model OutboxEvent {
+  id String @id @default(uuid()) @db.Uuid
+
+  topic   String
+  key     String
+  payload Json
+  headers Json?
+
+  status   OutboxStatus @default(PENDING)
+  attempts Int          @default(0)
+
+  createdAt   DateTime  @default(now())
+  availableAt DateTime  @default(now()) // for backoff scheduling
+  sentAt      DateTime?
+  lastError   String?
+
+  correlationId String?
+  actorUserId   String? @db.Uuid
+
+  @@index([status, availableAt])
+  @@index([topic, createdAt])
+}
+
+/**
+ * =========================
+ * AUDIT LOG (Admin/Support visibility)
+ * =========================
+ */
+
+model AuditLog {
+  id String @id @default(uuid()) @db.Uuid
+
+  actorType     AuditActorType
+  actorUserId   String?        @db.Uuid
+  actorApiKeyId String?        @db.Uuid
+
+  actorUser   User?   @relation("AuditLogUser", fields: [actorUserId], references: [id], onDelete: SetNull)
+  actorApiKey ApiKey? @relation("AuditLogApiKey", fields: [actorApiKeyId], references: [id], onDelete: SetNull)
+
+  action       String // e.g. "event.create", "reservation.reserve"
+  resourceType String // "Event", "Reservation", "Ticket"
+  resourceId   String
+
+  orgId   String? @db.Uuid
+  eventId String? @db.Uuid
+
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  @@index([orgId, createdAt])
+  @@index([eventId, createdAt])
+  @@index([resourceType, resourceId])
+  @@index([action, createdAt])
+}
