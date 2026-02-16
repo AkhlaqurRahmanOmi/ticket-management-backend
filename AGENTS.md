@@ -60,3 +60,17 @@ This file provides guidance to WARP (warp.dev) when working with code in this re
 - Export services/providers from a module only when other modules must consume them; otherwise keep them private to the module.
 - For swappable integrations (especially `payments/providers`), expose an interface token and bind one implementation (e.g., Stripe) in the module, so implementations can be replaced without changing service logic.
 
+## OOP + folder structure enforcement
+- Follow OOP strictly: encapsulate domain behavior in classes/services, keep single responsibility per class, prefer composition over inheritance except for shared infra abstractions (for example base repository).
+- Follow repository folder structure strictly; do not place files in arbitrary locations.
+- Group files by module and file type. Use dedicated subfolders where applicable:
+  - `dto/` for request/response DTOs
+  - `providers/` for concrete provider implementations
+  - `contracts/` (or `interfaces/`) for abstractions/tokens-facing contracts
+  - `repositories/` for persistence classes
+  - `policies/` for policy handlers/guards integrations
+  - `types/` for module-local types
+  - `constants/` for module constants/tokens
+- If a module grows, split by domain concern under that module while preserving the file-type grouping.
+- New code must align with both `Folder_structure.txt` and current module boundaries before introducing new folders/files.
+

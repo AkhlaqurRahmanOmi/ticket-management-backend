@@ -442,3 +442,54 @@ Real-time is UX only; correctness is enforced by Postgres concurrency control.
 - [ ] Phase 7: Outbox publisher
 - [ ] Phase 8: SSE realtime
 - [ ] Phase 9: Hardening
+
+---
+
+## D) Production Concurrency Addendum (2026-02-16)
+
+This addendum is normative and extends Sections 11, 12, Phase 3, and Phase 9.
+
+### D.1 Public vs Protected API Boundary
+- Public (or optionally authenticated): event discovery/details and seat-map reads, based on product mode.
+- Protected: all mutation endpoints (`/reservations`, `/payments`, org/event management).
+- Internal/privileged: worker and webhook flows with strict verification and least-privilege access.
+
+### D.2 Concurrency Control Matrix (Required)
+- Seat reserve (normal contention): optimistic locking (`Seat.version`) plus conditional update on status/expiry.
+- Seat reserve (hot contention / flash traffic): pessimistic row lock fallback (`FOR UPDATE NOWAIT` or `SKIP LOCKED`) with bounded retries.
+- Expiry worker: batched row processing with `SKIP LOCKED` to avoid worker collisions.
+- Payment webhook updates: idempotency keys and unique constraints first; no distributed lock required for correctness.
+- Ticket finalization consumer: idempotent transactional upsert/update guarded by unique constraints.
+
+### D.3 Distributed Locking Policy
+- Postgres remains the correctness authority.
+- Redis/distributed lock is optional optimization only (admission shaping), never the final correctness guard.
+- If distributed lock acquisition fails, return retryable response; DB invariants must still prevent double sell.
+
+### D.4 End-to-End Booking Sequence (Normative)
+1. Client calls `POST /reservations` with idempotency key.
+2. API validates state and commits reservation transaction (seat state + reservation + outbox event).
+3. API returns `reservationId` and `expiresAt`.
+4. Client calls `POST /payments` for that reservation.
+5. Webhook updates payment idempotently (`provider + providerRef` unique).
+6. Consumer handles `payment.succeeded` transactionally (confirm reservation, mark seat sold, create ticket, emit outbox).
+7. SSE/read APIs reflect DB-originated state transitions.
+
+### D.5 Failure-Mode and Race Handling (Required)
+- Duplicate reserve requests: same idempotency key returns same reservation result.
+- Concurrent reserve on same seat: exactly one success; others fail with conflict/retry semantics.
+- Payment success after reservation expiry: no automatic ticket issue; route to manual remediation/refund.
+- Outbox publish failure: retry with backoff; no event loss after DB commit.
+- Consumer redelivery: idempotent handling must prevent duplicate tickets/orders.
+- Worker crashes mid-batch: restart-safe and idempotent processing.
+- Clock skew: expiry logic uses server-side persisted timestamps only.
+
+### D.6 Explicit Amendment to Phase 3 (Reservations)
+- Add required fallback: pessimistic lock path for hot seats using `FOR UPDATE NOWAIT/SKIP LOCKED` with bounded retries.
+
+### D.7 Explicit Amendment to Phase 9 (Production Hardening)
+- Add flash-sale controls:
+  - admission control / queue mode toggle
+  - endpoint-level concurrency caps and fast-fail policy
+  - backpressure policy for downstream dependencies
+- Add acceptance criterion: flash-sale traffic must not exhaust DB connection pools or crash API nodes.
