@@ -9,23 +9,6 @@
 * 🟢 You can import this file directly.
 */
 
-export const GlobalRole = {
-  USER: 'USER',
-  SUPPORT: 'SUPPORT',
-  SUPER_ADMIN: 'SUPER_ADMIN'
-} as const
-
-export type GlobalRole = (typeof GlobalRole)[keyof typeof GlobalRole]
-
-
-export const OrgRole = {
-  ORG_STAFF: 'ORG_STAFF',
-  ORG_ADMIN: 'ORG_ADMIN'
-} as const
-
-export type OrgRole = (typeof OrgRole)[keyof typeof OrgRole]
-
-
 export const EventStatus = {
   DRAFT: 'DRAFT',
   PUBLISHED: 'PUBLISHED',

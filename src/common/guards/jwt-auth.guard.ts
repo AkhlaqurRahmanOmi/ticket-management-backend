@@ -4,15 +4,17 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
+import { ModuleRef } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import type { Request } from 'express';
 import type { AuthUser } from '@/common/auth/auth-user.type';
+import { AUTHORIZATION_PROVIDER } from '@/modules/iam/provider/token/tokens';
+import type { AuthorizationProvider } from '@/modules/iam/provider/authorization/authorization-provider.contract';
 
 type JwtPayload = {
   sub?: string;
   email?: string;
-  globalRole?: string;
   roles?: string[];
   memberships?: AuthUser['memberships'];
 };
@@ -22,6 +24,7 @@ export class JwtAuthGuard implements CanActivate {
   constructor(
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly moduleRef: ModuleRef,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -48,12 +51,22 @@ export class JwtAuthGuard implements CanActivate {
       throw new UnauthorizedException('Invalid token payload.');
     }
 
+    const authorizationProvider = this.moduleRef.get<AuthorizationProvider>(
+      AUTHORIZATION_PROVIDER,
+      { strict: false },
+    );
+
+    const authorizationContext = authorizationProvider
+      ? await authorizationProvider.getUserAuthorizationContext(payload.sub)
+      : undefined;
+
     request.user = {
       id: payload.sub,
       email: payload.email,
-      globalRole: payload.globalRole,
-      roles: payload.roles,
-      memberships: payload.memberships,
+      roles: authorizationContext?.roles ?? payload.roles ?? [],
+      permissions: authorizationContext?.permissions ?? [],
+      memberships:
+        authorizationContext?.memberships ?? payload.memberships ?? [],
     };
 
     return true;

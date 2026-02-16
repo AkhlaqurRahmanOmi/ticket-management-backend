@@ -6,6 +6,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+import type { Request } from 'express';
 import {
   PERMISSIONS_KEY,
   type Permission,
@@ -23,7 +24,7 @@ export class PermissionGuard implements CanActivate {
 
     if (!requiredPermissions || requiredPermissions.length === 0) return true;
 
-    const request = context.switchToHttp().getRequest<Express.Request>();
+    const request = context.switchToHttp().getRequest<Request>();
     const user = request.user;
     if (!user) {
       throw new UnauthorizedException('Authentication required.');

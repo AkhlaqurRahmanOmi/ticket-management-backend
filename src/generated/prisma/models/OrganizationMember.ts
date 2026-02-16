@@ -28,7 +28,7 @@ export type OrganizationMemberMinAggregateOutputType = {
   id: string | null
   orgId: string | null
   userId: string | null
-  role: $Enums.OrgRole | null
+  role: string | null
   createdAt: Date | null
 }
 
@@ -36,7 +36,7 @@ export type OrganizationMemberMaxAggregateOutputType = {
   id: string | null
   orgId: string | null
   userId: string | null
-  role: $Enums.OrgRole | null
+  role: string | null
   createdAt: Date | null
 }
 
@@ -151,7 +151,7 @@ export type OrganizationMemberGroupByOutputType = {
   id: string
   orgId: string
   userId: string
-  role: $Enums.OrgRole
+  role: string
   createdAt: Date
   _count: OrganizationMemberCountAggregateOutputType | null
   _min: OrganizationMemberMinAggregateOutputType | null
@@ -180,7 +180,7 @@ export type OrganizationMemberWhereInput = {
   id?: Prisma.UuidFilter<"OrganizationMember"> | string
   orgId?: Prisma.UuidFilter<"OrganizationMember"> | string
   userId?: Prisma.UuidFilter<"OrganizationMember"> | string
-  role?: Prisma.EnumOrgRoleFilter<"OrganizationMember"> | $Enums.OrgRole
+  role?: Prisma.StringFilter<"OrganizationMember"> | string
   createdAt?: Prisma.DateTimeFilter<"OrganizationMember"> | Date | string
   org?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -204,7 +204,7 @@ export type OrganizationMemberWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.OrganizationMemberWhereInput | Prisma.OrganizationMemberWhereInput[]
   orgId?: Prisma.UuidFilter<"OrganizationMember"> | string
   userId?: Prisma.UuidFilter<"OrganizationMember"> | string
-  role?: Prisma.EnumOrgRoleFilter<"OrganizationMember"> | $Enums.OrgRole
+  role?: Prisma.StringFilter<"OrganizationMember"> | string
   createdAt?: Prisma.DateTimeFilter<"OrganizationMember"> | Date | string
   org?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -228,13 +228,13 @@ export type OrganizationMemberScalarWhereWithAggregatesInput = {
   id?: Prisma.UuidWithAggregatesFilter<"OrganizationMember"> | string
   orgId?: Prisma.UuidWithAggregatesFilter<"OrganizationMember"> | string
   userId?: Prisma.UuidWithAggregatesFilter<"OrganizationMember"> | string
-  role?: Prisma.EnumOrgRoleWithAggregatesFilter<"OrganizationMember"> | $Enums.OrgRole
+  role?: Prisma.StringWithAggregatesFilter<"OrganizationMember"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"OrganizationMember"> | Date | string
 }
 
 export type OrganizationMemberCreateInput = {
   id?: string
-  role: $Enums.OrgRole
+  role: string
   createdAt?: Date | string
   org: Prisma.OrganizationCreateNestedOneWithoutMembersInput
   user: Prisma.UserCreateNestedOneWithoutMembershipsInput
@@ -244,13 +244,13 @@ export type OrganizationMemberUncheckedCreateInput = {
   id?: string
   orgId: string
   userId: string
-  role: $Enums.OrgRole
+  role: string
   createdAt?: Date | string
 }
 
 export type OrganizationMemberUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.EnumOrgRoleFieldUpdateOperationsInput | $Enums.OrgRole
+  role?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   org?: Prisma.OrganizationUpdateOneRequiredWithoutMembersNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutMembershipsNestedInput
@@ -260,7 +260,7 @@ export type OrganizationMemberUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   orgId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.EnumOrgRoleFieldUpdateOperationsInput | $Enums.OrgRole
+  role?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -268,13 +268,13 @@ export type OrganizationMemberCreateManyInput = {
   id?: string
   orgId: string
   userId: string
-  role: $Enums.OrgRole
+  role: string
   createdAt?: Date | string
 }
 
 export type OrganizationMemberUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.EnumOrgRoleFieldUpdateOperationsInput | $Enums.OrgRole
+  role?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -282,7 +282,7 @@ export type OrganizationMemberUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   orgId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.EnumOrgRoleFieldUpdateOperationsInput | $Enums.OrgRole
+  role?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -409,13 +409,9 @@ export type OrganizationMemberUncheckedUpdateManyWithoutOrgNestedInput = {
   deleteMany?: Prisma.OrganizationMemberScalarWhereInput | Prisma.OrganizationMemberScalarWhereInput[]
 }
 
-export type EnumOrgRoleFieldUpdateOperationsInput = {
-  set?: $Enums.OrgRole
-}
-
 export type OrganizationMemberCreateWithoutUserInput = {
   id?: string
-  role: $Enums.OrgRole
+  role: string
   createdAt?: Date | string
   org: Prisma.OrganizationCreateNestedOneWithoutMembersInput
 }
@@ -423,7 +419,7 @@ export type OrganizationMemberCreateWithoutUserInput = {
 export type OrganizationMemberUncheckedCreateWithoutUserInput = {
   id?: string
   orgId: string
-  role: $Enums.OrgRole
+  role: string
   createdAt?: Date | string
 }
 
@@ -460,13 +456,13 @@ export type OrganizationMemberScalarWhereInput = {
   id?: Prisma.UuidFilter<"OrganizationMember"> | string
   orgId?: Prisma.UuidFilter<"OrganizationMember"> | string
   userId?: Prisma.UuidFilter<"OrganizationMember"> | string
-  role?: Prisma.EnumOrgRoleFilter<"OrganizationMember"> | $Enums.OrgRole
+  role?: Prisma.StringFilter<"OrganizationMember"> | string
   createdAt?: Prisma.DateTimeFilter<"OrganizationMember"> | Date | string
 }
 
 export type OrganizationMemberCreateWithoutOrgInput = {
   id?: string
-  role: $Enums.OrgRole
+  role: string
   createdAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutMembershipsInput
 }
@@ -474,7 +470,7 @@ export type OrganizationMemberCreateWithoutOrgInput = {
 export type OrganizationMemberUncheckedCreateWithoutOrgInput = {
   id?: string
   userId: string
-  role: $Enums.OrgRole
+  role: string
   createdAt?: Date | string
 }
 
@@ -507,13 +503,13 @@ export type OrganizationMemberUpdateManyWithWhereWithoutOrgInput = {
 export type OrganizationMemberCreateManyUserInput = {
   id?: string
   orgId: string
-  role: $Enums.OrgRole
+  role: string
   createdAt?: Date | string
 }
 
 export type OrganizationMemberUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.EnumOrgRoleFieldUpdateOperationsInput | $Enums.OrgRole
+  role?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   org?: Prisma.OrganizationUpdateOneRequiredWithoutMembersNestedInput
 }
@@ -521,27 +517,27 @@ export type OrganizationMemberUpdateWithoutUserInput = {
 export type OrganizationMemberUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   orgId?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.EnumOrgRoleFieldUpdateOperationsInput | $Enums.OrgRole
+  role?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type OrganizationMemberUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   orgId?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.EnumOrgRoleFieldUpdateOperationsInput | $Enums.OrgRole
+  role?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type OrganizationMemberCreateManyOrgInput = {
   id?: string
   userId: string
-  role: $Enums.OrgRole
+  role: string
   createdAt?: Date | string
 }
 
 export type OrganizationMemberUpdateWithoutOrgInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.EnumOrgRoleFieldUpdateOperationsInput | $Enums.OrgRole
+  role?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutMembershipsNestedInput
 }
@@ -549,14 +545,14 @@ export type OrganizationMemberUpdateWithoutOrgInput = {
 export type OrganizationMemberUncheckedUpdateWithoutOrgInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.EnumOrgRoleFieldUpdateOperationsInput | $Enums.OrgRole
+  role?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type OrganizationMemberUncheckedUpdateManyWithoutOrgInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.EnumOrgRoleFieldUpdateOperationsInput | $Enums.OrgRole
+  role?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -624,7 +620,7 @@ export type $OrganizationMemberPayload<ExtArgs extends runtime.Types.Extensions.
     id: string
     orgId: string
     userId: string
-    role: $Enums.OrgRole
+    role: string
     createdAt: Date
   }, ExtArgs["result"]["organizationMember"]>
   composites: {}
@@ -1054,7 +1050,7 @@ export interface OrganizationMemberFieldRefs {
   readonly id: Prisma.FieldRef<"OrganizationMember", 'String'>
   readonly orgId: Prisma.FieldRef<"OrganizationMember", 'String'>
   readonly userId: Prisma.FieldRef<"OrganizationMember", 'String'>
-  readonly role: Prisma.FieldRef<"OrganizationMember", 'OrgRole'>
+  readonly role: Prisma.FieldRef<"OrganizationMember", 'String'>
   readonly createdAt: Prisma.FieldRef<"OrganizationMember", 'DateTime'>
 }
     

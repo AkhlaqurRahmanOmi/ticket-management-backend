@@ -29,7 +29,7 @@ export type UserMinAggregateOutputType = {
   email: string | null
   passwordHash: string | null
   displayName: string | null
-  globalRole: $Enums.GlobalRole | null
+  globalRole: string | null
   isActive: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -40,7 +40,7 @@ export type UserMaxAggregateOutputType = {
   email: string | null
   passwordHash: string | null
   displayName: string | null
-  globalRole: $Enums.GlobalRole | null
+  globalRole: string | null
   isActive: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -170,7 +170,7 @@ export type UserGroupByOutputType = {
   email: string
   passwordHash: string
   displayName: string | null
-  globalRole: $Enums.GlobalRole
+  globalRole: string
   isActive: boolean
   createdAt: Date
   updatedAt: Date
@@ -202,7 +202,7 @@ export type UserWhereInput = {
   email?: Prisma.StringFilter<"User"> | string
   passwordHash?: Prisma.StringFilter<"User"> | string
   displayName?: Prisma.StringNullableFilter<"User"> | string | null
-  globalRole?: Prisma.EnumGlobalRoleFilter<"User"> | $Enums.GlobalRole
+  globalRole?: Prisma.StringFilter<"User"> | string
   isActive?: Prisma.BoolFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
@@ -214,6 +214,7 @@ export type UserWhereInput = {
   tickets?: Prisma.TicketListRelationFilter
   idempotencyKeys?: Prisma.IdempotencyKeyListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
+  userRoles?: Prisma.UserRoleListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -233,6 +234,7 @@ export type UserOrderByWithRelationInput = {
   tickets?: Prisma.TicketOrderByRelationAggregateInput
   idempotencyKeys?: Prisma.IdempotencyKeyOrderByRelationAggregateInput
   auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
+  userRoles?: Prisma.UserRoleOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -243,7 +245,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   passwordHash?: Prisma.StringFilter<"User"> | string
   displayName?: Prisma.StringNullableFilter<"User"> | string | null
-  globalRole?: Prisma.EnumGlobalRoleFilter<"User"> | $Enums.GlobalRole
+  globalRole?: Prisma.StringFilter<"User"> | string
   isActive?: Prisma.BoolFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
@@ -255,6 +257,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   tickets?: Prisma.TicketListRelationFilter
   idempotencyKeys?: Prisma.IdempotencyKeyListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
+  userRoles?: Prisma.UserRoleListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -279,7 +282,7 @@ export type UserScalarWhereWithAggregatesInput = {
   email?: Prisma.StringWithAggregatesFilter<"User"> | string
   passwordHash?: Prisma.StringWithAggregatesFilter<"User"> | string
   displayName?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
-  globalRole?: Prisma.EnumGlobalRoleWithAggregatesFilter<"User"> | $Enums.GlobalRole
+  globalRole?: Prisma.StringWithAggregatesFilter<"User"> | string
   isActive?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
@@ -290,7 +293,7 @@ export type UserCreateInput = {
   email: string
   passwordHash: string
   displayName?: string | null
-  globalRole?: $Enums.GlobalRole
+  globalRole?: string
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -302,6 +305,7 @@ export type UserCreateInput = {
   tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
   idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorUserInput
+  userRoles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -309,7 +313,7 @@ export type UserUncheckedCreateInput = {
   email: string
   passwordHash: string
   displayName?: string | null
-  globalRole?: $Enums.GlobalRole
+  globalRole?: string
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -321,6 +325,7 @@ export type UserUncheckedCreateInput = {
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
   idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorUserInput
+  userRoles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -328,7 +333,7 @@ export type UserUpdateInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  globalRole?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
+  globalRole?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -340,6 +345,7 @@ export type UserUpdateInput = {
   tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
   idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorUserNestedInput
+  userRoles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -347,7 +353,7 @@ export type UserUncheckedUpdateInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  globalRole?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
+  globalRole?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -359,6 +365,7 @@ export type UserUncheckedUpdateInput = {
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
   idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorUserNestedInput
+  userRoles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -366,7 +373,7 @@ export type UserCreateManyInput = {
   email: string
   passwordHash: string
   displayName?: string | null
-  globalRole?: $Enums.GlobalRole
+  globalRole?: string
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -377,7 +384,7 @@ export type UserUpdateManyMutationInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  globalRole?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
+  globalRole?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -388,7 +395,7 @@ export type UserUncheckedUpdateManyInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  globalRole?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
+  globalRole?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -445,16 +452,26 @@ export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
 }
 
-export type EnumGlobalRoleFieldUpdateOperationsInput = {
-  set?: $Enums.GlobalRole
-}
-
 export type BoolFieldUpdateOperationsInput = {
   set?: boolean
 }
 
 export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
+}
+
+export type UserCreateNestedOneWithoutUserRolesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutUserRolesInput, Prisma.UserUncheckedCreateWithoutUserRolesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutUserRolesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutUserRolesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutUserRolesInput, Prisma.UserUncheckedCreateWithoutUserRolesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutUserRolesInput
+  upsert?: Prisma.UserUpsertWithoutUserRolesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutUserRolesInput, Prisma.UserUpdateWithoutUserRolesInput>, Prisma.UserUncheckedUpdateWithoutUserRolesInput>
 }
 
 export type UserCreateNestedOneWithoutSessionsInput = {
@@ -575,12 +592,104 @@ export type UserUpdateOneWithoutAuditLogsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAuditLogsInput, Prisma.UserUpdateWithoutAuditLogsInput>, Prisma.UserUncheckedUpdateWithoutAuditLogsInput>
 }
 
+export type UserCreateWithoutUserRolesInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  displayName?: string | null
+  globalRole?: string
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.OrganizationMemberCreateNestedManyWithoutUserInput
+  sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
+  reservations?: Prisma.ReservationCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderCreateNestedManyWithoutUserInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorUserInput
+}
+
+export type UserUncheckedCreateWithoutUserRolesInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  displayName?: string | null
+  globalRole?: string
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.OrganizationMemberUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
+  reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorUserInput
+}
+
+export type UserCreateOrConnectWithoutUserRolesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutUserRolesInput, Prisma.UserUncheckedCreateWithoutUserRolesInput>
+}
+
+export type UserUpsertWithoutUserRolesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutUserRolesInput, Prisma.UserUncheckedUpdateWithoutUserRolesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutUserRolesInput, Prisma.UserUncheckedCreateWithoutUserRolesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutUserRolesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutUserRolesInput, Prisma.UserUncheckedUpdateWithoutUserRolesInput>
+}
+
+export type UserUpdateWithoutUserRolesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  globalRole?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.OrganizationMemberUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
+  reservations?: Prisma.ReservationUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutUserRolesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  globalRole?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.OrganizationMemberUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
+  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorUserNestedInput
+}
+
 export type UserCreateWithoutSessionsInput = {
   id?: string
   email: string
   passwordHash: string
   displayName?: string | null
-  globalRole?: $Enums.GlobalRole
+  globalRole?: string
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -591,6 +700,7 @@ export type UserCreateWithoutSessionsInput = {
   tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
   idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorUserInput
+  userRoles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -598,7 +708,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   email: string
   passwordHash: string
   displayName?: string | null
-  globalRole?: $Enums.GlobalRole
+  globalRole?: string
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -609,6 +719,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
   idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorUserInput
+  userRoles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -632,7 +743,7 @@ export type UserUpdateWithoutSessionsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  globalRole?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
+  globalRole?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -643,6 +754,7 @@ export type UserUpdateWithoutSessionsInput = {
   tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
   idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorUserNestedInput
+  userRoles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -650,7 +762,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  globalRole?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
+  globalRole?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -661,6 +773,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
   idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorUserNestedInput
+  userRoles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutApiKeysInput = {
@@ -668,7 +781,7 @@ export type UserCreateWithoutApiKeysInput = {
   email: string
   passwordHash: string
   displayName?: string | null
-  globalRole?: $Enums.GlobalRole
+  globalRole?: string
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -679,6 +792,7 @@ export type UserCreateWithoutApiKeysInput = {
   tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
   idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorUserInput
+  userRoles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutApiKeysInput = {
@@ -686,7 +800,7 @@ export type UserUncheckedCreateWithoutApiKeysInput = {
   email: string
   passwordHash: string
   displayName?: string | null
-  globalRole?: $Enums.GlobalRole
+  globalRole?: string
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -697,6 +811,7 @@ export type UserUncheckedCreateWithoutApiKeysInput = {
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
   idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorUserInput
+  userRoles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutApiKeysInput = {
@@ -720,7 +835,7 @@ export type UserUpdateWithoutApiKeysInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  globalRole?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
+  globalRole?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -731,6 +846,7 @@ export type UserUpdateWithoutApiKeysInput = {
   tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
   idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorUserNestedInput
+  userRoles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutApiKeysInput = {
@@ -738,7 +854,7 @@ export type UserUncheckedUpdateWithoutApiKeysInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  globalRole?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
+  globalRole?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -749,6 +865,7 @@ export type UserUncheckedUpdateWithoutApiKeysInput = {
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
   idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorUserNestedInput
+  userRoles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutMembershipsInput = {
@@ -756,7 +873,7 @@ export type UserCreateWithoutMembershipsInput = {
   email: string
   passwordHash: string
   displayName?: string | null
-  globalRole?: $Enums.GlobalRole
+  globalRole?: string
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -767,6 +884,7 @@ export type UserCreateWithoutMembershipsInput = {
   tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
   idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorUserInput
+  userRoles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutMembershipsInput = {
@@ -774,7 +892,7 @@ export type UserUncheckedCreateWithoutMembershipsInput = {
   email: string
   passwordHash: string
   displayName?: string | null
-  globalRole?: $Enums.GlobalRole
+  globalRole?: string
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -785,6 +903,7 @@ export type UserUncheckedCreateWithoutMembershipsInput = {
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
   idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorUserInput
+  userRoles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutMembershipsInput = {
@@ -808,7 +927,7 @@ export type UserUpdateWithoutMembershipsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  globalRole?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
+  globalRole?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -819,6 +938,7 @@ export type UserUpdateWithoutMembershipsInput = {
   tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
   idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorUserNestedInput
+  userRoles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMembershipsInput = {
@@ -826,7 +946,7 @@ export type UserUncheckedUpdateWithoutMembershipsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  globalRole?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
+  globalRole?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -837,6 +957,7 @@ export type UserUncheckedUpdateWithoutMembershipsInput = {
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
   idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorUserNestedInput
+  userRoles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutReservationsInput = {
@@ -844,7 +965,7 @@ export type UserCreateWithoutReservationsInput = {
   email: string
   passwordHash: string
   displayName?: string | null
-  globalRole?: $Enums.GlobalRole
+  globalRole?: string
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -855,6 +976,7 @@ export type UserCreateWithoutReservationsInput = {
   tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
   idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorUserInput
+  userRoles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReservationsInput = {
@@ -862,7 +984,7 @@ export type UserUncheckedCreateWithoutReservationsInput = {
   email: string
   passwordHash: string
   displayName?: string | null
-  globalRole?: $Enums.GlobalRole
+  globalRole?: string
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -873,6 +995,7 @@ export type UserUncheckedCreateWithoutReservationsInput = {
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
   idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorUserInput
+  userRoles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReservationsInput = {
@@ -896,7 +1019,7 @@ export type UserUpdateWithoutReservationsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  globalRole?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
+  globalRole?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -907,6 +1030,7 @@ export type UserUpdateWithoutReservationsInput = {
   tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
   idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorUserNestedInput
+  userRoles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReservationsInput = {
@@ -914,7 +1038,7 @@ export type UserUncheckedUpdateWithoutReservationsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  globalRole?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
+  globalRole?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -925,6 +1049,7 @@ export type UserUncheckedUpdateWithoutReservationsInput = {
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
   idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorUserNestedInput
+  userRoles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutOrdersInput = {
@@ -932,7 +1057,7 @@ export type UserCreateWithoutOrdersInput = {
   email: string
   passwordHash: string
   displayName?: string | null
-  globalRole?: $Enums.GlobalRole
+  globalRole?: string
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -943,6 +1068,7 @@ export type UserCreateWithoutOrdersInput = {
   tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
   idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorUserInput
+  userRoles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutOrdersInput = {
@@ -950,7 +1076,7 @@ export type UserUncheckedCreateWithoutOrdersInput = {
   email: string
   passwordHash: string
   displayName?: string | null
-  globalRole?: $Enums.GlobalRole
+  globalRole?: string
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -961,6 +1087,7 @@ export type UserUncheckedCreateWithoutOrdersInput = {
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
   idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorUserInput
+  userRoles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutOrdersInput = {
@@ -984,7 +1111,7 @@ export type UserUpdateWithoutOrdersInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  globalRole?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
+  globalRole?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -995,6 +1122,7 @@ export type UserUpdateWithoutOrdersInput = {
   tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
   idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorUserNestedInput
+  userRoles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOrdersInput = {
@@ -1002,7 +1130,7 @@ export type UserUncheckedUpdateWithoutOrdersInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  globalRole?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
+  globalRole?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1013,6 +1141,7 @@ export type UserUncheckedUpdateWithoutOrdersInput = {
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
   idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorUserNestedInput
+  userRoles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTicketsInput = {
@@ -1020,7 +1149,7 @@ export type UserCreateWithoutTicketsInput = {
   email: string
   passwordHash: string
   displayName?: string | null
-  globalRole?: $Enums.GlobalRole
+  globalRole?: string
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1031,6 +1160,7 @@ export type UserCreateWithoutTicketsInput = {
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
   idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorUserInput
+  userRoles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTicketsInput = {
@@ -1038,7 +1168,7 @@ export type UserUncheckedCreateWithoutTicketsInput = {
   email: string
   passwordHash: string
   displayName?: string | null
-  globalRole?: $Enums.GlobalRole
+  globalRole?: string
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1049,6 +1179,7 @@ export type UserUncheckedCreateWithoutTicketsInput = {
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
   idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorUserInput
+  userRoles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTicketsInput = {
@@ -1072,7 +1203,7 @@ export type UserUpdateWithoutTicketsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  globalRole?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
+  globalRole?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1083,6 +1214,7 @@ export type UserUpdateWithoutTicketsInput = {
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
   idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorUserNestedInput
+  userRoles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTicketsInput = {
@@ -1090,7 +1222,7 @@ export type UserUncheckedUpdateWithoutTicketsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  globalRole?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
+  globalRole?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1101,6 +1233,7 @@ export type UserUncheckedUpdateWithoutTicketsInput = {
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
   idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorUserNestedInput
+  userRoles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutIdempotencyKeysInput = {
@@ -1108,7 +1241,7 @@ export type UserCreateWithoutIdempotencyKeysInput = {
   email: string
   passwordHash: string
   displayName?: string | null
-  globalRole?: $Enums.GlobalRole
+  globalRole?: string
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1119,6 +1252,7 @@ export type UserCreateWithoutIdempotencyKeysInput = {
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
   tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorUserInput
+  userRoles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutIdempotencyKeysInput = {
@@ -1126,7 +1260,7 @@ export type UserUncheckedCreateWithoutIdempotencyKeysInput = {
   email: string
   passwordHash: string
   displayName?: string | null
-  globalRole?: $Enums.GlobalRole
+  globalRole?: string
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1137,6 +1271,7 @@ export type UserUncheckedCreateWithoutIdempotencyKeysInput = {
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorUserInput
+  userRoles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutIdempotencyKeysInput = {
@@ -1160,7 +1295,7 @@ export type UserUpdateWithoutIdempotencyKeysInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  globalRole?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
+  globalRole?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1171,6 +1306,7 @@ export type UserUpdateWithoutIdempotencyKeysInput = {
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
   tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorUserNestedInput
+  userRoles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutIdempotencyKeysInput = {
@@ -1178,7 +1314,7 @@ export type UserUncheckedUpdateWithoutIdempotencyKeysInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  globalRole?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
+  globalRole?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1189,6 +1325,7 @@ export type UserUncheckedUpdateWithoutIdempotencyKeysInput = {
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorUserNestedInput
+  userRoles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAuditLogsInput = {
@@ -1196,7 +1333,7 @@ export type UserCreateWithoutAuditLogsInput = {
   email: string
   passwordHash: string
   displayName?: string | null
-  globalRole?: $Enums.GlobalRole
+  globalRole?: string
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1207,6 +1344,7 @@ export type UserCreateWithoutAuditLogsInput = {
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
   tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
   idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput
+  userRoles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAuditLogsInput = {
@@ -1214,7 +1352,7 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   email: string
   passwordHash: string
   displayName?: string | null
-  globalRole?: $Enums.GlobalRole
+  globalRole?: string
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1225,6 +1363,7 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
   idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput
+  userRoles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -1248,7 +1387,7 @@ export type UserUpdateWithoutAuditLogsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  globalRole?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
+  globalRole?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1259,6 +1398,7 @@ export type UserUpdateWithoutAuditLogsInput = {
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
   tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
   idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput
+  userRoles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAuditLogsInput = {
@@ -1266,7 +1406,7 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  globalRole?: Prisma.EnumGlobalRoleFieldUpdateOperationsInput | $Enums.GlobalRole
+  globalRole?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1277,6 +1417,7 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
   idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput
+  userRoles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -1293,6 +1434,7 @@ export type UserCountOutputType = {
   tickets: number
   idempotencyKeys: number
   auditLogs: number
+  userRoles: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1304,6 +1446,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   tickets?: boolean | UserCountOutputTypeCountTicketsArgs
   idempotencyKeys?: boolean | UserCountOutputTypeCountIdempotencyKeysArgs
   auditLogs?: boolean | UserCountOutputTypeCountAuditLogsArgs
+  userRoles?: boolean | UserCountOutputTypeCountUserRolesArgs
 }
 
 /**
@@ -1372,6 +1515,13 @@ export type UserCountOutputTypeCountAuditLogsArgs<ExtArgs extends runtime.Types.
   where?: Prisma.AuditLogWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountUserRolesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.UserRoleWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1390,6 +1540,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   tickets?: boolean | Prisma.User$ticketsArgs<ExtArgs>
   idempotencyKeys?: boolean | Prisma.User$idempotencyKeysArgs<ExtArgs>
   auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>
+  userRoles?: boolean | Prisma.User$userRolesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1436,6 +1587,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   tickets?: boolean | Prisma.User$ticketsArgs<ExtArgs>
   idempotencyKeys?: boolean | Prisma.User$idempotencyKeysArgs<ExtArgs>
   auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>
+  userRoles?: boolean | Prisma.User$userRolesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1452,13 +1604,14 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     tickets: Prisma.$TicketPayload<ExtArgs>[]
     idempotencyKeys: Prisma.$IdempotencyKeyPayload<ExtArgs>[]
     auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
+    userRoles: Prisma.$UserRolePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     email: string
     passwordHash: string
     displayName: string | null
-    globalRole: $Enums.GlobalRole
+    globalRole: string
     isActive: boolean
     createdAt: Date
     updatedAt: Date
@@ -1864,6 +2017,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   tickets<T extends Prisma.User$ticketsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$ticketsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   idempotencyKeys<T extends Prisma.User$idempotencyKeysArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$idempotencyKeysArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$IdempotencyKeyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   auditLogs<T extends Prisma.User$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  userRoles<T extends Prisma.User$userRolesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$userRolesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserRolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1897,7 +2051,7 @@ export interface UserFieldRefs {
   readonly email: Prisma.FieldRef<"User", 'String'>
   readonly passwordHash: Prisma.FieldRef<"User", 'String'>
   readonly displayName: Prisma.FieldRef<"User", 'String'>
-  readonly globalRole: Prisma.FieldRef<"User", 'GlobalRole'>
+  readonly globalRole: Prisma.FieldRef<"User", 'String'>
   readonly isActive: Prisma.FieldRef<"User", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
@@ -2478,6 +2632,30 @@ export type User$auditLogsArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.AuditLogScalarFieldEnum | Prisma.AuditLogScalarFieldEnum[]
+}
+
+/**
+ * User.userRoles
+ */
+export type User$userRolesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UserRole
+   */
+  select?: Prisma.UserRoleSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the UserRole
+   */
+  omit?: Prisma.UserRoleOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserRoleInclude<ExtArgs> | null
+  where?: Prisma.UserRoleWhereInput
+  orderBy?: Prisma.UserRoleOrderByWithRelationInput | Prisma.UserRoleOrderByWithRelationInput[]
+  cursor?: Prisma.UserRoleWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.UserRoleScalarFieldEnum | Prisma.UserRoleScalarFieldEnum[]
 }
 
 /**

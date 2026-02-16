@@ -1,10 +1,11 @@
-import { OrgRole } from '@/generated/prisma/enums';
-import { IsEnum, IsUUID } from 'class-validator';
+import { IsString, IsUUID, MaxLength, MinLength } from 'class-validator';
 
 export class AddOrgMemberDto {
   @IsUUID()
   userId!: string;
 
-  @IsEnum(OrgRole)
-  role!: OrgRole;
+  @IsString()
+  @MinLength(2)
+  @MaxLength(50)
+  role!: string;
 }

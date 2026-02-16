@@ -73,7 +73,10 @@ export abstract class BaseRepository {
     };
 
     if (typeof prismaWithTransaction.$transaction === 'function') {
-      return prismaWithTransaction.$transaction((tx) => callback(tx), options);
+      return prismaWithTransaction.$transaction(
+        (tx) => callback(tx as PrismaService),
+        options,
+      );
     }
 
     return callback(this.prisma);

@@ -7,6 +7,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { ModuleRef, Reflector } from '@nestjs/core';
+import type { Request } from 'express';
 import {
   POLICIES_KEY,
   type PolicyDefinition,
@@ -28,7 +29,7 @@ export class PolicyGuard implements CanActivate {
 
     if (!policies || policies.length === 0) return true;
 
-    const request = context.switchToHttp().getRequest<Express.Request>();
+    const request = context.switchToHttp().getRequest<Request>();
     const user = request.user;
     if (!user) {
       throw new UnauthorizedException('Authentication required.');
@@ -46,7 +47,7 @@ export class PolicyGuard implements CanActivate {
 
   private async evaluatePolicy(
     policy: PolicyDefinition,
-    context: { user: NonNullable<Express.Request['user']>; request: Express.Request },
+    context: { user: NonNullable<Request['user']>; request: Request },
   ): Promise<boolean> {
     if (typeof policy === 'function') {
       return policy(context);
