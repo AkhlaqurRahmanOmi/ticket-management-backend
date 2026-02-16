@@ -16,12 +16,14 @@ import { PrismaModule } from '@/infra/prisma/prisma.module';
 import { PrismaAuthorizationProvider } from './provider/authorization/prisma-authorization.provider';
 import { PrismaRoleAssignmentProvider } from './provider/authorization/prisma-role-assignment.provider';
 import {
+  EventCreatePolicyProvider,
   EventManagePolicyProvider,
   OrgMemberManagePolicyProvider,
   ReservationReadPolicyProvider,
   TicketReadPolicyProvider,
 } from './provider/authorization/acl-policies.provider';
 import {
+  EVENT_CREATE_POLICY,
   EVENT_MANAGE_POLICY,
   ORG_MEMBER_MANAGE_POLICY,
   RESERVATION_READ_POLICY,
@@ -37,6 +39,7 @@ import {
     PrismaAuthorizationProvider,
     PrismaRoleAssignmentProvider,
     OrgMemberManagePolicyProvider,
+    EventCreatePolicyProvider,
     EventManagePolicyProvider,
     ReservationReadPolicyProvider,
     TicketReadPolicyProvider,
@@ -65,6 +68,10 @@ import {
       useExisting: OrgMemberManagePolicyProvider,
     },
     {
+      provide: EVENT_CREATE_POLICY,
+      useExisting: EventCreatePolicyProvider,
+    },
+    {
       provide: EVENT_MANAGE_POLICY,
       useExisting: EventManagePolicyProvider,
     },
@@ -82,6 +89,7 @@ import {
     ACL_PROVIDER,
     ROLE_ASSIGNMENT_PROVIDER,
     ORG_MEMBER_MANAGE_POLICY,
+    EVENT_CREATE_POLICY,
     EVENT_MANAGE_POLICY,
     RESERVATION_READ_POLICY,
     TICKET_READ_POLICY,

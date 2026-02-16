@@ -38,6 +38,36 @@ export class OrgMemberManagePolicyProvider implements PolicyHandler {
 }
 
 @Injectable()
+export class EventCreatePolicyProvider implements PolicyHandler {
+  constructor(
+    @Inject(AUTHORIZATION_PROVIDER)
+    private readonly authorizationProvider: AuthorizationProvider,
+  ) {}
+
+  async handle({ user, request }: PolicyContext): Promise<boolean> {
+    const orgId = this.getBodyOrgId(request.body);
+    if (!orgId) return false;
+
+    const authz = await this.authorizationProvider.getUserAuthorizationContext(
+      user.id,
+    );
+    if (authz.roles.includes('SUPER_ADMIN')) return true;
+
+    return authz.memberships.some(
+      (membership) =>
+        membership.orgId === orgId &&
+        ['ORG_ADMIN', 'ORG_STAFF'].includes(membership.role),
+    );
+  }
+
+  private getBodyOrgId(body: unknown): string | undefined {
+    if (!body || typeof body !== 'object') return undefined;
+    const candidate = (body as Record<string, unknown>).orgId;
+    return typeof candidate === 'string' ? candidate : undefined;
+  }
+}
+
+@Injectable()
 export class EventManagePolicyProvider implements PolicyHandler {
   constructor(
     private readonly prisma: PrismaService,
