@@ -30,5 +30,17 @@ export const validateEnv = (config: EnvRecord): EnvRecord => {
     throw new Error(`${env.apiDocsPath} cannot be empty.`);
   }
 
+  const jwtSecretValue = config[env.jwtSecret];
+  if (!jwtSecretValue || jwtSecretValue.trim().length < 8) {
+    throw new Error(
+      `${env.jwtSecret} is required and must be at least 8 characters.`,
+    );
+  }
+
+  const jwtExpiresInValue = config[env.jwtExpiresIn];
+  if (!jwtExpiresInValue || jwtExpiresInValue.trim().length === 0) {
+    throw new Error(`${env.jwtExpiresIn} is required.`);
+  }
+
   return config;
 };

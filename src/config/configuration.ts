@@ -14,4 +14,8 @@ export default () => ({
     apiVersion: process.env[env.apiVersion] ?? '1',
     apiDocsPath: process.env[env.apiDocsPath] ?? 'docs',
   },
+  auth: {
+    jwtSecret: process.env[env.jwtSecret] ?? '',
+    jwtExpiresIn: process.env[env.jwtExpiresIn] ?? '1d',
+  },
 });
