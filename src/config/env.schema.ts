@@ -42,5 +42,24 @@ export const validateEnv = (config: EnvRecord): EnvRecord => {
     throw new Error(`${env.jwtExpiresIn} is required.`);
   }
 
+  const paymentWebhookSecretValue = config[env.paymentWebhookSecret];
+  if (
+    paymentWebhookSecretValue !== undefined &&
+    paymentWebhookSecretValue.trim().length > 0 &&
+    paymentWebhookSecretValue.trim().length < 8
+  ) {
+    throw new Error(
+      `${env.paymentWebhookSecret} must be at least 8 characters when provided.`,
+    );
+  }
+
+  const kafkaBrokersValue = config[env.kafkaBrokers];
+  if (
+    kafkaBrokersValue !== undefined &&
+    kafkaBrokersValue.trim().length === 0
+  ) {
+    throw new Error(`${env.kafkaBrokers} cannot be empty when provided.`);
+  }
+
   return config;
 };

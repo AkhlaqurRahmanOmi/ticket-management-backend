@@ -18,4 +18,10 @@ export default () => ({
     jwtSecret: process.env[env.jwtSecret] ?? '',
     jwtExpiresIn: process.env[env.jwtExpiresIn] ?? '1d',
   },
+  payments: {
+    webhookSecret: process.env[env.paymentWebhookSecret] ?? '',
+  },
+  kafka: {
+    brokers: process.env[env.kafkaBrokers] ?? '',
+  },
 });
