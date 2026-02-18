@@ -4,15 +4,16 @@ import {
   OnModuleDestroy,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Consumer, Kafka, Producer } from 'kafkajs';
+import { KafkaJS } from '@confluentinc/kafka-javascript';
 
 @Injectable()
 export class KafkaService implements OnModuleDestroy {
   private readonly logger = new Logger(KafkaService.name);
-  private readonly kafkaClient: Kafka | null;
-  private readonly consumers: Consumer[] = [];
-  private producer: Producer | null = null;
-  private producerConnectPromise: Promise<Producer | null> | null = null;
+  private readonly kafkaClient: KafkaJS.Kafka | null;
+  private readonly consumers: KafkaJS.Consumer[] = [];
+  private producer: KafkaJS.Producer | null = null;
+  private producerConnectPromise: Promise<KafkaJS.Producer | null> | null =
+    null;
   private warnedMissingConfig = false;
 
   constructor(private readonly configService: ConfigService) {
@@ -22,13 +23,15 @@ export class KafkaService implements OnModuleDestroy {
       return;
     }
 
-    this.kafkaClient = new Kafka({
-      clientId: 'ticket-booking-backend',
-      brokers,
+    this.kafkaClient = new KafkaJS.Kafka({
+      kafkaJS: {
+        clientId: 'ticket-booking-backend',
+        brokers,
+      },
     });
   }
 
-  async createConsumer(groupId: string): Promise<Consumer | null> {
+  async createConsumer(groupId: string): Promise<KafkaJS.Consumer | null> {
     if (!this.kafkaClient) {
       if (!this.warnedMissingConfig) {
         this.logger.warn(
@@ -39,7 +42,12 @@ export class KafkaService implements OnModuleDestroy {
       return null;
     }
 
-    const consumer = this.kafkaClient.consumer({ groupId });
+    const consumer = this.kafkaClient.consumer({
+      kafkaJS: {
+        groupId,
+        fromBeginning: false,
+      },
+    });
 
     try {
       await consumer.connect();
@@ -111,7 +119,7 @@ export class KafkaService implements OnModuleDestroy {
       : [];
   }
 
-  private async getProducer(): Promise<Producer | null> {
+  private async getProducer(): Promise<KafkaJS.Producer | null> {
     const client = this.kafkaClient;
     if (!client) {
       return null;

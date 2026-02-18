@@ -4,7 +4,7 @@ import {
   OnModuleDestroy,
   OnModuleInit,
 } from '@nestjs/common';
-import { EachMessagePayload, Consumer } from 'kafkajs';
+import { KafkaJS } from '@confluentinc/kafka-javascript';
 import { KafkaService } from '@/infra/kafka/kafka/kafka.service';
 import {
   PaymentSucceededConsumer,
@@ -16,7 +16,7 @@ export class PaymentSucceededConsumerWorker
   implements OnModuleInit, OnModuleDestroy
 {
   private readonly logger = new Logger(PaymentSucceededConsumerWorker.name);
-  private consumer: Consumer | null = null;
+  private consumer: KafkaJS.Consumer | null = null;
 
   constructor(
     private readonly kafkaService: KafkaService,
@@ -31,10 +31,7 @@ export class PaymentSucceededConsumerWorker
       if (!consumer) return;
 
       this.consumer = consumer;
-      await consumer.subscribe({
-        topic: 'payment.succeeded',
-        fromBeginning: false,
-      });
+      await consumer.subscribe({ topic: 'payment.succeeded' });
       await consumer.run({
         eachMessage: async (payload) => this.handleMessage(payload),
       });
@@ -70,7 +67,7 @@ export class PaymentSucceededConsumerWorker
     }
   }
 
-  private async handleMessage(payload: EachMessagePayload): Promise<void> {
+  private async handleMessage(payload: KafkaJS.EachMessagePayload): Promise<void> {
     const raw = payload.message.value?.toString('utf8');
     if (!raw) {
       this.logger.warn(
