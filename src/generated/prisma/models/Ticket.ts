@@ -29,6 +29,7 @@ export type TicketMinAggregateOutputType = {
   eventId: string | null
   orderId: string | null
   userId: string | null
+  domainType: $Enums.BookingDomain | null
   eventSeatId: string | null
   ticketTypeId: string | null
   orderItemId: string | null
@@ -46,6 +47,7 @@ export type TicketMaxAggregateOutputType = {
   eventId: string | null
   orderId: string | null
   userId: string | null
+  domainType: $Enums.BookingDomain | null
   eventSeatId: string | null
   ticketTypeId: string | null
   orderItemId: string | null
@@ -63,6 +65,7 @@ export type TicketCountAggregateOutputType = {
   eventId: number
   orderId: number
   userId: number
+  domainType: number
   eventSeatId: number
   ticketTypeId: number
   orderItemId: number
@@ -82,6 +85,7 @@ export type TicketMinAggregateInputType = {
   eventId?: true
   orderId?: true
   userId?: true
+  domainType?: true
   eventSeatId?: true
   ticketTypeId?: true
   orderItemId?: true
@@ -99,6 +103,7 @@ export type TicketMaxAggregateInputType = {
   eventId?: true
   orderId?: true
   userId?: true
+  domainType?: true
   eventSeatId?: true
   ticketTypeId?: true
   orderItemId?: true
@@ -116,6 +121,7 @@ export type TicketCountAggregateInputType = {
   eventId?: true
   orderId?: true
   userId?: true
+  domainType?: true
   eventSeatId?: true
   ticketTypeId?: true
   orderItemId?: true
@@ -206,6 +212,7 @@ export type TicketGroupByOutputType = {
   eventId: string
   orderId: string
   userId: string
+  domainType: $Enums.BookingDomain
   eventSeatId: string | null
   ticketTypeId: string | null
   orderItemId: string | null
@@ -244,6 +251,7 @@ export type TicketWhereInput = {
   eventId?: Prisma.UuidFilter<"Ticket"> | string
   orderId?: Prisma.UuidFilter<"Ticket"> | string
   userId?: Prisma.UuidFilter<"Ticket"> | string
+  domainType?: Prisma.EnumBookingDomainFilter<"Ticket"> | $Enums.BookingDomain
   eventSeatId?: Prisma.UuidNullableFilter<"Ticket"> | string | null
   ticketTypeId?: Prisma.UuidNullableFilter<"Ticket"> | string | null
   orderItemId?: Prisma.UuidNullableFilter<"Ticket"> | string | null
@@ -267,6 +275,7 @@ export type TicketOrderByWithRelationInput = {
   eventId?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  domainType?: Prisma.SortOrder
   eventSeatId?: Prisma.SortOrderInput | Prisma.SortOrder
   ticketTypeId?: Prisma.SortOrderInput | Prisma.SortOrder
   orderItemId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -295,6 +304,7 @@ export type TicketWhereUniqueInput = Prisma.AtLeast<{
   eventId?: Prisma.UuidFilter<"Ticket"> | string
   orderId?: Prisma.UuidFilter<"Ticket"> | string
   userId?: Prisma.UuidFilter<"Ticket"> | string
+  domainType?: Prisma.EnumBookingDomainFilter<"Ticket"> | $Enums.BookingDomain
   ticketTypeId?: Prisma.UuidNullableFilter<"Ticket"> | string | null
   orderItemId?: Prisma.UuidNullableFilter<"Ticket"> | string | null
   status?: Prisma.EnumTicketStatusFilter<"Ticket"> | $Enums.TicketStatus
@@ -316,6 +326,7 @@ export type TicketOrderByWithAggregationInput = {
   eventId?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  domainType?: Prisma.SortOrder
   eventSeatId?: Prisma.SortOrderInput | Prisma.SortOrder
   ticketTypeId?: Prisma.SortOrderInput | Prisma.SortOrder
   orderItemId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -339,6 +350,7 @@ export type TicketScalarWhereWithAggregatesInput = {
   eventId?: Prisma.UuidWithAggregatesFilter<"Ticket"> | string
   orderId?: Prisma.UuidWithAggregatesFilter<"Ticket"> | string
   userId?: Prisma.UuidWithAggregatesFilter<"Ticket"> | string
+  domainType?: Prisma.EnumBookingDomainWithAggregatesFilter<"Ticket"> | $Enums.BookingDomain
   eventSeatId?: Prisma.UuidNullableWithAggregatesFilter<"Ticket"> | string | null
   ticketTypeId?: Prisma.UuidNullableWithAggregatesFilter<"Ticket"> | string | null
   orderItemId?: Prisma.UuidNullableWithAggregatesFilter<"Ticket"> | string | null
@@ -353,6 +365,7 @@ export type TicketScalarWhereWithAggregatesInput = {
 
 export type TicketCreateInput = {
   id?: string
+  domainType?: $Enums.BookingDomain
   status?: $Enums.TicketStatus
   code: string
   issuedAt?: Date | string
@@ -373,6 +386,7 @@ export type TicketUncheckedCreateInput = {
   eventId: string
   orderId: string
   userId: string
+  domainType?: $Enums.BookingDomain
   eventSeatId?: string | null
   ticketTypeId?: string | null
   orderItemId?: string | null
@@ -387,6 +401,7 @@ export type TicketUncheckedCreateInput = {
 
 export type TicketUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   status?: Prisma.EnumTicketStatusFieldUpdateOperationsInput | $Enums.TicketStatus
   code?: Prisma.StringFieldUpdateOperationsInput | string
   issuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -407,6 +422,7 @@ export type TicketUncheckedUpdateInput = {
   eventId?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   eventSeatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ticketTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -424,6 +440,7 @@ export type TicketCreateManyInput = {
   eventId: string
   orderId: string
   userId: string
+  domainType?: $Enums.BookingDomain
   eventSeatId?: string | null
   ticketTypeId?: string | null
   orderItemId?: string | null
@@ -438,6 +455,7 @@ export type TicketCreateManyInput = {
 
 export type TicketUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   status?: Prisma.EnumTicketStatusFieldUpdateOperationsInput | $Enums.TicketStatus
   code?: Prisma.StringFieldUpdateOperationsInput | string
   issuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -452,6 +470,7 @@ export type TicketUncheckedUpdateManyInput = {
   eventId?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   eventSeatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ticketTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -484,6 +503,7 @@ export type TicketCountOrderByAggregateInput = {
   eventId?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  domainType?: Prisma.SortOrder
   eventSeatId?: Prisma.SortOrder
   ticketTypeId?: Prisma.SortOrder
   orderItemId?: Prisma.SortOrder
@@ -501,6 +521,7 @@ export type TicketMaxOrderByAggregateInput = {
   eventId?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  domainType?: Prisma.SortOrder
   eventSeatId?: Prisma.SortOrder
   ticketTypeId?: Prisma.SortOrder
   orderItemId?: Prisma.SortOrder
@@ -518,6 +539,7 @@ export type TicketMinOrderByAggregateInput = {
   eventId?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  domainType?: Prisma.SortOrder
   eventSeatId?: Prisma.SortOrder
   ticketTypeId?: Prisma.SortOrder
   orderItemId?: Prisma.SortOrder
@@ -778,6 +800,7 @@ export type EnumTicketStatusFieldUpdateOperationsInput = {
 
 export type TicketCreateWithoutUserInput = {
   id?: string
+  domainType?: $Enums.BookingDomain
   status?: $Enums.TicketStatus
   code: string
   issuedAt?: Date | string
@@ -796,6 +819,7 @@ export type TicketUncheckedCreateWithoutUserInput = {
   id?: string
   eventId: string
   orderId: string
+  domainType?: $Enums.BookingDomain
   eventSeatId?: string | null
   ticketTypeId?: string | null
   orderItemId?: string | null
@@ -842,6 +866,7 @@ export type TicketScalarWhereInput = {
   eventId?: Prisma.UuidFilter<"Ticket"> | string
   orderId?: Prisma.UuidFilter<"Ticket"> | string
   userId?: Prisma.UuidFilter<"Ticket"> | string
+  domainType?: Prisma.EnumBookingDomainFilter<"Ticket"> | $Enums.BookingDomain
   eventSeatId?: Prisma.UuidNullableFilter<"Ticket"> | string | null
   ticketTypeId?: Prisma.UuidNullableFilter<"Ticket"> | string | null
   orderItemId?: Prisma.UuidNullableFilter<"Ticket"> | string | null
@@ -856,6 +881,7 @@ export type TicketScalarWhereInput = {
 
 export type TicketCreateWithoutEventInput = {
   id?: string
+  domainType?: $Enums.BookingDomain
   status?: $Enums.TicketStatus
   code: string
   issuedAt?: Date | string
@@ -874,6 +900,7 @@ export type TicketUncheckedCreateWithoutEventInput = {
   id?: string
   orderId: string
   userId: string
+  domainType?: $Enums.BookingDomain
   eventSeatId?: string | null
   ticketTypeId?: string | null
   orderItemId?: string | null
@@ -914,6 +941,7 @@ export type TicketUpdateManyWithWhereWithoutEventInput = {
 
 export type TicketCreateWithoutTicketTypeInput = {
   id?: string
+  domainType?: $Enums.BookingDomain
   status?: $Enums.TicketStatus
   code: string
   issuedAt?: Date | string
@@ -933,6 +961,7 @@ export type TicketUncheckedCreateWithoutTicketTypeInput = {
   eventId: string
   orderId: string
   userId: string
+  domainType?: $Enums.BookingDomain
   eventSeatId?: string | null
   orderItemId?: string | null
   status?: $Enums.TicketStatus
@@ -972,6 +1001,7 @@ export type TicketUpdateManyWithWhereWithoutTicketTypeInput = {
 
 export type TicketCreateWithoutEventSeatInput = {
   id?: string
+  domainType?: $Enums.BookingDomain
   status?: $Enums.TicketStatus
   code: string
   issuedAt?: Date | string
@@ -991,6 +1021,7 @@ export type TicketUncheckedCreateWithoutEventSeatInput = {
   eventId: string
   orderId: string
   userId: string
+  domainType?: $Enums.BookingDomain
   ticketTypeId?: string | null
   orderItemId?: string | null
   status?: $Enums.TicketStatus
@@ -1020,6 +1051,7 @@ export type TicketUpdateToOneWithWhereWithoutEventSeatInput = {
 
 export type TicketUpdateWithoutEventSeatInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   status?: Prisma.EnumTicketStatusFieldUpdateOperationsInput | $Enums.TicketStatus
   code?: Prisma.StringFieldUpdateOperationsInput | string
   issuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1039,6 +1071,7 @@ export type TicketUncheckedUpdateWithoutEventSeatInput = {
   eventId?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   ticketTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTicketStatusFieldUpdateOperationsInput | $Enums.TicketStatus
@@ -1052,6 +1085,7 @@ export type TicketUncheckedUpdateWithoutEventSeatInput = {
 
 export type TicketCreateWithoutOrderInput = {
   id?: string
+  domainType?: $Enums.BookingDomain
   status?: $Enums.TicketStatus
   code: string
   issuedAt?: Date | string
@@ -1070,6 +1104,7 @@ export type TicketUncheckedCreateWithoutOrderInput = {
   id?: string
   eventId: string
   userId: string
+  domainType?: $Enums.BookingDomain
   eventSeatId?: string | null
   ticketTypeId?: string | null
   orderItemId?: string | null
@@ -1110,6 +1145,7 @@ export type TicketUpdateManyWithWhereWithoutOrderInput = {
 
 export type TicketCreateWithoutOrderItemInput = {
   id?: string
+  domainType?: $Enums.BookingDomain
   status?: $Enums.TicketStatus
   code: string
   issuedAt?: Date | string
@@ -1129,6 +1165,7 @@ export type TicketUncheckedCreateWithoutOrderItemInput = {
   eventId: string
   orderId: string
   userId: string
+  domainType?: $Enums.BookingDomain
   eventSeatId?: string | null
   ticketTypeId?: string | null
   status?: $Enums.TicketStatus
@@ -1170,6 +1207,7 @@ export type TicketCreateManyUserInput = {
   id?: string
   eventId: string
   orderId: string
+  domainType?: $Enums.BookingDomain
   eventSeatId?: string | null
   ticketTypeId?: string | null
   orderItemId?: string | null
@@ -1184,6 +1222,7 @@ export type TicketCreateManyUserInput = {
 
 export type TicketUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   status?: Prisma.EnumTicketStatusFieldUpdateOperationsInput | $Enums.TicketStatus
   code?: Prisma.StringFieldUpdateOperationsInput | string
   issuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1202,6 +1241,7 @@ export type TicketUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   eventId?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   eventSeatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ticketTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1218,6 +1258,7 @@ export type TicketUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   eventId?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   eventSeatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ticketTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1234,6 +1275,7 @@ export type TicketCreateManyEventInput = {
   id?: string
   orderId: string
   userId: string
+  domainType?: $Enums.BookingDomain
   eventSeatId?: string | null
   ticketTypeId?: string | null
   orderItemId?: string | null
@@ -1248,6 +1290,7 @@ export type TicketCreateManyEventInput = {
 
 export type TicketUpdateWithoutEventInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   status?: Prisma.EnumTicketStatusFieldUpdateOperationsInput | $Enums.TicketStatus
   code?: Prisma.StringFieldUpdateOperationsInput | string
   issuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1266,6 +1309,7 @@ export type TicketUncheckedUpdateWithoutEventInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   eventSeatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ticketTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1282,6 +1326,7 @@ export type TicketUncheckedUpdateManyWithoutEventInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   eventSeatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ticketTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1299,6 +1344,7 @@ export type TicketCreateManyTicketTypeInput = {
   eventId: string
   orderId: string
   userId: string
+  domainType?: $Enums.BookingDomain
   eventSeatId?: string | null
   orderItemId?: string | null
   status?: $Enums.TicketStatus
@@ -1312,6 +1358,7 @@ export type TicketCreateManyTicketTypeInput = {
 
 export type TicketUpdateWithoutTicketTypeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   status?: Prisma.EnumTicketStatusFieldUpdateOperationsInput | $Enums.TicketStatus
   code?: Prisma.StringFieldUpdateOperationsInput | string
   issuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1331,6 +1378,7 @@ export type TicketUncheckedUpdateWithoutTicketTypeInput = {
   eventId?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   eventSeatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTicketStatusFieldUpdateOperationsInput | $Enums.TicketStatus
@@ -1347,6 +1395,7 @@ export type TicketUncheckedUpdateManyWithoutTicketTypeInput = {
   eventId?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   eventSeatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTicketStatusFieldUpdateOperationsInput | $Enums.TicketStatus
@@ -1362,6 +1411,7 @@ export type TicketCreateManyOrderInput = {
   id?: string
   eventId: string
   userId: string
+  domainType?: $Enums.BookingDomain
   eventSeatId?: string | null
   ticketTypeId?: string | null
   orderItemId?: string | null
@@ -1376,6 +1426,7 @@ export type TicketCreateManyOrderInput = {
 
 export type TicketUpdateWithoutOrderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   status?: Prisma.EnumTicketStatusFieldUpdateOperationsInput | $Enums.TicketStatus
   code?: Prisma.StringFieldUpdateOperationsInput | string
   issuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1394,6 +1445,7 @@ export type TicketUncheckedUpdateWithoutOrderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   eventId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   eventSeatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ticketTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1410,6 +1462,7 @@ export type TicketUncheckedUpdateManyWithoutOrderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   eventId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   eventSeatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ticketTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1427,6 +1480,7 @@ export type TicketCreateManyOrderItemInput = {
   eventId: string
   orderId: string
   userId: string
+  domainType?: $Enums.BookingDomain
   eventSeatId?: string | null
   ticketTypeId?: string | null
   status?: $Enums.TicketStatus
@@ -1440,6 +1494,7 @@ export type TicketCreateManyOrderItemInput = {
 
 export type TicketUpdateWithoutOrderItemInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   status?: Prisma.EnumTicketStatusFieldUpdateOperationsInput | $Enums.TicketStatus
   code?: Prisma.StringFieldUpdateOperationsInput | string
   issuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1459,6 +1514,7 @@ export type TicketUncheckedUpdateWithoutOrderItemInput = {
   eventId?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   eventSeatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ticketTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTicketStatusFieldUpdateOperationsInput | $Enums.TicketStatus
@@ -1475,6 +1531,7 @@ export type TicketUncheckedUpdateManyWithoutOrderItemInput = {
   eventId?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   eventSeatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ticketTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTicketStatusFieldUpdateOperationsInput | $Enums.TicketStatus
@@ -1493,6 +1550,7 @@ export type TicketSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   eventId?: boolean
   orderId?: boolean
   userId?: boolean
+  domainType?: boolean
   eventSeatId?: boolean
   ticketTypeId?: boolean
   orderItemId?: boolean
@@ -1516,6 +1574,7 @@ export type TicketSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   eventId?: boolean
   orderId?: boolean
   userId?: boolean
+  domainType?: boolean
   eventSeatId?: boolean
   ticketTypeId?: boolean
   orderItemId?: boolean
@@ -1539,6 +1598,7 @@ export type TicketSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   eventId?: boolean
   orderId?: boolean
   userId?: boolean
+  domainType?: boolean
   eventSeatId?: boolean
   ticketTypeId?: boolean
   orderItemId?: boolean
@@ -1562,6 +1622,7 @@ export type TicketSelectScalar = {
   eventId?: boolean
   orderId?: boolean
   userId?: boolean
+  domainType?: boolean
   eventSeatId?: boolean
   ticketTypeId?: boolean
   orderItemId?: boolean
@@ -1574,7 +1635,7 @@ export type TicketSelectScalar = {
   checkedInBy?: boolean
 }
 
-export type TicketOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "eventId" | "orderId" | "userId" | "eventSeatId" | "ticketTypeId" | "orderItemId" | "status" | "code" | "issuedAt" | "voidedAt" | "refundedAt" | "checkedInAt" | "checkedInBy", ExtArgs["result"]["ticket"]>
+export type TicketOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "eventId" | "orderId" | "userId" | "domainType" | "eventSeatId" | "ticketTypeId" | "orderItemId" | "status" | "code" | "issuedAt" | "voidedAt" | "refundedAt" | "checkedInAt" | "checkedInBy", ExtArgs["result"]["ticket"]>
 export type TicketInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   event?: boolean | Prisma.EventDefaultArgs<ExtArgs>
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
@@ -1615,6 +1676,7 @@ export type $TicketPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     eventId: string
     orderId: string
     userId: string
+    domainType: $Enums.BookingDomain
     eventSeatId: string | null
     ticketTypeId: string | null
     orderItemId: string | null
@@ -2058,6 +2120,7 @@ export interface TicketFieldRefs {
   readonly eventId: Prisma.FieldRef<"Ticket", 'String'>
   readonly orderId: Prisma.FieldRef<"Ticket", 'String'>
   readonly userId: Prisma.FieldRef<"Ticket", 'String'>
+  readonly domainType: Prisma.FieldRef<"Ticket", 'BookingDomain'>
   readonly eventSeatId: Prisma.FieldRef<"Ticket", 'String'>
   readonly ticketTypeId: Prisma.FieldRef<"Ticket", 'String'>
   readonly orderItemId: Prisma.FieldRef<"Ticket", 'String'>

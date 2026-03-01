@@ -18,6 +18,15 @@ export const EventStatus = {
 export type EventStatus = (typeof EventStatus)[keyof typeof EventStatus]
 
 
+export const BookingDomain = {
+  EVENT: 'EVENT',
+  RAIL: 'RAIL',
+  AIR: 'AIR'
+} as const
+
+export type BookingDomain = (typeof BookingDomain)[keyof typeof BookingDomain]
+
+
 export const SeatInventoryStatus = {
   AVAILABLE: 'AVAILABLE',
   RESERVED: 'RESERVED',

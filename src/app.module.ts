@@ -4,20 +4,36 @@ import { CommonModule } from './common/common.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import configuration from './config/configuration';
+import { env } from './config/env';
 import { validateEnv } from './config/env.schema';
-import { PrismaModule } from './infra/prisma/prisma.module';
-import { RedisModule } from './infra/redis/redis.module';
 import { KafkaModule } from './infra/kafka/kafka.module';
 import { OutboxModule } from './infra/outbox/outbox.module';
-import { OrganizationsModule } from './modules/organizations/organizations.module';
-import { EventsModule } from './modules/events/events.module';
-import { ReservationsModule } from './modules/reservations/reservations.module';
-import { PaymentsModule } from './modules/payments/payments.module';
-import { TicketsModule } from './modules/tickets/tickets.module';
-import { RealtimeModule } from './modules/realtime/realtime.module';
-import { WorkersModule } from './workers/workers.module';
-import { IamModule } from './modules/iam/iam.module';
+import { PrismaModule } from './infra/prisma/prisma.module';
+import { RedisModule } from './infra/redis/redis.module';
+import { ClientRuntimeModule } from './modules/client-runtime/client-runtime.module';
+import { EventsDomainModule } from './modules/domains/events/events-domain.module';
+import { DomainRuntimeModule } from './modules/domain-runtime/domain-runtime.module';
 import { HealthModule } from './modules/health/health.module';
+import { IamModule } from './modules/iam/iam.module';
+import { OrganizationsModule } from './modules/organizations/organizations.module';
+import { PaymentsModule } from './modules/payments/payments.module';
+import { WorkersModule } from './workers/workers.module';
+
+const resolveDomainModules = () => {
+  const bookingDomain = process.env[env.bookingDomain] ?? 'event';
+
+  switch (bookingDomain) {
+    case 'event':
+      return [EventsDomainModule];
+    case 'rail':
+    case 'air':
+      throw new Error(
+        `BOOKING_DOMAIN=${bookingDomain} is configured, but its domain pack is not wired yet.`,
+      );
+    default:
+      throw new Error(`Unsupported BOOKING_DOMAIN=${bookingDomain}.`);
+  }
+};
 
 @Module({
   imports: [
@@ -31,15 +47,14 @@ import { HealthModule } from './modules/health/health.module';
     RedisModule,
     KafkaModule,
     OutboxModule,
+    DomainRuntimeModule,
+    ClientRuntimeModule,
     OrganizationsModule,
-    EventsModule,
-    ReservationsModule,
     PaymentsModule,
-    TicketsModule,
-    RealtimeModule,
     WorkersModule,
     IamModule,
     HealthModule,
+    ...resolveDomainModules(),
   ],
   controllers: [AppController],
   providers: [AppService],

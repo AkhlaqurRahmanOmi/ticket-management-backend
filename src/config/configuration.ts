@@ -13,6 +13,8 @@ export default () => ({
     apiPrefix: process.env[env.apiPrefix] ?? 'api',
     apiVersion: process.env[env.apiVersion] ?? '1',
     apiDocsPath: process.env[env.apiDocsPath] ?? 'docs',
+    bookingDomain: process.env[env.bookingDomain] ?? 'event',
+    clientProfile: process.env[env.clientProfile] ?? 'default',
   },
   auth: {
     jwtSecret: process.env[env.jwtSecret] ?? '',
@@ -57,3 +59,4 @@ export default () => ({
     ),
   },
 });
+

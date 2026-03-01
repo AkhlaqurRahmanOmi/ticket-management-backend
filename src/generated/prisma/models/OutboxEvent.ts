@@ -46,6 +46,7 @@ export type OutboxEventMinAggregateOutputType = {
   lastError: string | null
   correlationId: string | null
   actorUserId: string | null
+  domainType: $Enums.BookingDomain | null
 }
 
 export type OutboxEventMaxAggregateOutputType = {
@@ -60,6 +61,7 @@ export type OutboxEventMaxAggregateOutputType = {
   lastError: string | null
   correlationId: string | null
   actorUserId: string | null
+  domainType: $Enums.BookingDomain | null
 }
 
 export type OutboxEventCountAggregateOutputType = {
@@ -76,6 +78,7 @@ export type OutboxEventCountAggregateOutputType = {
   lastError: number
   correlationId: number
   actorUserId: number
+  domainType: number
   _all: number
 }
 
@@ -100,6 +103,7 @@ export type OutboxEventMinAggregateInputType = {
   lastError?: true
   correlationId?: true
   actorUserId?: true
+  domainType?: true
 }
 
 export type OutboxEventMaxAggregateInputType = {
@@ -114,6 +118,7 @@ export type OutboxEventMaxAggregateInputType = {
   lastError?: true
   correlationId?: true
   actorUserId?: true
+  domainType?: true
 }
 
 export type OutboxEventCountAggregateInputType = {
@@ -130,6 +135,7 @@ export type OutboxEventCountAggregateInputType = {
   lastError?: true
   correlationId?: true
   actorUserId?: true
+  domainType?: true
   _all?: true
 }
 
@@ -233,6 +239,7 @@ export type OutboxEventGroupByOutputType = {
   lastError: string | null
   correlationId: string | null
   actorUserId: string | null
+  domainType: $Enums.BookingDomain | null
   _count: OutboxEventCountAggregateOutputType | null
   _avg: OutboxEventAvgAggregateOutputType | null
   _sum: OutboxEventSumAggregateOutputType | null
@@ -272,6 +279,7 @@ export type OutboxEventWhereInput = {
   lastError?: Prisma.StringNullableFilter<"OutboxEvent"> | string | null
   correlationId?: Prisma.StringNullableFilter<"OutboxEvent"> | string | null
   actorUserId?: Prisma.UuidNullableFilter<"OutboxEvent"> | string | null
+  domainType?: Prisma.EnumBookingDomainNullableFilter<"OutboxEvent"> | $Enums.BookingDomain | null
 }
 
 export type OutboxEventOrderByWithRelationInput = {
@@ -288,6 +296,7 @@ export type OutboxEventOrderByWithRelationInput = {
   lastError?: Prisma.SortOrderInput | Prisma.SortOrder
   correlationId?: Prisma.SortOrderInput | Prisma.SortOrder
   actorUserId?: Prisma.SortOrderInput | Prisma.SortOrder
+  domainType?: Prisma.SortOrderInput | Prisma.SortOrder
 }
 
 export type OutboxEventWhereUniqueInput = Prisma.AtLeast<{
@@ -307,6 +316,7 @@ export type OutboxEventWhereUniqueInput = Prisma.AtLeast<{
   lastError?: Prisma.StringNullableFilter<"OutboxEvent"> | string | null
   correlationId?: Prisma.StringNullableFilter<"OutboxEvent"> | string | null
   actorUserId?: Prisma.UuidNullableFilter<"OutboxEvent"> | string | null
+  domainType?: Prisma.EnumBookingDomainNullableFilter<"OutboxEvent"> | $Enums.BookingDomain | null
 }, "id">
 
 export type OutboxEventOrderByWithAggregationInput = {
@@ -323,6 +333,7 @@ export type OutboxEventOrderByWithAggregationInput = {
   lastError?: Prisma.SortOrderInput | Prisma.SortOrder
   correlationId?: Prisma.SortOrderInput | Prisma.SortOrder
   actorUserId?: Prisma.SortOrderInput | Prisma.SortOrder
+  domainType?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.OutboxEventCountOrderByAggregateInput
   _avg?: Prisma.OutboxEventAvgOrderByAggregateInput
   _max?: Prisma.OutboxEventMaxOrderByAggregateInput
@@ -347,6 +358,7 @@ export type OutboxEventScalarWhereWithAggregatesInput = {
   lastError?: Prisma.StringNullableWithAggregatesFilter<"OutboxEvent"> | string | null
   correlationId?: Prisma.StringNullableWithAggregatesFilter<"OutboxEvent"> | string | null
   actorUserId?: Prisma.UuidNullableWithAggregatesFilter<"OutboxEvent"> | string | null
+  domainType?: Prisma.EnumBookingDomainNullableWithAggregatesFilter<"OutboxEvent"> | $Enums.BookingDomain | null
 }
 
 export type OutboxEventCreateInput = {
@@ -363,6 +375,7 @@ export type OutboxEventCreateInput = {
   lastError?: string | null
   correlationId?: string | null
   actorUserId?: string | null
+  domainType?: $Enums.BookingDomain | null
 }
 
 export type OutboxEventUncheckedCreateInput = {
@@ -379,6 +392,7 @@ export type OutboxEventUncheckedCreateInput = {
   lastError?: string | null
   correlationId?: string | null
   actorUserId?: string | null
+  domainType?: $Enums.BookingDomain | null
 }
 
 export type OutboxEventUpdateInput = {
@@ -395,6 +409,7 @@ export type OutboxEventUpdateInput = {
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   correlationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actorUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  domainType?: Prisma.NullableEnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain | null
 }
 
 export type OutboxEventUncheckedUpdateInput = {
@@ -411,6 +426,7 @@ export type OutboxEventUncheckedUpdateInput = {
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   correlationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actorUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  domainType?: Prisma.NullableEnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain | null
 }
 
 export type OutboxEventCreateManyInput = {
@@ -427,6 +443,7 @@ export type OutboxEventCreateManyInput = {
   lastError?: string | null
   correlationId?: string | null
   actorUserId?: string | null
+  domainType?: $Enums.BookingDomain | null
 }
 
 export type OutboxEventUpdateManyMutationInput = {
@@ -443,6 +460,7 @@ export type OutboxEventUpdateManyMutationInput = {
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   correlationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actorUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  domainType?: Prisma.NullableEnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain | null
 }
 
 export type OutboxEventUncheckedUpdateManyInput = {
@@ -459,6 +477,7 @@ export type OutboxEventUncheckedUpdateManyInput = {
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   correlationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actorUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  domainType?: Prisma.NullableEnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain | null
 }
 
 export type OutboxEventCountOrderByAggregateInput = {
@@ -475,6 +494,7 @@ export type OutboxEventCountOrderByAggregateInput = {
   lastError?: Prisma.SortOrder
   correlationId?: Prisma.SortOrder
   actorUserId?: Prisma.SortOrder
+  domainType?: Prisma.SortOrder
 }
 
 export type OutboxEventAvgOrderByAggregateInput = {
@@ -493,6 +513,7 @@ export type OutboxEventMaxOrderByAggregateInput = {
   lastError?: Prisma.SortOrder
   correlationId?: Prisma.SortOrder
   actorUserId?: Prisma.SortOrder
+  domainType?: Prisma.SortOrder
 }
 
 export type OutboxEventMinOrderByAggregateInput = {
@@ -507,6 +528,7 @@ export type OutboxEventMinOrderByAggregateInput = {
   lastError?: Prisma.SortOrder
   correlationId?: Prisma.SortOrder
   actorUserId?: Prisma.SortOrder
+  domainType?: Prisma.SortOrder
 }
 
 export type OutboxEventSumOrderByAggregateInput = {
@@ -515,6 +537,10 @@ export type OutboxEventSumOrderByAggregateInput = {
 
 export type EnumOutboxStatusFieldUpdateOperationsInput = {
   set?: $Enums.OutboxStatus
+}
+
+export type NullableEnumBookingDomainFieldUpdateOperationsInput = {
+  set?: $Enums.BookingDomain | null
 }
 
 
@@ -533,6 +559,7 @@ export type OutboxEventSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   lastError?: boolean
   correlationId?: boolean
   actorUserId?: boolean
+  domainType?: boolean
 }, ExtArgs["result"]["outboxEvent"]>
 
 export type OutboxEventSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -549,6 +576,7 @@ export type OutboxEventSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   lastError?: boolean
   correlationId?: boolean
   actorUserId?: boolean
+  domainType?: boolean
 }, ExtArgs["result"]["outboxEvent"]>
 
 export type OutboxEventSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -565,6 +593,7 @@ export type OutboxEventSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   lastError?: boolean
   correlationId?: boolean
   actorUserId?: boolean
+  domainType?: boolean
 }, ExtArgs["result"]["outboxEvent"]>
 
 export type OutboxEventSelectScalar = {
@@ -581,9 +610,10 @@ export type OutboxEventSelectScalar = {
   lastError?: boolean
   correlationId?: boolean
   actorUserId?: boolean
+  domainType?: boolean
 }
 
-export type OutboxEventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "topic" | "key" | "payload" | "headers" | "status" | "attempts" | "createdAt" | "availableAt" | "sentAt" | "lastError" | "correlationId" | "actorUserId", ExtArgs["result"]["outboxEvent"]>
+export type OutboxEventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "topic" | "key" | "payload" | "headers" | "status" | "attempts" | "createdAt" | "availableAt" | "sentAt" | "lastError" | "correlationId" | "actorUserId" | "domainType", ExtArgs["result"]["outboxEvent"]>
 
 export type $OutboxEventPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "OutboxEvent"
@@ -602,6 +632,7 @@ export type $OutboxEventPayload<ExtArgs extends runtime.Types.Extensions.Interna
     lastError: string | null
     correlationId: string | null
     actorUserId: string | null
+    domainType: $Enums.BookingDomain | null
   }, ExtArgs["result"]["outboxEvent"]>
   composites: {}
 }
@@ -1038,6 +1069,7 @@ export interface OutboxEventFieldRefs {
   readonly lastError: Prisma.FieldRef<"OutboxEvent", 'String'>
   readonly correlationId: Prisma.FieldRef<"OutboxEvent", 'String'>
   readonly actorUserId: Prisma.FieldRef<"OutboxEvent", 'String'>
+  readonly domainType: Prisma.FieldRef<"OutboxEvent", 'BookingDomain'>
 }
     
 

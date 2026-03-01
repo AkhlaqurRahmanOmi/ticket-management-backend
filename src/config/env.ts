@@ -4,6 +4,8 @@ export const env = {
   apiPrefix: 'API_PREFIX',
   apiVersion: 'API_VERSION',
   apiDocsPath: 'API_DOCS_PATH',
+  bookingDomain: 'BOOKING_DOMAIN',
+  clientProfile: 'CLIENT_PROFILE',
   jwtSecret: 'JWT_SECRET',
   jwtExpiresIn: 'JWT_EXPIRES_IN',
   redisUrl: 'REDIS_URL',
@@ -23,3 +25,4 @@ export const env = {
 } as const;
 
 export type EnvKey = (typeof env)[keyof typeof env];
+

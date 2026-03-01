@@ -4,6 +4,8 @@ import { MetricsProvider } from '@/common/providers/metrics.provider';
 import { KafkaService } from '@/infra/kafka/kafka/kafka.service';
 import { PrismaService } from '@/infra/prisma/prisma/prisma.service';
 import { RedisService } from '@/infra/redis/redis/redis.service';
+import { ClientRuntimeService } from '@/modules/client-runtime/client-runtime.service';
+import { DomainRuntimeService } from '@/modules/domain-runtime/domain-runtime.service';
 import { OutboxPublisherWorker } from '@/workers/outbox-publisher.worker';
 import { PaymentSucceededConsumerWorker } from '@/workers/payment-succeeded.consumer.worker';
 import { ReservationExpiryWorker } from '@/workers/reservation-expiry.worker';
@@ -44,6 +46,8 @@ export class HealthProvider {
     private readonly prismaService: PrismaService,
     private readonly redisService: RedisService,
     private readonly kafkaService: KafkaService,
+    private readonly domainRuntimeService: DomainRuntimeService,
+    private readonly clientRuntimeService: ClientRuntimeService,
     private readonly metricsProvider: MetricsProvider,
     private readonly reservationExpiryWorker: ReservationExpiryWorker,
     private readonly outboxPublisherWorker: OutboxPublisherWorker,
@@ -61,6 +65,7 @@ export class HealthProvider {
     checks.push(await this.checkPostgres());
     checks.push(await this.checkRedis());
     checks.push(await this.checkKafka());
+    checks.push(this.checkRuntimeComposition());
     checks.push(this.checkReservationExpiryWorker());
     checks.push(this.checkOutboxPublisherWorker());
     checks.push(this.checkPaymentSucceededConsumerWorker());
@@ -206,6 +211,23 @@ export class HealthProvider {
         lastInitAt: status.lastInitAt?.toISOString() ?? null,
         lastInitError: status.lastInitError,
         lastMessageAt: status.lastMessageAt?.toISOString() ?? null,
+      },
+    };
+  }
+
+  private checkRuntimeComposition(): HealthCheckItem {
+    const activeDomain = this.domainRuntimeService.getActiveDomainMetadata();
+    const activeClient = this.clientRuntimeService.getClientProfileMetadata();
+
+    return {
+      name: 'runtime.composition',
+      ready: true,
+      details: {
+        bookingDomain: activeDomain.key,
+        bookingDomainLabel: activeDomain.label,
+        inventoryModel: activeDomain.inventoryModel,
+        clientProfile: activeClient.key,
+        defaultClientProfile: activeClient.isDefault,
       },
     };
   }

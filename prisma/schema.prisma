@@ -26,6 +26,12 @@ enum EventStatus {
   CANCELLED
 }
 
+enum BookingDomain {
+  EVENT
+  RAIL
+  AIR
+}
+
 enum SeatInventoryStatus {
   AVAILABLE
   RESERVED
@@ -434,12 +440,18 @@ model EventSeat {
  * =========================
  * RESERVATIONS
  * =========================
+ * Transition note:
+ * These commerce models remain event-first in v1.
+ * `domainType` is additive groundwork so shared records can be tagged by
+ * domain while we migrate later phases toward Booking / BookingItem /
+ * IssuedDocument without breaking the existing event flow.
  */
 
 model Reservation {
-  id      String @id @default(uuid()) @db.Uuid
-  eventId String @db.Uuid
-  userId  String @db.Uuid
+  id         String        @id @default(uuid()) @db.Uuid
+  eventId    String        @db.Uuid
+  userId     String        @db.Uuid
+  domainType BookingDomain @default(EVENT)
 
   event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
   user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -461,6 +473,7 @@ model Reservation {
   @@index([eventId, status])
   @@index([status, expiresAt])
   @@index([userId])
+  @@index([domainType, status, expiresAt])
 }
 
 /// Reservation can contain multiple items.
@@ -505,10 +518,11 @@ model ReservationItem {
  */
 
 model Order {
-  id      String @id @default(uuid()) @db.Uuid
-  eventId String @db.Uuid
-  userId  String @db.Uuid
-  orgId   String @db.Uuid
+  id         String        @id @default(uuid()) @db.Uuid
+  eventId    String        @db.Uuid
+  userId     String        @db.Uuid
+  orgId      String        @db.Uuid
+  domainType BookingDomain @default(EVENT)
 
   event Event        @relation(fields: [eventId], references: [id], onDelete: Cascade)
   user  User         @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -534,6 +548,7 @@ model Order {
   @@index([userId])
   @@index([orgId])
   @@index([status, createdAt])
+  @@index([domainType, status, createdAt])
 }
 
 /// Normalized order lines.
@@ -569,9 +584,10 @@ model OrderItem {
 }
 
 model Payment {
-  id            String  @id @default(uuid()) @db.Uuid
-  orderId       String? @db.Uuid
-  reservationId String? @db.Uuid
+  id            String         @id @default(uuid()) @db.Uuid
+  orderId       String?        @db.Uuid
+  reservationId String?        @db.Uuid
+  domainType    BookingDomain  @default(EVENT)
 
   order       Order?       @relation(fields: [orderId], references: [id], onDelete: SetNull)
   reservation Reservation? @relation(fields: [reservationId], references: [id], onDelete: SetNull)
@@ -595,6 +611,7 @@ model Payment {
   @@index([orderId])
   @@index([reservationId])
   @@index([status, createdAt])
+  @@index([domainType, status, createdAt])
 }
 
 /// Stores raw webhook events for audit/debug and idempotency.
@@ -622,10 +639,11 @@ model PaymentWebhookEvent {
 }
 
 model Ticket {
-  id      String @id @default(uuid()) @db.Uuid
-  eventId String @db.Uuid
-  orderId String @db.Uuid
-  userId  String @db.Uuid
+  id         String        @id @default(uuid()) @db.Uuid
+  eventId    String        @db.Uuid
+  orderId    String        @db.Uuid
+  userId     String        @db.Uuid
+  domainType BookingDomain @default(EVENT)
 
   event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
   order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
@@ -658,6 +676,7 @@ model Ticket {
   @@index([userId])
   @@index([eventSeatId])
   @@index([ticketTypeId])
+  @@index([domainType, issuedAt])
 }
 
 /**
@@ -707,16 +726,18 @@ model OutboxEvent {
   status   OutboxStatus @default(PENDING)
   attempts Int          @default(0)
 
-  createdAt   DateTime  @default(now())
-  availableAt DateTime  @default(now()) // for backoff scheduling
+  createdAt   DateTime       @default(now())
+  availableAt DateTime       @default(now()) // for backoff scheduling
   sentAt      DateTime?
   lastError   String?
 
   correlationId String?
-  actorUserId   String? @db.Uuid
+  actorUserId   String?        @db.Uuid
+  domainType    BookingDomain?
 
   @@index([status, availableAt])
   @@index([topic, createdAt])
+  @@index([domainType, status, availableAt])
 }
 
 /**
@@ -750,3 +771,4 @@ model AuditLog {
   @@index([resourceType, resourceId])
   @@index([action, createdAt])
 }
+

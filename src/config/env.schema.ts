@@ -30,6 +30,19 @@ export const validateEnv = (config: EnvRecord): EnvRecord => {
     throw new Error(`${env.apiDocsPath} cannot be empty.`);
   }
 
+  const allowedBookingDomains = new Set(['event', 'rail', 'air']);
+  const bookingDomainValue = config[env.bookingDomain] ?? 'event';
+  if (!allowedBookingDomains.has(bookingDomainValue)) {
+    throw new Error(
+      `Invalid ${env.bookingDomain}: "${bookingDomainValue}". Allowed values: event, rail, air.`,
+    );
+  }
+
+  const clientProfileValue = config[env.clientProfile];
+  if (clientProfileValue !== undefined && clientProfileValue.trim().length === 0) {
+    throw new Error(`${env.clientProfile} cannot be empty when provided.`);
+  }
+
   const jwtSecretValue = config[env.jwtSecret];
   if (!jwtSecretValue || jwtSecretValue.trim().length < 8) {
     throw new Error(
@@ -94,3 +107,4 @@ export const validateEnv = (config: EnvRecord): EnvRecord => {
 
   return config;
 };
+

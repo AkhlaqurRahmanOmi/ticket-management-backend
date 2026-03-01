@@ -28,6 +28,7 @@ export type ReservationMinAggregateOutputType = {
   id: string | null
   eventId: string | null
   userId: string | null
+  domainType: $Enums.BookingDomain | null
   status: $Enums.ReservationStatus | null
   expiresAt: Date | null
   idempotencyKey: string | null
@@ -40,6 +41,7 @@ export type ReservationMaxAggregateOutputType = {
   id: string | null
   eventId: string | null
   userId: string | null
+  domainType: $Enums.BookingDomain | null
   status: $Enums.ReservationStatus | null
   expiresAt: Date | null
   idempotencyKey: string | null
@@ -52,6 +54,7 @@ export type ReservationCountAggregateOutputType = {
   id: number
   eventId: number
   userId: number
+  domainType: number
   status: number
   expiresAt: number
   idempotencyKey: number
@@ -66,6 +69,7 @@ export type ReservationMinAggregateInputType = {
   id?: true
   eventId?: true
   userId?: true
+  domainType?: true
   status?: true
   expiresAt?: true
   idempotencyKey?: true
@@ -78,6 +82,7 @@ export type ReservationMaxAggregateInputType = {
   id?: true
   eventId?: true
   userId?: true
+  domainType?: true
   status?: true
   expiresAt?: true
   idempotencyKey?: true
@@ -90,6 +95,7 @@ export type ReservationCountAggregateInputType = {
   id?: true
   eventId?: true
   userId?: true
+  domainType?: true
   status?: true
   expiresAt?: true
   idempotencyKey?: true
@@ -175,6 +181,7 @@ export type ReservationGroupByOutputType = {
   id: string
   eventId: string
   userId: string
+  domainType: $Enums.BookingDomain
   status: $Enums.ReservationStatus
   expiresAt: Date
   idempotencyKey: string
@@ -208,6 +215,7 @@ export type ReservationWhereInput = {
   id?: Prisma.UuidFilter<"Reservation"> | string
   eventId?: Prisma.UuidFilter<"Reservation"> | string
   userId?: Prisma.UuidFilter<"Reservation"> | string
+  domainType?: Prisma.EnumBookingDomainFilter<"Reservation"> | $Enums.BookingDomain
   status?: Prisma.EnumReservationStatusFilter<"Reservation"> | $Enums.ReservationStatus
   expiresAt?: Prisma.DateTimeFilter<"Reservation"> | Date | string
   idempotencyKey?: Prisma.StringFilter<"Reservation"> | string
@@ -224,6 +232,7 @@ export type ReservationOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   eventId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  domainType?: Prisma.SortOrder
   status?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   idempotencyKey?: Prisma.SortOrder
@@ -244,6 +253,7 @@ export type ReservationWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.ReservationWhereInput | Prisma.ReservationWhereInput[]
   eventId?: Prisma.UuidFilter<"Reservation"> | string
   userId?: Prisma.UuidFilter<"Reservation"> | string
+  domainType?: Prisma.EnumBookingDomainFilter<"Reservation"> | $Enums.BookingDomain
   status?: Prisma.EnumReservationStatusFilter<"Reservation"> | $Enums.ReservationStatus
   expiresAt?: Prisma.DateTimeFilter<"Reservation"> | Date | string
   idempotencyKey?: Prisma.StringFilter<"Reservation"> | string
@@ -260,6 +270,7 @@ export type ReservationOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   eventId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  domainType?: Prisma.SortOrder
   status?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   idempotencyKey?: Prisma.SortOrder
@@ -278,6 +289,7 @@ export type ReservationScalarWhereWithAggregatesInput = {
   id?: Prisma.UuidWithAggregatesFilter<"Reservation"> | string
   eventId?: Prisma.UuidWithAggregatesFilter<"Reservation"> | string
   userId?: Prisma.UuidWithAggregatesFilter<"Reservation"> | string
+  domainType?: Prisma.EnumBookingDomainWithAggregatesFilter<"Reservation"> | $Enums.BookingDomain
   status?: Prisma.EnumReservationStatusWithAggregatesFilter<"Reservation"> | $Enums.ReservationStatus
   expiresAt?: Prisma.DateTimeWithAggregatesFilter<"Reservation"> | Date | string
   idempotencyKey?: Prisma.StringWithAggregatesFilter<"Reservation"> | string
@@ -288,6 +300,7 @@ export type ReservationScalarWhereWithAggregatesInput = {
 
 export type ReservationCreateInput = {
   id?: string
+  domainType?: $Enums.BookingDomain
   status?: $Enums.ReservationStatus
   expiresAt: Date | string
   idempotencyKey: string
@@ -304,6 +317,7 @@ export type ReservationUncheckedCreateInput = {
   id?: string
   eventId: string
   userId: string
+  domainType?: $Enums.BookingDomain
   status?: $Enums.ReservationStatus
   expiresAt: Date | string
   idempotencyKey: string
@@ -316,6 +330,7 @@ export type ReservationUncheckedCreateInput = {
 
 export type ReservationUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
@@ -332,6 +347,7 @@ export type ReservationUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   eventId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
@@ -346,6 +362,7 @@ export type ReservationCreateManyInput = {
   id?: string
   eventId: string
   userId: string
+  domainType?: $Enums.BookingDomain
   status?: $Enums.ReservationStatus
   expiresAt: Date | string
   idempotencyKey: string
@@ -356,6 +373,7 @@ export type ReservationCreateManyInput = {
 
 export type ReservationUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
@@ -368,6 +386,7 @@ export type ReservationUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   eventId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
@@ -395,6 +414,7 @@ export type ReservationCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   eventId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  domainType?: Prisma.SortOrder
   status?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   idempotencyKey?: Prisma.SortOrder
@@ -407,6 +427,7 @@ export type ReservationMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   eventId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  domainType?: Prisma.SortOrder
   status?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   idempotencyKey?: Prisma.SortOrder
@@ -419,6 +440,7 @@ export type ReservationMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   eventId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  domainType?: Prisma.SortOrder
   status?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   idempotencyKey?: Prisma.SortOrder
@@ -521,6 +543,10 @@ export type ReservationUncheckedUpdateManyWithoutEventNestedInput = {
   deleteMany?: Prisma.ReservationScalarWhereInput | Prisma.ReservationScalarWhereInput[]
 }
 
+export type EnumBookingDomainFieldUpdateOperationsInput = {
+  set?: $Enums.BookingDomain
+}
+
 export type EnumReservationStatusFieldUpdateOperationsInput = {
   set?: $Enums.ReservationStatus
 }
@@ -557,6 +583,7 @@ export type ReservationUpdateOneWithoutPaymentLinksNestedInput = {
 
 export type ReservationCreateWithoutUserInput = {
   id?: string
+  domainType?: $Enums.BookingDomain
   status?: $Enums.ReservationStatus
   expiresAt: Date | string
   idempotencyKey: string
@@ -571,6 +598,7 @@ export type ReservationCreateWithoutUserInput = {
 export type ReservationUncheckedCreateWithoutUserInput = {
   id?: string
   eventId: string
+  domainType?: $Enums.BookingDomain
   status?: $Enums.ReservationStatus
   expiresAt: Date | string
   idempotencyKey: string
@@ -614,6 +642,7 @@ export type ReservationScalarWhereInput = {
   id?: Prisma.UuidFilter<"Reservation"> | string
   eventId?: Prisma.UuidFilter<"Reservation"> | string
   userId?: Prisma.UuidFilter<"Reservation"> | string
+  domainType?: Prisma.EnumBookingDomainFilter<"Reservation"> | $Enums.BookingDomain
   status?: Prisma.EnumReservationStatusFilter<"Reservation"> | $Enums.ReservationStatus
   expiresAt?: Prisma.DateTimeFilter<"Reservation"> | Date | string
   idempotencyKey?: Prisma.StringFilter<"Reservation"> | string
@@ -624,6 +653,7 @@ export type ReservationScalarWhereInput = {
 
 export type ReservationCreateWithoutEventInput = {
   id?: string
+  domainType?: $Enums.BookingDomain
   status?: $Enums.ReservationStatus
   expiresAt: Date | string
   idempotencyKey: string
@@ -638,6 +668,7 @@ export type ReservationCreateWithoutEventInput = {
 export type ReservationUncheckedCreateWithoutEventInput = {
   id?: string
   userId: string
+  domainType?: $Enums.BookingDomain
   status?: $Enums.ReservationStatus
   expiresAt: Date | string
   idempotencyKey: string
@@ -676,6 +707,7 @@ export type ReservationUpdateManyWithWhereWithoutEventInput = {
 
 export type ReservationCreateWithoutItemsInput = {
   id?: string
+  domainType?: $Enums.BookingDomain
   status?: $Enums.ReservationStatus
   expiresAt: Date | string
   idempotencyKey: string
@@ -691,6 +723,7 @@ export type ReservationUncheckedCreateWithoutItemsInput = {
   id?: string
   eventId: string
   userId: string
+  domainType?: $Enums.BookingDomain
   status?: $Enums.ReservationStatus
   expiresAt: Date | string
   idempotencyKey: string
@@ -718,6 +751,7 @@ export type ReservationUpdateToOneWithWhereWithoutItemsInput = {
 
 export type ReservationUpdateWithoutItemsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
@@ -733,6 +767,7 @@ export type ReservationUncheckedUpdateWithoutItemsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   eventId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
@@ -744,6 +779,7 @@ export type ReservationUncheckedUpdateWithoutItemsInput = {
 
 export type ReservationCreateWithoutPaymentLinksInput = {
   id?: string
+  domainType?: $Enums.BookingDomain
   status?: $Enums.ReservationStatus
   expiresAt: Date | string
   idempotencyKey: string
@@ -759,6 +795,7 @@ export type ReservationUncheckedCreateWithoutPaymentLinksInput = {
   id?: string
   eventId: string
   userId: string
+  domainType?: $Enums.BookingDomain
   status?: $Enums.ReservationStatus
   expiresAt: Date | string
   idempotencyKey: string
@@ -786,6 +823,7 @@ export type ReservationUpdateToOneWithWhereWithoutPaymentLinksInput = {
 
 export type ReservationUpdateWithoutPaymentLinksInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
@@ -801,6 +839,7 @@ export type ReservationUncheckedUpdateWithoutPaymentLinksInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   eventId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
@@ -813,6 +852,7 @@ export type ReservationUncheckedUpdateWithoutPaymentLinksInput = {
 export type ReservationCreateManyUserInput = {
   id?: string
   eventId: string
+  domainType?: $Enums.BookingDomain
   status?: $Enums.ReservationStatus
   expiresAt: Date | string
   idempotencyKey: string
@@ -823,6 +863,7 @@ export type ReservationCreateManyUserInput = {
 
 export type ReservationUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
@@ -837,6 +878,7 @@ export type ReservationUpdateWithoutUserInput = {
 export type ReservationUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   eventId?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
@@ -850,6 +892,7 @@ export type ReservationUncheckedUpdateWithoutUserInput = {
 export type ReservationUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   eventId?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
@@ -861,6 +904,7 @@ export type ReservationUncheckedUpdateManyWithoutUserInput = {
 export type ReservationCreateManyEventInput = {
   id?: string
   userId: string
+  domainType?: $Enums.BookingDomain
   status?: $Enums.ReservationStatus
   expiresAt: Date | string
   idempotencyKey: string
@@ -871,6 +915,7 @@ export type ReservationCreateManyEventInput = {
 
 export type ReservationUpdateWithoutEventInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
@@ -885,6 +930,7 @@ export type ReservationUpdateWithoutEventInput = {
 export type ReservationUncheckedUpdateWithoutEventInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
@@ -898,6 +944,7 @@ export type ReservationUncheckedUpdateWithoutEventInput = {
 export type ReservationUncheckedUpdateManyWithoutEventInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
@@ -950,6 +997,7 @@ export type ReservationSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   id?: boolean
   eventId?: boolean
   userId?: boolean
+  domainType?: boolean
   status?: boolean
   expiresAt?: boolean
   idempotencyKey?: boolean
@@ -967,6 +1015,7 @@ export type ReservationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   id?: boolean
   eventId?: boolean
   userId?: boolean
+  domainType?: boolean
   status?: boolean
   expiresAt?: boolean
   idempotencyKey?: boolean
@@ -981,6 +1030,7 @@ export type ReservationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   id?: boolean
   eventId?: boolean
   userId?: boolean
+  domainType?: boolean
   status?: boolean
   expiresAt?: boolean
   idempotencyKey?: boolean
@@ -995,6 +1045,7 @@ export type ReservationSelectScalar = {
   id?: boolean
   eventId?: boolean
   userId?: boolean
+  domainType?: boolean
   status?: boolean
   expiresAt?: boolean
   idempotencyKey?: boolean
@@ -1003,7 +1054,7 @@ export type ReservationSelectScalar = {
   cancelledAt?: boolean
 }
 
-export type ReservationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "eventId" | "userId" | "status" | "expiresAt" | "idempotencyKey" | "createdAt" | "updatedAt" | "cancelledAt", ExtArgs["result"]["reservation"]>
+export type ReservationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "eventId" | "userId" | "domainType" | "status" | "expiresAt" | "idempotencyKey" | "createdAt" | "updatedAt" | "cancelledAt", ExtArgs["result"]["reservation"]>
 export type ReservationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   event?: boolean | Prisma.EventDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1032,6 +1083,7 @@ export type $ReservationPayload<ExtArgs extends runtime.Types.Extensions.Interna
     id: string
     eventId: string
     userId: string
+    domainType: $Enums.BookingDomain
     status: $Enums.ReservationStatus
     expiresAt: Date
     idempotencyKey: string
@@ -1468,6 +1520,7 @@ export interface ReservationFieldRefs {
   readonly id: Prisma.FieldRef<"Reservation", 'String'>
   readonly eventId: Prisma.FieldRef<"Reservation", 'String'>
   readonly userId: Prisma.FieldRef<"Reservation", 'String'>
+  readonly domainType: Prisma.FieldRef<"Reservation", 'BookingDomain'>
   readonly status: Prisma.FieldRef<"Reservation", 'ReservationStatus'>
   readonly expiresAt: Prisma.FieldRef<"Reservation", 'DateTime'>
   readonly idempotencyKey: Prisma.FieldRef<"Reservation", 'String'>

@@ -2608,6 +2608,7 @@ export const ReservationScalarFieldEnum = {
   id: 'id',
   eventId: 'eventId',
   userId: 'userId',
+  domainType: 'domainType',
   status: 'status',
   expiresAt: 'expiresAt',
   idempotencyKey: 'idempotencyKey',
@@ -2638,6 +2639,7 @@ export const OrderScalarFieldEnum = {
   eventId: 'eventId',
   userId: 'userId',
   orgId: 'orgId',
+  domainType: 'domainType',
   status: 'status',
   subtotalCents: 'subtotalCents',
   feesCents: 'feesCents',
@@ -2672,6 +2674,7 @@ export const PaymentScalarFieldEnum = {
   id: 'id',
   orderId: 'orderId',
   reservationId: 'reservationId',
+  domainType: 'domainType',
   provider: 'provider',
   providerRef: 'providerRef',
   status: 'status',
@@ -2708,6 +2711,7 @@ export const TicketScalarFieldEnum = {
   eventId: 'eventId',
   orderId: 'orderId',
   userId: 'userId',
+  domainType: 'domainType',
   eventSeatId: 'eventSeatId',
   ticketTypeId: 'ticketTypeId',
   orderItemId: 'orderItemId',
@@ -2751,7 +2755,8 @@ export const OutboxEventScalarFieldEnum = {
   sentAt: 'sentAt',
   lastError: 'lastError',
   correlationId: 'correlationId',
-  actorUserId: 'actorUserId'
+  actorUserId: 'actorUserId',
+  domainType: 'domainType'
 } as const
 
 export type OutboxEventScalarFieldEnum = (typeof OutboxEventScalarFieldEnum)[keyof typeof OutboxEventScalarFieldEnum]
@@ -2902,6 +2907,20 @@ export type EnumSeatInventoryStatusFieldRefInput<$PrismaModel> = FieldRefInputTy
  * Reference to a field of type 'SeatInventoryStatus[]'
  */
 export type ListEnumSeatInventoryStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SeatInventoryStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'BookingDomain'
+ */
+export type EnumBookingDomainFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BookingDomain'>
+    
+
+
+/**
+ * Reference to a field of type 'BookingDomain[]'
+ */
+export type ListEnumBookingDomainFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BookingDomain[]'>
     
 
 

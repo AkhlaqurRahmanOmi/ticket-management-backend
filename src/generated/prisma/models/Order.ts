@@ -43,6 +43,7 @@ export type OrderMinAggregateOutputType = {
   eventId: string | null
   userId: string | null
   orgId: string | null
+  domainType: $Enums.BookingDomain | null
   status: $Enums.OrderStatus | null
   subtotalCents: number | null
   feesCents: number | null
@@ -59,6 +60,7 @@ export type OrderMaxAggregateOutputType = {
   eventId: string | null
   userId: string | null
   orgId: string | null
+  domainType: $Enums.BookingDomain | null
   status: $Enums.OrderStatus | null
   subtotalCents: number | null
   feesCents: number | null
@@ -75,6 +77,7 @@ export type OrderCountAggregateOutputType = {
   eventId: number
   userId: number
   orgId: number
+  domainType: number
   status: number
   subtotalCents: number
   feesCents: number
@@ -105,6 +108,7 @@ export type OrderMinAggregateInputType = {
   eventId?: true
   userId?: true
   orgId?: true
+  domainType?: true
   status?: true
   subtotalCents?: true
   feesCents?: true
@@ -121,6 +125,7 @@ export type OrderMaxAggregateInputType = {
   eventId?: true
   userId?: true
   orgId?: true
+  domainType?: true
   status?: true
   subtotalCents?: true
   feesCents?: true
@@ -137,6 +142,7 @@ export type OrderCountAggregateInputType = {
   eventId?: true
   userId?: true
   orgId?: true
+  domainType?: true
   status?: true
   subtotalCents?: true
   feesCents?: true
@@ -240,6 +246,7 @@ export type OrderGroupByOutputType = {
   eventId: string
   userId: string
   orgId: string
+  domainType: $Enums.BookingDomain
   status: $Enums.OrderStatus
   subtotalCents: number
   feesCents: number
@@ -279,6 +286,7 @@ export type OrderWhereInput = {
   eventId?: Prisma.UuidFilter<"Order"> | string
   userId?: Prisma.UuidFilter<"Order"> | string
   orgId?: Prisma.UuidFilter<"Order"> | string
+  domainType?: Prisma.EnumBookingDomainFilter<"Order"> | $Enums.BookingDomain
   status?: Prisma.EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
   subtotalCents?: Prisma.IntFilter<"Order"> | number
   feesCents?: Prisma.IntFilter<"Order"> | number
@@ -301,6 +309,7 @@ export type OrderOrderByWithRelationInput = {
   eventId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   orgId?: Prisma.SortOrder
+  domainType?: Prisma.SortOrder
   status?: Prisma.SortOrder
   subtotalCents?: Prisma.SortOrder
   feesCents?: Prisma.SortOrder
@@ -326,6 +335,7 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   eventId?: Prisma.UuidFilter<"Order"> | string
   userId?: Prisma.UuidFilter<"Order"> | string
   orgId?: Prisma.UuidFilter<"Order"> | string
+  domainType?: Prisma.EnumBookingDomainFilter<"Order"> | $Enums.BookingDomain
   status?: Prisma.EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
   subtotalCents?: Prisma.IntFilter<"Order"> | number
   feesCents?: Prisma.IntFilter<"Order"> | number
@@ -348,6 +358,7 @@ export type OrderOrderByWithAggregationInput = {
   eventId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   orgId?: Prisma.SortOrder
+  domainType?: Prisma.SortOrder
   status?: Prisma.SortOrder
   subtotalCents?: Prisma.SortOrder
   feesCents?: Prisma.SortOrder
@@ -372,6 +383,7 @@ export type OrderScalarWhereWithAggregatesInput = {
   eventId?: Prisma.UuidWithAggregatesFilter<"Order"> | string
   userId?: Prisma.UuidWithAggregatesFilter<"Order"> | string
   orgId?: Prisma.UuidWithAggregatesFilter<"Order"> | string
+  domainType?: Prisma.EnumBookingDomainWithAggregatesFilter<"Order"> | $Enums.BookingDomain
   status?: Prisma.EnumOrderStatusWithAggregatesFilter<"Order"> | $Enums.OrderStatus
   subtotalCents?: Prisma.IntWithAggregatesFilter<"Order"> | number
   feesCents?: Prisma.IntWithAggregatesFilter<"Order"> | number
@@ -385,6 +397,7 @@ export type OrderScalarWhereWithAggregatesInput = {
 
 export type OrderCreateInput = {
   id?: string
+  domainType?: $Enums.BookingDomain
   status?: $Enums.OrderStatus
   subtotalCents: number
   feesCents?: number
@@ -407,6 +420,7 @@ export type OrderUncheckedCreateInput = {
   eventId: string
   userId: string
   orgId: string
+  domainType?: $Enums.BookingDomain
   status?: $Enums.OrderStatus
   subtotalCents: number
   feesCents?: number
@@ -423,6 +437,7 @@ export type OrderUncheckedCreateInput = {
 
 export type OrderUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   subtotalCents?: Prisma.IntFieldUpdateOperationsInput | number
   feesCents?: Prisma.IntFieldUpdateOperationsInput | number
@@ -445,6 +460,7 @@ export type OrderUncheckedUpdateInput = {
   eventId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   orgId?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   subtotalCents?: Prisma.IntFieldUpdateOperationsInput | number
   feesCents?: Prisma.IntFieldUpdateOperationsInput | number
@@ -464,6 +480,7 @@ export type OrderCreateManyInput = {
   eventId: string
   userId: string
   orgId: string
+  domainType?: $Enums.BookingDomain
   status?: $Enums.OrderStatus
   subtotalCents: number
   feesCents?: number
@@ -477,6 +494,7 @@ export type OrderCreateManyInput = {
 
 export type OrderUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   subtotalCents?: Prisma.IntFieldUpdateOperationsInput | number
   feesCents?: Prisma.IntFieldUpdateOperationsInput | number
@@ -493,6 +511,7 @@ export type OrderUncheckedUpdateManyInput = {
   eventId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   orgId?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   subtotalCents?: Prisma.IntFieldUpdateOperationsInput | number
   feesCents?: Prisma.IntFieldUpdateOperationsInput | number
@@ -519,6 +538,7 @@ export type OrderCountOrderByAggregateInput = {
   eventId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   orgId?: Prisma.SortOrder
+  domainType?: Prisma.SortOrder
   status?: Prisma.SortOrder
   subtotalCents?: Prisma.SortOrder
   feesCents?: Prisma.SortOrder
@@ -541,6 +561,7 @@ export type OrderMaxOrderByAggregateInput = {
   eventId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   orgId?: Prisma.SortOrder
+  domainType?: Prisma.SortOrder
   status?: Prisma.SortOrder
   subtotalCents?: Prisma.SortOrder
   feesCents?: Prisma.SortOrder
@@ -557,6 +578,7 @@ export type OrderMinOrderByAggregateInput = {
   eventId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   orgId?: Prisma.SortOrder
+  domainType?: Prisma.SortOrder
   status?: Prisma.SortOrder
   subtotalCents?: Prisma.SortOrder
   feesCents?: Prisma.SortOrder
@@ -760,6 +782,7 @@ export type OrderUpdateOneRequiredWithoutTicketsNestedInput = {
 
 export type OrderCreateWithoutUserInput = {
   id?: string
+  domainType?: $Enums.BookingDomain
   status?: $Enums.OrderStatus
   subtotalCents: number
   feesCents?: number
@@ -780,6 +803,7 @@ export type OrderUncheckedCreateWithoutUserInput = {
   id?: string
   eventId: string
   orgId: string
+  domainType?: $Enums.BookingDomain
   status?: $Enums.OrderStatus
   subtotalCents: number
   feesCents?: number
@@ -828,6 +852,7 @@ export type OrderScalarWhereInput = {
   eventId?: Prisma.UuidFilter<"Order"> | string
   userId?: Prisma.UuidFilter<"Order"> | string
   orgId?: Prisma.UuidFilter<"Order"> | string
+  domainType?: Prisma.EnumBookingDomainFilter<"Order"> | $Enums.BookingDomain
   status?: Prisma.EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
   subtotalCents?: Prisma.IntFilter<"Order"> | number
   feesCents?: Prisma.IntFilter<"Order"> | number
@@ -841,6 +866,7 @@ export type OrderScalarWhereInput = {
 
 export type OrderCreateWithoutOrgInput = {
   id?: string
+  domainType?: $Enums.BookingDomain
   status?: $Enums.OrderStatus
   subtotalCents: number
   feesCents?: number
@@ -861,6 +887,7 @@ export type OrderUncheckedCreateWithoutOrgInput = {
   id?: string
   eventId: string
   userId: string
+  domainType?: $Enums.BookingDomain
   status?: $Enums.OrderStatus
   subtotalCents: number
   feesCents?: number
@@ -903,6 +930,7 @@ export type OrderUpdateManyWithWhereWithoutOrgInput = {
 
 export type OrderCreateWithoutEventInput = {
   id?: string
+  domainType?: $Enums.BookingDomain
   status?: $Enums.OrderStatus
   subtotalCents: number
   feesCents?: number
@@ -923,6 +951,7 @@ export type OrderUncheckedCreateWithoutEventInput = {
   id?: string
   userId: string
   orgId: string
+  domainType?: $Enums.BookingDomain
   status?: $Enums.OrderStatus
   subtotalCents: number
   feesCents?: number
@@ -965,6 +994,7 @@ export type OrderUpdateManyWithWhereWithoutEventInput = {
 
 export type OrderCreateWithoutItemsInput = {
   id?: string
+  domainType?: $Enums.BookingDomain
   status?: $Enums.OrderStatus
   subtotalCents: number
   feesCents?: number
@@ -986,6 +1016,7 @@ export type OrderUncheckedCreateWithoutItemsInput = {
   eventId: string
   userId: string
   orgId: string
+  domainType?: $Enums.BookingDomain
   status?: $Enums.OrderStatus
   subtotalCents: number
   feesCents?: number
@@ -1017,6 +1048,7 @@ export type OrderUpdateToOneWithWhereWithoutItemsInput = {
 
 export type OrderUpdateWithoutItemsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   subtotalCents?: Prisma.IntFieldUpdateOperationsInput | number
   feesCents?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1038,6 +1070,7 @@ export type OrderUncheckedUpdateWithoutItemsInput = {
   eventId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   orgId?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   subtotalCents?: Prisma.IntFieldUpdateOperationsInput | number
   feesCents?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1053,6 +1086,7 @@ export type OrderUncheckedUpdateWithoutItemsInput = {
 
 export type OrderCreateWithoutPaymentsInput = {
   id?: string
+  domainType?: $Enums.BookingDomain
   status?: $Enums.OrderStatus
   subtotalCents: number
   feesCents?: number
@@ -1074,6 +1108,7 @@ export type OrderUncheckedCreateWithoutPaymentsInput = {
   eventId: string
   userId: string
   orgId: string
+  domainType?: $Enums.BookingDomain
   status?: $Enums.OrderStatus
   subtotalCents: number
   feesCents?: number
@@ -1105,6 +1140,7 @@ export type OrderUpdateToOneWithWhereWithoutPaymentsInput = {
 
 export type OrderUpdateWithoutPaymentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   subtotalCents?: Prisma.IntFieldUpdateOperationsInput | number
   feesCents?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1126,6 +1162,7 @@ export type OrderUncheckedUpdateWithoutPaymentsInput = {
   eventId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   orgId?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   subtotalCents?: Prisma.IntFieldUpdateOperationsInput | number
   feesCents?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1141,6 +1178,7 @@ export type OrderUncheckedUpdateWithoutPaymentsInput = {
 
 export type OrderCreateWithoutTicketsInput = {
   id?: string
+  domainType?: $Enums.BookingDomain
   status?: $Enums.OrderStatus
   subtotalCents: number
   feesCents?: number
@@ -1162,6 +1200,7 @@ export type OrderUncheckedCreateWithoutTicketsInput = {
   eventId: string
   userId: string
   orgId: string
+  domainType?: $Enums.BookingDomain
   status?: $Enums.OrderStatus
   subtotalCents: number
   feesCents?: number
@@ -1193,6 +1232,7 @@ export type OrderUpdateToOneWithWhereWithoutTicketsInput = {
 
 export type OrderUpdateWithoutTicketsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   subtotalCents?: Prisma.IntFieldUpdateOperationsInput | number
   feesCents?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1214,6 +1254,7 @@ export type OrderUncheckedUpdateWithoutTicketsInput = {
   eventId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   orgId?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   subtotalCents?: Prisma.IntFieldUpdateOperationsInput | number
   feesCents?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1231,6 +1272,7 @@ export type OrderCreateManyUserInput = {
   id?: string
   eventId: string
   orgId: string
+  domainType?: $Enums.BookingDomain
   status?: $Enums.OrderStatus
   subtotalCents: number
   feesCents?: number
@@ -1244,6 +1286,7 @@ export type OrderCreateManyUserInput = {
 
 export type OrderUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   subtotalCents?: Prisma.IntFieldUpdateOperationsInput | number
   feesCents?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1264,6 +1307,7 @@ export type OrderUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   eventId?: Prisma.StringFieldUpdateOperationsInput | string
   orgId?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   subtotalCents?: Prisma.IntFieldUpdateOperationsInput | number
   feesCents?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1282,6 +1326,7 @@ export type OrderUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   eventId?: Prisma.StringFieldUpdateOperationsInput | string
   orgId?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   subtotalCents?: Prisma.IntFieldUpdateOperationsInput | number
   feesCents?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1297,6 +1342,7 @@ export type OrderCreateManyOrgInput = {
   id?: string
   eventId: string
   userId: string
+  domainType?: $Enums.BookingDomain
   status?: $Enums.OrderStatus
   subtotalCents: number
   feesCents?: number
@@ -1310,6 +1356,7 @@ export type OrderCreateManyOrgInput = {
 
 export type OrderUpdateWithoutOrgInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   subtotalCents?: Prisma.IntFieldUpdateOperationsInput | number
   feesCents?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1330,6 +1377,7 @@ export type OrderUncheckedUpdateWithoutOrgInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   eventId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   subtotalCents?: Prisma.IntFieldUpdateOperationsInput | number
   feesCents?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1348,6 +1396,7 @@ export type OrderUncheckedUpdateManyWithoutOrgInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   eventId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   subtotalCents?: Prisma.IntFieldUpdateOperationsInput | number
   feesCents?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1363,6 +1412,7 @@ export type OrderCreateManyEventInput = {
   id?: string
   userId: string
   orgId: string
+  domainType?: $Enums.BookingDomain
   status?: $Enums.OrderStatus
   subtotalCents: number
   feesCents?: number
@@ -1376,6 +1426,7 @@ export type OrderCreateManyEventInput = {
 
 export type OrderUpdateWithoutEventInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   subtotalCents?: Prisma.IntFieldUpdateOperationsInput | number
   feesCents?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1396,6 +1447,7 @@ export type OrderUncheckedUpdateWithoutEventInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   orgId?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   subtotalCents?: Prisma.IntFieldUpdateOperationsInput | number
   feesCents?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1414,6 +1466,7 @@ export type OrderUncheckedUpdateManyWithoutEventInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   orgId?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   subtotalCents?: Prisma.IntFieldUpdateOperationsInput | number
   feesCents?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1479,6 +1532,7 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   eventId?: boolean
   userId?: boolean
   orgId?: boolean
+  domainType?: boolean
   status?: boolean
   subtotalCents?: boolean
   feesCents?: boolean
@@ -1502,6 +1556,7 @@ export type OrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   eventId?: boolean
   userId?: boolean
   orgId?: boolean
+  domainType?: boolean
   status?: boolean
   subtotalCents?: boolean
   feesCents?: boolean
@@ -1521,6 +1576,7 @@ export type OrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   eventId?: boolean
   userId?: boolean
   orgId?: boolean
+  domainType?: boolean
   status?: boolean
   subtotalCents?: boolean
   feesCents?: boolean
@@ -1540,6 +1596,7 @@ export type OrderSelectScalar = {
   eventId?: boolean
   userId?: boolean
   orgId?: boolean
+  domainType?: boolean
   status?: boolean
   subtotalCents?: boolean
   feesCents?: boolean
@@ -1551,7 +1608,7 @@ export type OrderSelectScalar = {
   refundedAt?: boolean
 }
 
-export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "eventId" | "userId" | "orgId" | "status" | "subtotalCents" | "feesCents" | "totalCents" | "createdAt" | "updatedAt" | "paidAt" | "cancelledAt" | "refundedAt", ExtArgs["result"]["order"]>
+export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "eventId" | "userId" | "orgId" | "domainType" | "status" | "subtotalCents" | "feesCents" | "totalCents" | "createdAt" | "updatedAt" | "paidAt" | "cancelledAt" | "refundedAt", ExtArgs["result"]["order"]>
 export type OrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   event?: boolean | Prisma.EventDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1587,6 +1644,7 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     eventId: string
     userId: string
     orgId: string
+    domainType: $Enums.BookingDomain
     status: $Enums.OrderStatus
     subtotalCents: number
     feesCents: number
@@ -2029,6 +2087,7 @@ export interface OrderFieldRefs {
   readonly eventId: Prisma.FieldRef<"Order", 'String'>
   readonly userId: Prisma.FieldRef<"Order", 'String'>
   readonly orgId: Prisma.FieldRef<"Order", 'String'>
+  readonly domainType: Prisma.FieldRef<"Order", 'BookingDomain'>
   readonly status: Prisma.FieldRef<"Order", 'OrderStatus'>
   readonly subtotalCents: Prisma.FieldRef<"Order", 'Int'>
   readonly feesCents: Prisma.FieldRef<"Order", 'Int'>

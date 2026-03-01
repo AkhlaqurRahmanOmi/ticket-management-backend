@@ -5,14 +5,17 @@ import {
   OnModuleInit,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { ModuleRef } from '@nestjs/core';
 import { KafkaJS } from '@confluentinc/kafka-javascript';
+import type { DomainTopicRegistry } from '@/modules/domain-runtime/domain-topic-registry.interface';
+import { DOMAIN_TOPIC_REGISTRY } from '@/modules/domain-runtime/domain.tokens';
 
 @Injectable()
 export class KafkaService implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(KafkaService.name);
   private readonly kafkaClient: KafkaJS.Kafka | null;
   private readonly consumers: KafkaJS.Consumer[] = [];
-  private readonly requiredTopics = [
+  private readonly coreRequiredTopics = [
     'reservation.created',
     'reservation.expired',
     'payment.succeeded',
@@ -24,7 +27,10 @@ export class KafkaService implements OnModuleInit, OnModuleDestroy {
     null;
   private warnedMissingConfig = false;
 
-  constructor(private readonly configService: ConfigService) {
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly moduleRef: ModuleRef,
+  ) {
     const brokers = this.resolveBrokers();
     if (brokers.length === 0) {
       this.kafkaClient = null;
@@ -44,7 +50,7 @@ export class KafkaService implements OnModuleInit, OnModuleDestroy {
       return;
     }
 
-    await this.ensureRequiredTopics();
+    await this.ensureRequiredTopics(this.resolveRequiredTopics());
   }
 
   async createConsumer(groupId: string): Promise<KafkaJS.Consumer | null> {
@@ -158,7 +164,7 @@ export class KafkaService implements OnModuleInit, OnModuleDestroy {
     }
   }
 
-  private async ensureRequiredTopics(): Promise<void> {
+  private async ensureRequiredTopics(requiredTopics: readonly string[]): Promise<void> {
     const client = this.kafkaClient;
     if (!client) {
       return;
@@ -168,15 +174,13 @@ export class KafkaService implements OnModuleInit, OnModuleDestroy {
     try {
       await admin.connect();
       await admin.createTopics({
-        topics: this.requiredTopics.map((topic) => ({
+        topics: requiredTopics.map((topic) => ({
           topic,
           numPartitions: 1,
           replicationFactor: 1,
         })),
       });
-      this.logger.log(
-        `Kafka topics ensured: ${this.requiredTopics.join(', ')}`,
-      );
+      this.logger.log(`Kafka topics ensured: ${requiredTopics.join(', ')}`);
     } catch (error) {
       this.logger.error(
         'Failed to ensure Kafka topics at startup',
@@ -192,6 +196,26 @@ export class KafkaService implements OnModuleInit, OnModuleDestroy {
           }`,
         );
       }
+    }
+  }
+
+  private resolveRequiredTopics(): readonly string[] {
+    const domainTopicRegistry = this.getDomainTopicRegistry();
+    return Array.from(
+      new Set([
+        ...this.coreRequiredTopics,
+        ...(domainTopicRegistry?.getRequiredTopics() ?? []),
+      ]),
+    );
+  }
+
+  private getDomainTopicRegistry(): DomainTopicRegistry | undefined {
+    try {
+      return this.moduleRef.get<DomainTopicRegistry>(DOMAIN_TOPIC_REGISTRY, {
+        strict: false,
+      });
+    } catch {
+      return undefined;
     }
   }
 

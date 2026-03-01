@@ -19,5 +19,6 @@ import { EventsService } from './events.service';
     RolesGuard,
     PolicyGuard,
   ],
+  exports: [EventsService],
 })
 export class EventsModule {}
