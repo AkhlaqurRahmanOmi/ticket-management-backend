@@ -23,5 +23,10 @@ import { ReservationExpiryWorker } from './reservation-expiry.worker';
     PaymentSucceededConsumerWorker,
     OutboxPublisherWorker,
   ],
+  exports: [
+    ReservationExpiryWorker,
+    PaymentSucceededConsumerWorker,
+    OutboxPublisherWorker,
+  ],
 })
 export class WorkersModule {}

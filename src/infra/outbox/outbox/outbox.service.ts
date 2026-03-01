@@ -22,14 +22,21 @@ export class OutboxService {
     key: string,
     payload: Record<string, unknown>,
     actorUserId?: string,
+    options?: {
+      correlationId?: string | null;
+      headers?: Record<string, unknown> | null;
+      availableAt?: Date;
+    },
   ) {
     return this.prisma.outboxEvent.create({
       data: {
         topic,
         key,
         payload: payload as Prisma.InputJsonValue,
+        headers: (options?.headers ?? null) as Prisma.InputJsonValue,
         status: 'PENDING',
-        correlationId: null,
+        availableAt: options?.availableAt ?? new Date(),
+        correlationId: options?.correlationId ?? null,
         actorUserId: actorUserId ?? null,
       },
     });

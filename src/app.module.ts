@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { CommonModule } from './common/common.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import configuration from './config/configuration';
@@ -16,9 +17,11 @@ import { TicketsModule } from './modules/tickets/tickets.module';
 import { RealtimeModule } from './modules/realtime/realtime.module';
 import { WorkersModule } from './workers/workers.module';
 import { IamModule } from './modules/iam/iam.module';
+import { HealthModule } from './modules/health/health.module';
 
 @Module({
   imports: [
+    CommonModule,
     ConfigModule.forRoot({
       isGlobal: true,
       load: [configuration],
@@ -36,6 +39,7 @@ import { IamModule } from './modules/iam/iam.module';
     RealtimeModule,
     WorkersModule,
     IamModule,
+    HealthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

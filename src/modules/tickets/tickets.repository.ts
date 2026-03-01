@@ -20,6 +20,7 @@ type PaymentSucceededFinalizationResult = {
   paymentId: string;
   orderId: string | null;
   reservationId: string | null;
+  eventId: string | null;
   ticketIds: string[];
   soldSeatIds: string[];
   reason?: string;
@@ -131,6 +132,7 @@ export class TicketsRepository extends BaseRepository {
           paymentId: payment.id,
           orderId: payment.orderId,
           reservationId: payment.reservationId,
+          eventId: payment.reservation?.eventId ?? null,
           ticketIds: [],
           soldSeatIds: [],
           reason: 'payment_not_succeeded',
@@ -149,6 +151,7 @@ export class TicketsRepository extends BaseRepository {
           paymentId: payment.id,
           orderId: payment.orderId,
           reservationId: payment.reservationId,
+          eventId: payment.reservation?.eventId ?? null,
           ticketIds: existingTickets.map((ticket) => ticket.id),
           soldSeatIds: [],
           reason: 'already_finalized',
@@ -370,6 +373,7 @@ export class TicketsRepository extends BaseRepository {
         paymentId: payment.id,
         orderId: order.id,
         reservationId: reservation.id,
+        eventId: reservation.eventId,
         ticketIds: createdTicketIds,
         soldSeatIds,
       };

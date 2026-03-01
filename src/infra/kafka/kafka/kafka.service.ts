@@ -2,15 +2,23 @@ import {
   Injectable,
   Logger,
   OnModuleDestroy,
+  OnModuleInit,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { KafkaJS } from '@confluentinc/kafka-javascript';
 
 @Injectable()
-export class KafkaService implements OnModuleDestroy {
+export class KafkaService implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(KafkaService.name);
   private readonly kafkaClient: KafkaJS.Kafka | null;
   private readonly consumers: KafkaJS.Consumer[] = [];
+  private readonly requiredTopics = [
+    'reservation.created',
+    'reservation.expired',
+    'payment.succeeded',
+    'payment.failed',
+    'payment.succeeded.dlq',
+  ];
   private producer: KafkaJS.Producer | null = null;
   private producerConnectPromise: Promise<KafkaJS.Producer | null> | null =
     null;
@@ -29,6 +37,14 @@ export class KafkaService implements OnModuleDestroy {
         brokers,
       },
     });
+  }
+
+  async onModuleInit(): Promise<void> {
+    if (!this.kafkaClient) {
+      return;
+    }
+
+    await this.ensureRequiredTopics();
   }
 
   async createConsumer(groupId: string): Promise<KafkaJS.Consumer | null> {
@@ -66,6 +82,27 @@ export class KafkaService implements OnModuleDestroy {
     return this.kafkaClient !== null;
   }
 
+  async getHealthStatus(): Promise<{
+    configured: boolean;
+    producerConnected: boolean;
+    consumers: number;
+  }> {
+    if (!this.kafkaClient) {
+      return {
+        configured: false,
+        producerConnected: false,
+        consumers: this.consumers.length,
+      };
+    }
+
+    const producer = await this.getProducer();
+    return {
+      configured: true,
+      producerConnected: producer !== null,
+      consumers: this.consumers.length,
+    };
+  }
+
   async publish(
     topic: string,
     key: string,
@@ -77,13 +114,27 @@ export class KafkaService implements OnModuleDestroy {
       throw new Error('Kafka producer is not configured.');
     }
 
+    const correlationId =
+      typeof payload.correlationId === 'string' && payload.correlationId.trim()
+        ? payload.correlationId.trim()
+        : undefined;
+    const normalizedHeaders: Record<string, string> = {
+      ...(headers ?? {}),
+    };
+    if (correlationId && !normalizedHeaders['x-correlation-id']) {
+      normalizedHeaders['x-correlation-id'] = correlationId;
+    }
+
     await producer.send({
       topic,
       messages: [
         {
           key,
           value: JSON.stringify(payload),
-          headers,
+          headers:
+            Object.keys(normalizedHeaders).length > 0
+              ? normalizedHeaders
+              : undefined,
         },
       ],
     });
@@ -103,6 +154,43 @@ export class KafkaService implements OnModuleDestroy {
         await this.producer.disconnect();
       } catch (error) {
         this.logger.error('Error while disconnecting Kafka producer', error as Error);
+      }
+    }
+  }
+
+  private async ensureRequiredTopics(): Promise<void> {
+    const client = this.kafkaClient;
+    if (!client) {
+      return;
+    }
+
+    const admin = client.admin();
+    try {
+      await admin.connect();
+      await admin.createTopics({
+        topics: this.requiredTopics.map((topic) => ({
+          topic,
+          numPartitions: 1,
+          replicationFactor: 1,
+        })),
+      });
+      this.logger.log(
+        `Kafka topics ensured: ${this.requiredTopics.join(', ')}`,
+      );
+    } catch (error) {
+      this.logger.error(
+        'Failed to ensure Kafka topics at startup',
+        error as Error,
+      );
+    } finally {
+      try {
+        await admin.disconnect();
+      } catch (disconnectError) {
+        this.logger.warn(
+          `Failed to disconnect Kafka admin client: ${
+            (disconnectError as Error).message
+          }`,
+        );
       }
     }
   }

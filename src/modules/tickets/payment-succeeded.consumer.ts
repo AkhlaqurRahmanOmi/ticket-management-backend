@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { RealtimeService } from '@/modules/realtime/realtime.service';
 import { TicketsService } from './tickets.service';
 
 type PaymentSucceededEventData = {
@@ -22,7 +23,10 @@ export type PaymentSucceededEventEnvelope = {
 export class PaymentSucceededConsumer {
   private readonly logger = new Logger(PaymentSucceededConsumer.name);
 
-  constructor(private readonly ticketsService: TicketsService) {}
+  constructor(
+    private readonly ticketsService: TicketsService,
+    private readonly realtimeService: RealtimeService,
+  ) {}
 
   async handle(message: PaymentSucceededEventEnvelope): Promise<void> {
     const data = message.data;
@@ -43,6 +47,15 @@ export class PaymentSucceededConsumer {
       correlationId: message.correlationId,
       actor: message.actor,
     });
+
+    if (result.processed && result.eventId && result.soldSeatIds.length > 0) {
+      await this.realtimeService.publishSeatUpdates(result.eventId, {
+        type: 'payment.succeeded',
+        paymentId: data.paymentId,
+        reservationId: result.reservationId,
+        seatIds: result.soldSeatIds,
+      });
+    }
 
     this.logger.log(
       `payment.succeeded handled paymentId=${data.paymentId} processed=${result.processed} idempotent=${result.idempotent} orderId=${result.orderId ?? 'n/a'} tickets=${result.ticketIds.length}`,

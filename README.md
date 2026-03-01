@@ -1,98 +1,178 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Ticket Booking Backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Production-ready modular monolith backend for a multi-tenant ticketing system.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Built with NestJS, Prisma, PostgreSQL, Redis, and Kafka using an outbox-driven event architecture.
 
-## Description
+## Tech Stack
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- Runtime: Node.js, NestJS 11, TypeScript
+- Database: PostgreSQL (source of truth)
+- ORM: Prisma
+- Realtime: Redis Pub/Sub + SSE
+- Event backbone: Kafka (KRaft) + Outbox pattern
+- Scheduling/workers: `@nestjs/schedule`
+- Validation/config: `class-validator`, `@nestjs/config`
 
-## Project setup
+## System Architecture
+
+- API process serves REST + SSE.
+- PostgreSQL stores all transactional state.
+- Redis handles fanout/rate-limit primitives.
+- Outbox table stores domain events in the same DB transaction as state changes.
+- Outbox publisher worker reliably publishes outbox events to Kafka.
+- Kafka consumers process async domain flows (for example payment success -> ticket finalization).
+
+## Core Modules
+
+- `src/modules/iam`: authentication and authorization (RBAC + policy guard integration)
+- `src/modules/organizations`: organization and membership management
+- `src/modules/events`: event management and inventory access
+- `src/modules/reservations`: concurrency-safe seat reservation with TTL
+- `src/modules/payments`: payment creation + idempotent webhook processing
+- `src/modules/tickets`: payment success finalization and ticket issuance flow
+- `src/modules/realtime`: SSE stream + Redis-backed seat update fanout
+- `src/modules/health`: live/ready/alerts endpoints
+
+Infra modules:
+- `src/infra/prisma`
+- `src/infra/redis`
+- `src/infra/kafka`
+- `src/infra/outbox`
+
+Workers:
+- `src/workers/outbox-publisher.worker.ts`
+- `src/workers/reservation-expiry.worker.ts`
+- `src/workers/payment-succeeded.consumer.worker.ts`
+
+## Reliability and Concurrency
+
+- Postgres is the correctness boundary.
+- Seat reservation uses optimistic checks with bounded fallback locking logic in repository flow.
+- Reservation TTL expiry worker releases seats safely.
+- Payment webhook processing is idempotent.
+- Outbox guarantees DB -> Kafka publish reliability.
+- Kafka consumers are retry-safe and DLQ-aware.
+
+## Observability and Operations
+
+- Structured application logs with correlation context.
+- Metrics endpoint: `GET /metrics` (Prometheus exposition format).
+- Health endpoints:
+  - `GET /health/live`
+  - `GET /health/ready`
+  - `GET /health/alerts`
+- Alert rules evaluate readiness and metric-derived thresholds (outbox failure ratio, webhook failure ratio, DLQ/retry growth).
+
+## API Response Envelope
+
+Global response structure is enforced through common interceptors/filters:
+
+- Success: `{ "success": true, "message": "...", "data": ..., "meta"?: ... }`
+- Error: `{ "success": false, "message": "...", "errors"?: ..., "meta"?: ... }`
+
+SSE (`text/event-stream`) and `/metrics` are intentionally not wrapped.
+
+## Local Development
+
+## Prerequisites
+
+- Node.js 20+ (recommended LTS)
+- Yarn 1.x
+- Docker Desktop
+
+## 1) Install dependencies
 
 ```bash
-$ yarn install
+yarn install
 ```
 
-## Compile and run the project
+## 2) Configure environment
+
+Create `.env` from `.env.example` and set values for your machine.
+
+Minimum required app values:
+- `DATABASE_URL`
+- `REDIS_URL`
+- `KAFKA_BROKERS`
+- `JWT_SECRET`
+- `JWT_EXPIRES_IN`
+- `PORT`
+- `NODE_ENV`
+
+## 3) Start local infrastructure
 
 ```bash
-# development
-$ yarn run start
-
-# watch mode
-$ yarn run start:dev
-
-# production mode
-$ yarn run start:prod
+docker compose up -d
 ```
 
-## Run tests
+Default service ports in this repo:
+- Postgres: `5555`
+- Redis: `6379`
+- Kafka: configured through `.env` (`KAFKA_PORT`)
+
+## 4) Start app
 
 ```bash
-# unit tests
-$ yarn run test
-
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
+yarn start:dev
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+## 5) Build production bundle
 
 ```bash
-$ yarn install -g @nestjs/mau
-$ mau deploy
+yarn build
+yarn start:prod
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## Useful Commands
 
-## Resources
+- Lint: `yarn lint`
+- Format: `yarn format`
+- Unit tests: `yarn test`
+- Coverage: `yarn test:cov`
+- E2E tests: `yarn test:e2e`
 
-Check out a few resources that may come in handy when working with NestJS:
+## Kafka Notes (Important)
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+- The app now ensures required topics at startup (idempotent), including:
+  - `reservation.created`
+  - `reservation.expired`
+  - `payment.succeeded`
+  - `payment.failed`
+  - `payment.succeeded.dlq`
+- If Kafka host ports are blocked on Windows, choose a non-excluded host port and set:
+  - `.env` -> `KAFKA_PORT=<safe_port>`
+  - `.env` -> `KAFKA_BROKERS=localhost:<safe_port>`
+- Recreate Kafka after listener changes:
 
-## Support
+```bash
+docker compose down -v
+docker compose up -d kafka
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## Health and Readiness Semantics
 
-## Stay in touch
+- `live`: process is up.
+- `ready`: dependencies + worker readiness checks pass.
+- `alerts`: warning/critical operational rule evaluation.
+- `ready` and `alerts` return HTTP `503` when critical conditions are active.
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## Project Structure
 
-## License
+- `src/common`: cross-cutting concerns (guards, decorators, interceptors, filters, helpers)
+- `src/config`: environment mapping and validation
+- `src/infra`: infrastructure adapters/providers
+- `src/modules`: domain modules
+- `src/workers`: scheduled and consumer workers
+- `prisma`: schema and migrations
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+## Security and Auth
+
+- JWT authentication for protected endpoints.
+- Role and policy-based authorization in guards/decorators.
+- Payment webhook signature verification path supported by provider abstraction.
+- Rate limit guard in place for critical endpoints.
+
+## Status
+
+Current implementation includes end-to-end reservation/payment/ticket flows, Redis SSE fanout, Kafka outbox publishing, consumer retries/DLQ, metrics, health/readiness/alerts, and production hardening slices aligned with `SRS.md`.

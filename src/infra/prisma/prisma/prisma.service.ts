@@ -61,4 +61,9 @@ export class PrismaService
       await app.close();
     });
   }
+
+  async isHealthy(): Promise<boolean> {
+    await this.$queryRaw`SELECT 1`;
+    return true;
+  }
 }

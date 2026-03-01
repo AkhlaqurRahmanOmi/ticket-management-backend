@@ -19,6 +19,16 @@ export class ResponseInterceptor implements NestInterceptor {
     const http = context.switchToHttp();
     const req = http.getRequest();
     const res = http.getResponse();
+    const acceptHeader = (req.headers?.accept as string | undefined) ?? '';
+
+    // Keep native SSE and metrics payloads unwrapped.
+    if (
+      acceptHeader.includes('text/event-stream') ||
+      req.path === '/metrics' ||
+      req.url === '/metrics'
+    ) {
+      return next.handle();
+    }
 
     return next.handle().pipe(
       map((data) => {

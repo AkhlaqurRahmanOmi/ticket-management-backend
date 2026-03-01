@@ -42,6 +42,11 @@ export const validateEnv = (config: EnvRecord): EnvRecord => {
     throw new Error(`${env.jwtExpiresIn} is required.`);
   }
 
+  const redisUrlValue = config[env.redisUrl];
+  if (!redisUrlValue || redisUrlValue.trim().length === 0) {
+    throw new Error(`${env.redisUrl} is required.`);
+  }
+
   const paymentWebhookSecretValue = config[env.paymentWebhookSecret];
   if (
     paymentWebhookSecretValue !== undefined &&
@@ -59,6 +64,32 @@ export const validateEnv = (config: EnvRecord): EnvRecord => {
     kafkaBrokersValue.trim().length === 0
   ) {
     throw new Error(`${env.kafkaBrokers} cannot be empty when provided.`);
+  }
+
+  const optionalNumericKeys = [
+    env.outboxPublishBatchSize,
+    env.outboxPublishLeaseSeconds,
+    env.outboxPublishMaxAttempts,
+    env.outboxPublishMaxLoops,
+    env.alertOutboxFailureRatioThreshold,
+    env.alertOutboxMinSamples,
+    env.alertWebhookFailureRatioThreshold,
+    env.alertWebhookMinSamples,
+    env.alertPaymentSucceededDlqThreshold,
+    env.alertPaymentSucceededRetryThreshold,
+  ];
+
+  for (const key of optionalNumericKeys) {
+    const value = config[key];
+    if (value === undefined) continue;
+    if (value.trim().length === 0) {
+      throw new Error(`${key} cannot be empty when provided.`);
+    }
+
+    const parsed = Number(value);
+    if (!Number.isFinite(parsed) || parsed <= 0) {
+      throw new Error(`${key} must be a positive number when provided.`);
+    }
   }
 
   return config;
