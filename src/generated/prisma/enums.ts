@@ -18,6 +18,15 @@ export const EventStatus = {
 export type EventStatus = (typeof EventStatus)[keyof typeof EventStatus]
 
 
+export const RailTripStatus = {
+  DRAFT: 'DRAFT',
+  PUBLISHED: 'PUBLISHED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type RailTripStatus = (typeof RailTripStatus)[keyof typeof RailTripStatus]
+
+
 export const BookingDomain = {
   EVENT: 'EVENT',
   RAIL: 'RAIL',
@@ -45,6 +54,35 @@ export const ReservationStatus = {
 } as const
 
 export type ReservationStatus = (typeof ReservationStatus)[keyof typeof ReservationStatus]
+
+
+export const BookingStatus = {
+  HOLD: 'HOLD',
+  CONFIRMED: 'CONFIRMED',
+  EXPIRED: 'EXPIRED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type BookingStatus = (typeof BookingStatus)[keyof typeof BookingStatus]
+
+
+export const BookingItemStatus = {
+  HOLD: 'HOLD',
+  CONFIRMED: 'CONFIRMED',
+  EXPIRED: 'EXPIRED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type BookingItemStatus = (typeof BookingItemStatus)[keyof typeof BookingItemStatus]
+
+
+export const PassengerType = {
+  ADULT: 'ADULT',
+  CHILD: 'CHILD',
+  INFANT: 'INFANT'
+} as const
+
+export type PassengerType = (typeof PassengerType)[keyof typeof PassengerType]
 
 
 export const PaymentStatus = {

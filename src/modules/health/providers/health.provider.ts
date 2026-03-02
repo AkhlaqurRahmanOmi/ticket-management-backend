@@ -227,7 +227,10 @@ export class HealthProvider {
         bookingDomainLabel: activeDomain.label,
         inventoryModel: activeDomain.inventoryModel,
         clientProfile: activeClient.key,
+        clientProfileLabel: activeClient.label,
         defaultClientProfile: activeClient.isDefault,
+        customOverridePackActive: activeClient.overridePackActive,
+        clientPolicyOverrides: activeClient.policyOverrides,
       },
     };
   }

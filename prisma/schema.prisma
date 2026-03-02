@@ -26,6 +26,12 @@ enum EventStatus {
   CANCELLED
 }
 
+enum RailTripStatus {
+  DRAFT
+  PUBLISHED
+  CANCELLED
+}
+
 enum BookingDomain {
   EVENT
   RAIL
@@ -44,6 +50,26 @@ enum ReservationStatus {
   CONFIRMED
   EXPIRED
   CANCELLED
+}
+
+enum BookingStatus {
+  HOLD
+  CONFIRMED
+  EXPIRED
+  CANCELLED
+}
+
+enum BookingItemStatus {
+  HOLD
+  CONFIRMED
+  EXPIRED
+  CANCELLED
+}
+
+enum PassengerType {
+  ADULT
+  CHILD
+  INFANT
 }
 
 enum PaymentStatus {
@@ -105,6 +131,7 @@ model User {
   memberships     OrganizationMember[]
   sessions        AuthSession[]
   apiKeys         ApiKey[]
+  bookings        Booking[]
   reservations    Reservation[]
   orders          Order[]
   tickets         Ticket[]
@@ -214,6 +241,9 @@ model Organization {
   members OrganizationMember[]
   venues  Venue[]
   events  Event[]
+  railRoutes RailRoute[]
+  railTrips RailTrip[]
+  bookings Booking[]
   orders  Order[]
 
   @@index([name])
@@ -438,6 +468,207 @@ model EventSeat {
 
 /**
  * =========================
+ * RAIL / INVENTORY
+ * =========================
+ */
+
+model RailStation {
+  id String @id @default(uuid()) @db.Uuid
+
+  name    String
+  code    String @unique
+  city    String?
+  country String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  originTrips        RailTrip[]      @relation("RailTripOriginStation")
+  destinationTrips   RailTrip[]      @relation("RailTripDestinationStation")
+  originRoutes       RailRoute[]     @relation("RailRouteOriginStation")
+  destinationRoutes  RailRoute[]     @relation("RailRouteDestinationStation")
+  routeStops         RailRouteStop[]
+  tripStops          RailTripStop[]
+
+  @@index([name])
+  @@index([city])
+}
+
+model RailRoute {
+  id                   String @id @default(uuid()) @db.Uuid
+  orgId                String @db.Uuid
+  originStationId      String @db.Uuid
+  destinationStationId String @db.Uuid
+
+  org                Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  originStation      RailStation  @relation("RailRouteOriginStation", fields: [originStationId], references: [id], onDelete: Restrict)
+  destinationStation RailStation  @relation("RailRouteDestinationStation", fields: [destinationStationId], references: [id], onDelete: Restrict)
+
+  name String
+  code String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  stops RailRouteStop[]
+  trips RailTrip[]
+
+  @@unique([orgId, name])
+  @@index([orgId])
+  @@index([originStationId, destinationStationId])
+}
+
+model RailRouteStop {
+  id        String @id @default(uuid()) @db.Uuid
+  routeId   String @db.Uuid
+  stationId String @db.Uuid
+
+  route   RailRoute   @relation(fields: [routeId], references: [id], onDelete: Cascade)
+  station RailStation @relation(fields: [stationId], references: [id], onDelete: Restrict)
+
+  sequence                Int
+  scheduledArrivalOffset  Int?
+  scheduledDepartureOffset Int?
+  isBoardingAllowed       Boolean @default(true)
+  isDropAllowed           Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tripStops RailTripStop[]
+
+  @@unique([routeId, sequence])
+  @@index([routeId])
+  @@index([stationId])
+}
+
+model RailTrip {
+  id                   String @id @default(uuid()) @db.Uuid
+  orgId                String @db.Uuid
+  routeId              String? @db.Uuid
+  originStationId      String @db.Uuid
+  destinationStationId String @db.Uuid
+
+  org                Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  route              RailRoute?    @relation(fields: [routeId], references: [id], onDelete: SetNull)
+  originStation      RailStation   @relation("RailTripOriginStation", fields: [originStationId], references: [id], onDelete: Restrict)
+  destinationStation RailStation   @relation("RailTripDestinationStation", fields: [destinationStationId], references: [id], onDelete: Restrict)
+
+  tripNumber String
+  title      String?
+  departsAt  DateTime
+  arrivesAt  DateTime
+  status     RailTripStatus @default(DRAFT)
+
+  currency       String @default("USD")
+  basePriceCents Int
+  feesCents      Int    @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  coaches       RailCoach[]
+  stops         RailTripStop[]
+  seatInventory RailTripSeat[]
+
+  @@index([orgId])
+  @@index([routeId])
+  @@index([status, departsAt])
+  @@index([originStationId, destinationStationId, departsAt])
+  @@index([orgId, status, departsAt])
+}
+
+model RailTripStop {
+  id          String @id @default(uuid()) @db.Uuid
+  tripId      String @db.Uuid
+  stationId   String @db.Uuid
+  routeStopId String? @db.Uuid
+
+  trip      RailTrip      @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  station   RailStation   @relation(fields: [stationId], references: [id], onDelete: Restrict)
+  routeStop RailRouteStop? @relation(fields: [routeStopId], references: [id], onDelete: SetNull)
+
+  sequence          Int
+  arrivalAt         DateTime?
+  departureAt       DateTime?
+  isBoardingAllowed Boolean @default(true)
+  isDropAllowed     Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([tripId, sequence])
+  @@index([tripId])
+  @@index([stationId])
+  @@index([routeStopId])
+}
+
+model RailCoach {
+  id     String @id @default(uuid()) @db.Uuid
+  tripId String @db.Uuid
+  trip   RailTrip @relation(fields: [tripId], references: [id], onDelete: Cascade)
+
+  code      String
+  seatClass String?
+  sortOrder Int @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  seats      RailSeat[]
+  tripSeats  RailTripSeat[]
+
+  @@unique([tripId, code])
+  @@index([tripId, sortOrder])
+  @@index([tripId, seatClass])
+}
+
+model RailSeat {
+  id      String @id @default(uuid()) @db.Uuid
+  coachId String @db.Uuid
+  coach   RailCoach @relation(fields: [coachId], references: [id], onDelete: Cascade)
+
+  seatNumber String
+  label      String?
+  code       String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tripSeats RailTripSeat[]
+
+  @@unique([coachId, code])
+  @@index([coachId, seatNumber])
+}
+
+model RailTripSeat {
+  id      String @id @default(uuid()) @db.Uuid
+  tripId  String @db.Uuid
+  coachId String @db.Uuid
+  seatId  String @db.Uuid
+
+  trip  RailTrip  @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  coach RailCoach @relation(fields: [coachId], references: [id], onDelete: Cascade)
+  seat  RailSeat  @relation(fields: [seatId], references: [id], onDelete: Cascade)
+
+  status        SeatInventoryStatus @default(AVAILABLE)
+  reservedUntil DateTime?
+  version       Int                 @default(0)
+
+  priceCents Int?
+  feesCents  Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([tripId, seatId])
+  @@index([tripId, status])
+  @@index([coachId, status])
+  @@index([reservedUntil])
+}
+
+/**
+ * =========================
  * RESERVATIONS
  * =========================
  * Transition note:
@@ -509,6 +740,110 @@ model ReservationItem {
   @@index([reservationId])
   @@index([eventSeatId])
   @@index([ticketTypeId])
+}
+
+/**
+ * =========================
+ * BOOKING KERNEL (Transition)
+ * =========================
+ */
+
+model Booking {
+  id         String        @id @default(uuid()) @db.Uuid
+  userId     String        @db.Uuid
+  orgId      String?       @db.Uuid
+  domainType BookingDomain @default(EVENT)
+
+  user User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  org  Organization? @relation(fields: [orgId], references: [id], onDelete: SetNull)
+
+  status BookingStatus @default(HOLD)
+
+  currency      String    @default("USD")
+  holdExpiresAt DateTime?
+  idempotencyKey String
+  metadata       Json?
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  confirmedAt DateTime?
+  cancelledAt DateTime?
+  expiredAt   DateTime?
+
+  items      BookingItem[]
+  passengers Passenger[]
+  payments   Payment[]
+
+  @@unique([userId, domainType, idempotencyKey])
+  @@index([orgId])
+  @@index([userId, status, createdAt])
+  @@index([status, holdExpiresAt])
+  @@index([domainType, status, createdAt])
+}
+
+model Passenger {
+  id        String  @id @default(uuid()) @db.Uuid
+  bookingId String  @db.Uuid
+  booking   Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  type PassengerType @default(ADULT)
+
+  firstName      String
+  lastName       String
+  middleName     String?
+  email          String?
+  phone          String?
+  dateOfBirth    DateTime?
+  gender         String?
+  documentType   String?
+  documentNumber String?
+  nationality    String?
+  metadata       Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  items BookingItem[]
+
+  @@index([bookingId])
+  @@index([type])
+  @@index([lastName, firstName])
+}
+
+model BookingItem {
+  id          String  @id @default(uuid()) @db.Uuid
+  bookingId   String  @db.Uuid
+  passengerId String? @db.Uuid
+
+  booking   Booking    @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  passenger Passenger? @relation(fields: [passengerId], references: [id], onDelete: SetNull)
+
+  status BookingItemStatus @default(HOLD)
+
+  inventoryType String
+  inventoryRefId String
+  segmentRefId String?
+  seatLabel    String?
+  quantity     Int @default(1)
+
+  unitPriceCents Int
+  feesCents     Int    @default(0)
+  currency      String @default("USD")
+
+  snapshot Json?
+  metadata Json?
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  confirmedAt DateTime?
+  cancelledAt DateTime?
+  expiredAt   DateTime?
+
+  @@index([bookingId])
+  @@index([passengerId])
+  @@index([status, createdAt])
+  @@index([inventoryType, inventoryRefId])
+  @@index([segmentRefId])
 }
 
 /**
@@ -586,10 +921,12 @@ model OrderItem {
 model Payment {
   id            String         @id @default(uuid()) @db.Uuid
   orderId       String?        @db.Uuid
+  bookingId     String?        @db.Uuid
   reservationId String?        @db.Uuid
   domainType    BookingDomain  @default(EVENT)
 
   order       Order?       @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  booking     Booking?     @relation(fields: [bookingId], references: [id], onDelete: SetNull)
   reservation Reservation? @relation(fields: [reservationId], references: [id], onDelete: SetNull)
 
   provider    String // "stripe", "sslcommerz", etc.
@@ -609,6 +946,7 @@ model Payment {
 
   @@unique([provider, providerRef])
   @@index([orderId])
+  @@index([bookingId])
   @@index([reservationId])
   @@index([status, createdAt])
   @@index([domainType, status, createdAt])
@@ -771,4 +1109,6 @@ model AuditLog {
   @@index([resourceType, resourceId])
   @@index([action, createdAt])
 }
+
+
 

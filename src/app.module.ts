@@ -10,11 +10,14 @@ import { KafkaModule } from './infra/kafka/kafka.module';
 import { OutboxModule } from './infra/outbox/outbox.module';
 import { PrismaModule } from './infra/prisma/prisma.module';
 import { RedisModule } from './infra/redis/redis.module';
+import { BookingsModule } from './modules/bookings/bookings.module';
 import { ClientRuntimeModule } from './modules/client-runtime/client-runtime.module';
 import { EventsDomainModule } from './modules/domains/events/events-domain.module';
+import { RailDomainModule } from './modules/domains/rail/rail-domain.module';
 import { DomainRuntimeModule } from './modules/domain-runtime/domain-runtime.module';
 import { HealthModule } from './modules/health/health.module';
 import { IamModule } from './modules/iam/iam.module';
+import { IssuanceModule } from './modules/issuance/issuance.module';
 import { OrganizationsModule } from './modules/organizations/organizations.module';
 import { PaymentsModule } from './modules/payments/payments.module';
 import { WorkersModule } from './workers/workers.module';
@@ -26,6 +29,7 @@ const resolveDomainModules = () => {
     case 'event':
       return [EventsDomainModule];
     case 'rail':
+      return [RailDomainModule];
     case 'air':
       throw new Error(
         `BOOKING_DOMAIN=${bookingDomain} is configured, but its domain pack is not wired yet.`,
@@ -49,6 +53,8 @@ const resolveDomainModules = () => {
     OutboxModule,
     DomainRuntimeModule,
     ClientRuntimeModule,
+    BookingsModule,
+    IssuanceModule,
     OrganizationsModule,
     PaymentsModule,
     WorkersModule,

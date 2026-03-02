@@ -2,6 +2,7 @@ export type LogContextInput = {
   module?: string;
   action?: string;
   correlationId?: string;
+  bookingId?: string;
   eventId?: string;
   reservationId?: string;
   paymentId?: string;

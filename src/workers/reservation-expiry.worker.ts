@@ -1,7 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { ModuleRef } from '@nestjs/core';
 import { Cron } from '@nestjs/schedule';
-import { RealtimeService } from '@/modules/realtime/realtime.service';
-import { ReservationsService } from '@/modules/reservations/reservations.service';
+import { BookingsService } from '@/modules/bookings/bookings.service';
+import { REALTIME_PROVIDER } from '@/modules/domain-runtime/domain.tokens';
+import type { DomainRealtimeProvider } from '@/modules/domain-runtime/realtime-provider.interface';
 
 @Injectable()
 export class ReservationExpiryWorker {
@@ -11,8 +13,8 @@ export class ReservationExpiryWorker {
   private lastError: string | null = null;
 
   constructor(
-    private readonly reservationsService: ReservationsService,
-    private readonly realtimeService: RealtimeService,
+    private readonly bookingsService: BookingsService,
+    private readonly moduleRef: ModuleRef,
   ) {}
 
   // Runs every 15 seconds; keep batch bounded for predictable load.
@@ -20,14 +22,24 @@ export class ReservationExpiryWorker {
   async run(): Promise<void> {
     this.lastRunAt = new Date();
     try {
-      const summary = await this.reservationsService.processExpiredReservations(100);
+      const summary = await this.bookingsService.processExpiredHolds(100);
+      const realtimeProvider = this.moduleRef.get<DomainRealtimeProvider>(
+        REALTIME_PROVIDER,
+        { strict: false },
+      );
 
       for (const item of summary.results) {
-        if (item.releasedSeatIds.length === 0) continue;
-        await this.realtimeService.publishSeatUpdates(item.eventId, {
+        if (
+          !realtimeProvider ||
+          item.releasedInventoryRefIds.length === 0 ||
+          !item.inventoryScopeId
+        ) {
+          continue;
+        }
+        await realtimeProvider.publishInventoryUpdates(item.inventoryScopeId, {
           type: 'reservation.expired',
           reservationId: item.reservationId,
-          seatIds: item.releasedSeatIds,
+          seatIds: item.releasedInventoryRefIds,
         });
       }
 

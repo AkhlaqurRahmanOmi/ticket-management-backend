@@ -1,14 +1,12 @@
 import { Injectable } from '@nestjs/common';
-
-export type DefaultPassengerRequirements = {
-  passengerRequired: boolean;
-  requiredFields: string[];
-  allowGuestPassengerRecords: boolean;
-};
+import type {
+  PassengerPolicy,
+  PassengerRequirements,
+} from '@/modules/client-runtime/interfaces/client-policy.interface';
 
 @Injectable()
-export class DefaultPassengerPolicyProvider {
-  getRequirements(): DefaultPassengerRequirements {
+export class DefaultPassengerPolicyProvider implements PassengerPolicy {
+  getRequirements(): PassengerRequirements {
     return {
       passengerRequired: false,
       requiredFields: [],

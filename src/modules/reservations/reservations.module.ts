@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
+import { BookingsModule } from '@/modules/bookings/bookings.module';
 import { IamModule } from '@/modules/iam/iam.module';
 import { PrismaModule } from '@/infra/prisma/prisma.module';
 import { RedisModule } from '@/infra/redis/redis.module';
@@ -13,7 +14,14 @@ import { ReservationsRepository } from './reservations.repository';
 import { ReservationsService } from './reservations.service';
 
 @Module({
-  imports: [PrismaModule, JwtModule, IamModule, RealtimeModule, RedisModule],
+  imports: [
+    PrismaModule,
+    JwtModule,
+    IamModule,
+    RealtimeModule,
+    RedisModule,
+    BookingsModule,
+  ],
   controllers: [ReservationsController],
   providers: [
     ReservationsService,

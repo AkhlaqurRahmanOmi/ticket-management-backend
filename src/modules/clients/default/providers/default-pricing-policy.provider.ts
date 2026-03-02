@@ -1,23 +1,13 @@
 import { Injectable } from '@nestjs/common';
-
-export type DefaultPriceBreakdownInput = {
-  baseAmountCents: number;
-  currency?: string;
-};
-
-export type DefaultPriceBreakdown = {
-  baseAmountCents: number;
-  serviceFeeCents: number;
-  taxCents: number;
-  totalAmountCents: number;
-  currency: string;
-};
+import type {
+  PriceBreakdown,
+  PriceBreakdownInput,
+  PricingPolicy,
+} from '@/modules/client-runtime/interfaces/client-policy.interface';
 
 @Injectable()
-export class DefaultPricingPolicyProvider {
-  buildPriceBreakdown(
-    input: DefaultPriceBreakdownInput,
-  ): DefaultPriceBreakdown {
+export class DefaultPricingPolicyProvider implements PricingPolicy {
+  buildPriceBreakdown(input: PriceBreakdownInput): PriceBreakdown {
     const baseAmountCents = Math.max(0, input.baseAmountCents);
 
     return {

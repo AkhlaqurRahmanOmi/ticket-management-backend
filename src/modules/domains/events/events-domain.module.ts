@@ -9,13 +9,14 @@ import {
 } from '@/modules/domain-runtime/domain.tokens';
 import type { DomainTopicRegistry } from '@/modules/domain-runtime/domain-topic-registry.interface';
 import { EventsModule } from '@/modules/events/events.module';
-import { EventsService } from '@/modules/events/events.service';
+import { IssuanceModule } from '@/modules/issuance/issuance.module';
+import { IssuanceService } from '@/modules/issuance/issuance.service';
 import { RealtimeModule } from '@/modules/realtime/realtime.module';
-import { RealtimeService } from '@/modules/realtime/realtime.service';
 import { ReservationsModule } from '@/modules/reservations/reservations.module';
-import { ReservationsService } from '@/modules/reservations/reservations.service';
 import { TicketsModule } from '@/modules/tickets/tickets.module';
-import { TicketsService } from '@/modules/tickets/tickets.service';
+import { EventBookingFinalizerProvider } from './providers/event-booking-finalizer.provider';
+import { EventInventoryProvider } from './providers/event-inventory.provider';
+import { EventRealtimeProvider } from './providers/event-realtime.provider';
 
 const EVENT_DOMAIN_TOPICS = [
   'reservation.created',
@@ -35,49 +36,43 @@ const eventDomainTopicRegistry: DomainTopicRegistry = {
 };
 
 @Module({
-  imports: [EventsModule, ReservationsModule, TicketsModule, RealtimeModule],
+  imports: [
+    EventsModule,
+    ReservationsModule,
+    TicketsModule,
+    RealtimeModule,
+    IssuanceModule,
+  ],
   providers: [
+    EventInventoryProvider,
+    EventBookingFinalizerProvider,
+    EventRealtimeProvider,
     {
       provide: SEAT_SEARCH_PROVIDER,
-      useFactory: (eventsService: EventsService) => ({
-        getSeatMap: eventsService.getEventSeats.bind(eventsService),
-        syncSeatInventory: eventsService.syncEventSeats.bind(eventsService),
-      }),
-      inject: [EventsService],
+      useExisting: EventInventoryProvider,
     },
     {
       provide: INVENTORY_PROVIDER,
-      useFactory: (reservationsService: ReservationsService) => ({
-        createHold: reservationsService.createReservation.bind(reservationsService),
-        getHold: reservationsService.getReservation.bind(reservationsService),
-        expireHolds: reservationsService.processExpiredReservations.bind(reservationsService),
-      }),
-      inject: [ReservationsService],
+      useExisting: EventInventoryProvider,
     },
     {
       provide: BOOKING_FINALIZER,
-      useFactory: (ticketsService: TicketsService) => ({
-        finalizePaymentSucceeded:
-          ticketsService.finalizePaymentSucceeded.bind(ticketsService),
-      }),
-      inject: [TicketsService],
+      useExisting: EventBookingFinalizerProvider,
     },
     {
       provide: ISSUANCE_PROVIDER,
-      useFactory: (ticketsService: TicketsService) => ({
-        getIssuedTicket: ticketsService.getTicket.bind(ticketsService),
-        getIssuedTicketsForUser: ticketsService.getMyTickets.bind(ticketsService),
+      useFactory: (issuanceService: IssuanceService) => ({
+        issueDocuments: issuanceService.issueDocuments.bind(issuanceService),
+        getIssuedDocument:
+          issuanceService.getIssuedDocument.bind(issuanceService),
+        getIssuedDocumentsForUser:
+          issuanceService.getIssuedDocumentsForUser.bind(issuanceService),
       }),
-      inject: [TicketsService],
+      inject: [IssuanceService],
     },
     {
       provide: REALTIME_PROVIDER,
-      useFactory: (realtimeService: RealtimeService) => ({
-        publishSeatUpdates:
-          realtimeService.publishSeatUpdates.bind(realtimeService),
-        streamSeatUpdates: realtimeService.streamEventSeats.bind(realtimeService),
-      }),
-      inject: [RealtimeService],
+      useExisting: EventRealtimeProvider,
     },
     {
       provide: DOMAIN_TOPIC_REGISTRY,
@@ -89,10 +84,13 @@ const eventDomainTopicRegistry: DomainTopicRegistry = {
     ReservationsModule,
     TicketsModule,
     RealtimeModule,
+    EventInventoryProvider,
     SEAT_SEARCH_PROVIDER,
     INVENTORY_PROVIDER,
+    EventBookingFinalizerProvider,
     BOOKING_FINALIZER,
     ISSUANCE_PROVIDER,
+    EventRealtimeProvider,
     REALTIME_PROVIDER,
     DOMAIN_TOPIC_REGISTRY,
   ],

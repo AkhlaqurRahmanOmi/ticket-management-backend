@@ -1,15 +1,14 @@
 import { Injectable } from '@nestjs/common';
-
-export type DefaultNotificationPreferences = {
-  bookingCreated: boolean;
-  paymentSucceeded: boolean;
-  ticketIssued: boolean;
-  cancellationConfirmed: boolean;
-};
+import type {
+  NotificationPolicyContract,
+  NotificationPreferences,
+} from '@/modules/client-runtime/interfaces/client-policy.interface';
 
 @Injectable()
-export class DefaultNotificationPolicyProvider {
-  getPreferences(): DefaultNotificationPreferences {
+export class DefaultNotificationPolicyProvider
+  implements NotificationPolicyContract
+{
+  getPreferences(): NotificationPreferences {
     return {
       bookingCreated: true,
       paymentSucceeded: true,

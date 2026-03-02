@@ -7,11 +7,17 @@ import {
   MaxLength,
   Min,
   MinLength,
+  ValidateIf,
 } from 'class-validator';
 
 export class CreatePaymentDto {
+  @ValidateIf((payload: CreatePaymentDto) => !payload.reservationId)
   @IsUUID()
-  reservationId!: string;
+  bookingId!: string;
+
+  @IsOptional()
+  @IsUUID()
+  reservationId?: string;
 
   @IsOptional()
   @Transform(({ value }) =>

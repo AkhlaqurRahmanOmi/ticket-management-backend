@@ -120,6 +120,46 @@ export type EventTicketType = Prisma.EventTicketTypeModel
  */
 export type EventSeat = Prisma.EventSeatModel
 /**
+ * Model RailStation
+ * 
+ */
+export type RailStation = Prisma.RailStationModel
+/**
+ * Model RailRoute
+ * 
+ */
+export type RailRoute = Prisma.RailRouteModel
+/**
+ * Model RailRouteStop
+ * 
+ */
+export type RailRouteStop = Prisma.RailRouteStopModel
+/**
+ * Model RailTrip
+ * 
+ */
+export type RailTrip = Prisma.RailTripModel
+/**
+ * Model RailTripStop
+ * 
+ */
+export type RailTripStop = Prisma.RailTripStopModel
+/**
+ * Model RailCoach
+ * 
+ */
+export type RailCoach = Prisma.RailCoachModel
+/**
+ * Model RailSeat
+ * 
+ */
+export type RailSeat = Prisma.RailSeatModel
+/**
+ * Model RailTripSeat
+ * 
+ */
+export type RailTripSeat = Prisma.RailTripSeatModel
+/**
  * Model Reservation
  * 
  */
@@ -133,6 +173,21 @@ export type Reservation = Prisma.ReservationModel
  * Enforce via application logic or DB CHECK constraints (recommended).
  */
 export type ReservationItem = Prisma.ReservationItemModel
+/**
+ * Model Booking
+ * 
+ */
+export type Booking = Prisma.BookingModel
+/**
+ * Model Passenger
+ * 
+ */
+export type Passenger = Prisma.PassengerModel
+/**
+ * Model BookingItem
+ * 
+ */
+export type BookingItem = Prisma.BookingItemModel
 /**
  * Model Order
  * 

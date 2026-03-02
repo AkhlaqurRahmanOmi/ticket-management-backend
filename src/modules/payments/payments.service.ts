@@ -9,6 +9,7 @@ import {
 import { randomUUID } from 'crypto';
 import { buildLogContext } from '@/common/utils/log-context';
 import { MetricsProvider } from '@/common/providers/metrics.provider';
+import { BookingsService } from '@/modules/bookings/bookings.service';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import type {
   PaymentProvider,
@@ -23,6 +24,7 @@ export class PaymentsService {
   private readonly logger = new Logger(PaymentsService.name);
 
   constructor(
+    private readonly bookingsService: BookingsService,
     private readonly paymentsRepository: PaymentsRepository,
     @Inject(PAYMENT_PROVIDER_REGISTRY)
     private readonly paymentProviders: PaymentProviderRegistry,
@@ -36,59 +38,69 @@ export class PaymentsService {
   ) {
     const startTime = Date.now();
     try {
-      const reservation = await this.paymentsRepository.findReservationForPayment(
-        dto.reservationId,
-      );
-      if (!reservation) {
-        throw new BadRequestException('Reservation not found.');
+      const requestedBookingId = dto.bookingId ?? dto.reservationId;
+      if (!requestedBookingId) {
+        throw new BadRequestException('bookingId is required.');
       }
 
-      if (reservation.userId !== userId) {
-        throw new ForbiddenException('You can only pay for your own reservation.');
+      const booking =
+        await this.bookingsService.getPaymentTarget(requestedBookingId);
+      if (!booking) {
+        throw new BadRequestException('Booking not found.');
+      }
+
+      if (booking.userId !== userId) {
+        throw new ForbiddenException('You can only pay for your own booking.');
       }
 
       const now = new Date();
-      if (reservation.status !== 'ACTIVE' || reservation.expiresAt <= now) {
+      if (
+        booking.status !== 'HOLD' ||
+        !booking.holdExpiresAt ||
+        booking.holdExpiresAt <= now
+      ) {
         throw new BadRequestException(
-          'Payment cannot be created for expired or inactive reservation.',
+          'Payment cannot be created for expired or inactive booking.',
         );
       }
 
-      const expectedAmountCents = reservation.items.reduce(
-        (total, item) => total + item.quantity * (item.priceCents + item.feesCents),
+      const expectedAmountCents = booking.items.reduce(
+        (total, item) =>
+          total + item.quantity * (item.unitPriceCents + item.feesCents),
         0,
       );
 
       if (dto.amountCents !== expectedAmountCents) {
         throw new BadRequestException(
-          `Invalid payment amount. Expected ${expectedAmountCents} cents for this reservation.`,
+          `Invalid payment amount. Expected ${expectedAmountCents} cents for this booking.`,
         );
       }
 
-      const reservationCurrency = reservation.event?.currency?.toUpperCase();
-      if (reservationCurrency && dto.currency !== reservationCurrency) {
+      const bookingCurrency = booking.currency.toUpperCase();
+      if (dto.currency !== bookingCurrency) {
         throw new BadRequestException(
-          `Invalid payment currency. Expected ${reservationCurrency}.`,
+          `Invalid payment currency. Expected ${bookingCurrency}.`,
         );
       }
 
       const provider = this.getPaymentProvider(dto.provider);
       const paymentIntent = await provider.createPaymentIntent({
-        reservationId: reservation.id,
+        bookingId: booking.id,
         amountCents: dto.amountCents,
         currency: dto.currency,
         providerRef: dto.providerRef,
       });
 
       const payment = await this.paymentsRepository.createPendingPayment({
-        reservationId: reservation.id,
+        bookingId: booking.id,
+        reservationId: booking.legacyReservationId,
         provider: paymentIntent.provider,
         providerRef: paymentIntent.providerRef,
         amountCents: dto.amountCents,
         currency: dto.currency,
       });
 
-      if (payment.reservationId !== reservation.id) {
+      if (payment.bookingId !== booking.id) {
         throw new BadRequestException(
           'providerRef already belongs to another payment record.',
         );
@@ -101,10 +113,11 @@ export class PaymentsService {
           action: 'create',
           correlationId,
           userId,
-          reservationId: reservation.id,
+          bookingId: booking.id,
           paymentId: payment.id,
           provider: payment.provider,
           meta: {
+            reservationId: booking.legacyReservationId,
             amountCents: payment.amountCents,
             currency: payment.currency,
           },

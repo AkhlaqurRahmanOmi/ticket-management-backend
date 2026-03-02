@@ -1,5 +1,5 @@
 export type PaymentIntentInput = {
-  reservationId: string;
+  bookingId: string;
   amountCents: number;
   currency: string;
   providerRef?: string;

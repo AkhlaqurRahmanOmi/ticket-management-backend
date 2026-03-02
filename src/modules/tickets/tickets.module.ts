@@ -7,7 +7,6 @@ import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
 import { PolicyGuard } from '@/common/guards/policy.guard';
 import { RolesGuard } from '@/common/guards/roles.guard';
 import { MeTicketsController } from './me-tickets.controller';
-import { PaymentSucceededConsumer } from './payment-succeeded.consumer';
 import { TicketsController } from './tickets.controller';
 import { TicketsRepository } from './tickets.repository';
 import { TicketsService } from './tickets.service';
@@ -18,11 +17,10 @@ import { TicketsService } from './tickets.service';
   providers: [
     TicketsService,
     TicketsRepository,
-    PaymentSucceededConsumer,
     JwtAuthGuard,
     PolicyGuard,
     RolesGuard,
   ],
-  exports: [TicketsService, PaymentSucceededConsumer],
+  exports: [TicketsService],
 })
 export class TicketsModule {}

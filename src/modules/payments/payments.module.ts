@@ -5,6 +5,7 @@ import { RateLimitGuard } from '@/common/guards/rate-limit.guard';
 import { RolesGuard } from '@/common/guards/roles.guard';
 import { PrismaModule } from '@/infra/prisma/prisma.module';
 import { RedisModule } from '@/infra/redis/redis.module';
+import { BookingsModule } from '@/modules/bookings/bookings.module';
 import { IamModule } from '@/modules/iam/iam.module';
 import { ManualPaymentProvider } from './provider/manual-payment.provider';
 import { PaymentsController } from './payments.controller';
@@ -13,7 +14,7 @@ import { PaymentsService } from './payments.service';
 import { PAYMENT_PROVIDER_REGISTRY } from './token/payments.tokens';
 
 @Module({
-  imports: [PrismaModule, JwtModule, IamModule, RedisModule],
+  imports: [PrismaModule, JwtModule, IamModule, RedisModule, BookingsModule],
   controllers: [PaymentsController],
   providers: [
     PaymentsService,

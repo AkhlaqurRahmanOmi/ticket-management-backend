@@ -4,14 +4,16 @@ import {
   OnModuleDestroy,
   OnModuleInit,
 } from '@nestjs/common';
+import { ModuleRef } from '@nestjs/core';
 import { KafkaJS } from '@confluentinc/kafka-javascript';
 import { KafkaService } from '@/infra/kafka/kafka/kafka.service';
-import {
-  PaymentSucceededConsumer,
-  PaymentSucceededEventEnvelope,
-} from '@/modules/tickets/payment-succeeded.consumer';
 import { buildLogContext } from '@/common/utils/log-context';
 import { MetricsProvider } from '@/common/providers/metrics.provider';
+import { BOOKING_FINALIZER } from '@/modules/domain-runtime/domain.tokens';
+import type {
+  BookingFinalizer,
+  PaymentSucceededEventEnvelope,
+} from '@/modules/payments/interface/booking-finalizer.interface';
 
 @Injectable()
 export class PaymentSucceededConsumerWorker
@@ -27,7 +29,7 @@ export class PaymentSucceededConsumerWorker
 
   constructor(
     private readonly kafkaService: KafkaService,
-    private readonly paymentSucceededConsumer: PaymentSucceededConsumer,
+    private readonly moduleRef: ModuleRef,
     private readonly metricsProvider: MetricsProvider,
   ) {}
 
@@ -166,6 +168,46 @@ export class PaymentSucceededConsumerWorker
       parsed.data && typeof parsed.data.paymentId === 'string'
         ? parsed.data.paymentId
         : 'n/a';
+    if (paymentId === 'n/a') {
+      this.logger.warn(
+        'Skipping payment.succeeded message without paymentId',
+        buildLogContext({
+          module: 'workers.paymentSucceededConsumer',
+          action: 'message.validate',
+          correlationId,
+          partition: payload.partition,
+          offset: payload.message.offset,
+        }),
+      );
+      this.metricsProvider.incrementCounter(
+        'kafka_payment_succeeded_skipped_total',
+        'Count of skipped payment.succeeded messages',
+        1,
+        { reason: 'missing_payment_id' },
+      );
+      return;
+    }
+
+    if (parsed.data?.status && parsed.data.status !== 'SUCCEEDED') {
+      this.logger.warn(
+        `Skipping payment.succeeded message with invalid status=${parsed.data.status}`,
+        buildLogContext({
+          module: 'workers.paymentSucceededConsumer',
+          action: 'message.validate',
+          correlationId,
+          paymentId,
+          partition: payload.partition,
+          offset: payload.message.offset,
+        }),
+      );
+      this.metricsProvider.incrementCounter(
+        'kafka_payment_succeeded_skipped_total',
+        'Count of skipped payment.succeeded messages',
+        1,
+        { reason: 'invalid_status' },
+      );
+      return;
+    }
 
     const processResult = await this.processWithRetry(parsed);
     if (processResult.success) {
@@ -260,11 +302,32 @@ export class PaymentSucceededConsumerWorker
     attempts: number;
     error?: Error;
   }> {
+    const bookingFinalizer = this.moduleRef.get<BookingFinalizer>(
+      BOOKING_FINALIZER,
+      { strict: false },
+    );
+    if (!bookingFinalizer) {
+      return {
+        success: false,
+        attempts: 0,
+        error: new Error('BOOKING_FINALIZER provider is not registered.'),
+      };
+    }
+
     let lastError: Error | undefined;
 
     for (let attempt = 1; attempt <= this.maxProcessRetries; attempt += 1) {
       try {
-        await this.paymentSucceededConsumer.handle(message);
+        await bookingFinalizer.finalizePaymentSucceeded({
+          paymentId: message.data?.paymentId ?? '',
+          bookingId: message.data?.bookingId,
+          reservationId: message.data?.reservationId,
+          provider: message.data?.provider,
+          providerRef: message.data?.providerRef,
+          status: message.data?.status,
+          correlationId: message.correlationId,
+          actor: message.actor,
+        });
         return { success: true, attempts: attempt };
       } catch (error) {
         lastError = error as Error;

@@ -1,26 +1,12 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { BaseRepository } from '@/common/repositories/base.repository';
 import { PrismaService } from '@/infra/prisma/prisma/prisma.service';
 import { UnitOfWorkService } from '@/infra/prisma/unit-of-work.service';
-
-type CreatePendingPaymentInput = {
-  reservationId: string;
-  provider: string;
-  providerRef: string;
-  amountCents: number;
-  currency: string;
-};
-
-type ProcessWebhookInput = {
-  provider: string;
-  providerEventId: string;
-  providerRef: string;
-  status: 'SUCCEEDED' | 'FAILED';
-  signatureValid: boolean;
-  payload?: Record<string, unknown>;
-  correlationId: string;
-};
+import {
+  type CreatePendingPaymentInput,
+  type ProcessWebhookInput,
+} from './types/payment-repository.types';
 
 @Injectable()
 export class PaymentsRepository extends BaseRepository {
@@ -29,31 +15,6 @@ export class PaymentsRepository extends BaseRepository {
     unitOfWork: UnitOfWorkService,
   ) {
     super(prisma, unitOfWork);
-  }
-
-  findReservationForPayment(reservationId: string) {
-    return this.prisma.reservation.findUnique({
-      where: { id: reservationId },
-      select: {
-        id: true,
-        userId: true,
-        status: true,
-        expiresAt: true,
-        eventId: true,
-        event: {
-          select: {
-            currency: true,
-          },
-        },
-        items: {
-          select: {
-            quantity: true,
-            priceCents: true,
-            feesCents: true,
-          },
-        },
-      },
-    });
   }
 
   findPaymentByProviderRef(provider: string, providerRef: string) {
@@ -66,6 +27,7 @@ export class PaymentsRepository extends BaseRepository {
       },
       select: {
         id: true,
+        bookingId: true,
         reservationId: true,
         provider: true,
         providerRef: true,
@@ -82,7 +44,8 @@ export class PaymentsRepository extends BaseRepository {
     try {
       return await this.prisma.payment.create({
         data: {
-          reservationId: input.reservationId,
+          bookingId: input.bookingId,
+          reservationId: input.reservationId ?? null,
           provider: input.provider,
           providerRef: input.providerRef,
           status: 'PENDING',
@@ -91,6 +54,7 @@ export class PaymentsRepository extends BaseRepository {
         } as never,
         select: {
           id: true,
+          bookingId: true,
           reservationId: true,
           provider: true,
           providerRef: true,
@@ -176,6 +140,7 @@ export class PaymentsRepository extends BaseRepository {
         },
         select: {
           id: true,
+          bookingId: true,
           reservationId: true,
           status: true,
           provider: true,
@@ -240,6 +205,7 @@ export class PaymentsRepository extends BaseRepository {
               actor: 'system',
               data: {
                 paymentId: payment.id,
+                bookingId: payment.bookingId,
                 reservationId: payment.reservationId,
                 provider: payment.provider,
                 providerRef: payment.providerRef,

@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
-
-export type DefaultCancellationPolicy = {
-  allowHoldCancellation: boolean;
-  allowConfirmedCancellation: boolean;
-  refundMode: 'none' | 'manual_review';
-};
+import type {
+  CancellationPolicyContract,
+  CancellationRules,
+} from '@/modules/client-runtime/interfaces/client-policy.interface';
 
 @Injectable()
-export class DefaultCancellationPolicyProvider {
-  getPolicy(): DefaultCancellationPolicy {
+export class DefaultCancellationPolicyProvider
+  implements CancellationPolicyContract
+{
+  getPolicy(): CancellationRules {
     return {
       allowHoldCancellation: true,
       allowConfirmedCancellation: false,

@@ -1,16 +1,14 @@
 import { Injectable } from '@nestjs/common';
-
-export type DefaultBookingRules = {
-  seatHoldTtlSeconds: number;
-  allowGuestCheckout: boolean;
-  requirePassengerDetails: boolean;
-};
+import type {
+  BookingRules,
+  BookingRulesPolicy,
+} from '@/modules/client-runtime/interfaces/client-policy.interface';
 
 @Injectable()
-export class DefaultBookingRulesProvider {
-  getRules(): DefaultBookingRules {
+export class DefaultBookingRulesProvider implements BookingRulesPolicy {
+  getRules(): BookingRules {
     return {
-      seatHoldTtlSeconds: 900,
+      seatHoldTtlSeconds: 300,
       allowGuestCheckout: true,
       requirePassengerDetails: false,
     };
