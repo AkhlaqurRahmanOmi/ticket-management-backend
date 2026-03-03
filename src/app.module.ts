@@ -12,6 +12,7 @@ import { PrismaModule } from './infra/prisma/prisma.module';
 import { RedisModule } from './infra/redis/redis.module';
 import { BookingsModule } from './modules/bookings/bookings.module';
 import { ClientRuntimeModule } from './modules/client-runtime/client-runtime.module';
+import { AirDomainModule } from './modules/domains/air-domain.module';
 import { EventsDomainModule } from './modules/domains/events/events-domain.module';
 import { RailDomainModule } from './modules/domains/rail/rail-domain.module';
 import { DomainRuntimeModule } from './modules/domain-runtime/domain-runtime.module';
@@ -31,9 +32,7 @@ const resolveDomainModules = () => {
     case 'rail':
       return [RailDomainModule];
     case 'air':
-      throw new Error(
-        `BOOKING_DOMAIN=${bookingDomain} is configured, but its domain pack is not wired yet.`,
-      );
+      return [AirDomainModule];
     default:
       throw new Error(`Unsupported BOOKING_DOMAIN=${bookingDomain}.`);
   }

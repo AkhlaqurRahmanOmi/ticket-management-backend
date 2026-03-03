@@ -8,18 +8,26 @@ import {
   SEAT_SEARCH_PROVIDER,
 } from '@/modules/domain-runtime/domain.tokens';
 import type { DomainTopicRegistry } from '@/modules/domain-runtime/domain-topic-registry.interface';
+import { IssuanceModule } from '@/modules/issuance/issuance.module';
 import { RailModule } from '@/modules/rail/rail.module';
 import { RailBookingFinalizerProvider } from './providers/rail-booking-finalizer.provider';
 import { RailInventoryProvider } from './providers/rail-inventory.provider';
 import { RailIssuanceProvider } from './providers/rail-issuance.provider';
 import { RailRealtimeProvider } from './providers/rail-realtime.provider';
 
+const RAIL_DOMAIN_TOPICS = [
+  'payment.succeeded',
+  'payment.failed',
+  'payment.succeeded.dlq',
+  'ticket.issued',
+] as const;
+
 const railDomainTopicRegistry: DomainTopicRegistry = {
-  getRequiredTopics: () => [],
+  getRequiredTopics: () => RAIL_DOMAIN_TOPICS,
 };
 
 @Module({
-  imports: [RailModule],
+  imports: [RailModule, IssuanceModule],
   providers: [
     RailInventoryProvider,
     RailIssuanceProvider,

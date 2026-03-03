@@ -213,6 +213,7 @@ export type UserWhereInput = {
   reservations?: Prisma.ReservationListRelationFilter
   orders?: Prisma.OrderListRelationFilter
   tickets?: Prisma.TicketListRelationFilter
+  railIssuedDocuments?: Prisma.RailIssuedDocumentListRelationFilter
   idempotencyKeys?: Prisma.IdempotencyKeyListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
   userRoles?: Prisma.UserRoleListRelationFilter
@@ -234,6 +235,7 @@ export type UserOrderByWithRelationInput = {
   reservations?: Prisma.ReservationOrderByRelationAggregateInput
   orders?: Prisma.OrderOrderByRelationAggregateInput
   tickets?: Prisma.TicketOrderByRelationAggregateInput
+  railIssuedDocuments?: Prisma.RailIssuedDocumentOrderByRelationAggregateInput
   idempotencyKeys?: Prisma.IdempotencyKeyOrderByRelationAggregateInput
   auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
   userRoles?: Prisma.UserRoleOrderByRelationAggregateInput
@@ -258,6 +260,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   reservations?: Prisma.ReservationListRelationFilter
   orders?: Prisma.OrderListRelationFilter
   tickets?: Prisma.TicketListRelationFilter
+  railIssuedDocuments?: Prisma.RailIssuedDocumentListRelationFilter
   idempotencyKeys?: Prisma.IdempotencyKeyListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
   userRoles?: Prisma.UserRoleListRelationFilter
@@ -307,6 +310,7 @@ export type UserCreateInput = {
   reservations?: Prisma.ReservationCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
   tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  railIssuedDocuments?: Prisma.RailIssuedDocumentCreateNestedManyWithoutUserInput
   idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorUserInput
   userRoles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
@@ -328,6 +332,7 @@ export type UserUncheckedCreateInput = {
   reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  railIssuedDocuments?: Prisma.RailIssuedDocumentUncheckedCreateNestedManyWithoutUserInput
   idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorUserInput
   userRoles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
@@ -349,6 +354,7 @@ export type UserUpdateInput = {
   reservations?: Prisma.ReservationUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
   tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  railIssuedDocuments?: Prisma.RailIssuedDocumentUpdateManyWithoutUserNestedInput
   idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorUserNestedInput
   userRoles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
@@ -370,6 +376,7 @@ export type UserUncheckedUpdateInput = {
   reservations?: Prisma.ReservationUncheckedUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  railIssuedDocuments?: Prisma.RailIssuedDocumentUncheckedUpdateManyWithoutUserNestedInput
   idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorUserNestedInput
   userRoles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
@@ -581,6 +588,20 @@ export type UserUpdateOneRequiredWithoutTicketsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutTicketsInput, Prisma.UserUpdateWithoutTicketsInput>, Prisma.UserUncheckedUpdateWithoutTicketsInput>
 }
 
+export type UserCreateNestedOneWithoutRailIssuedDocumentsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutRailIssuedDocumentsInput, Prisma.UserUncheckedCreateWithoutRailIssuedDocumentsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRailIssuedDocumentsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutRailIssuedDocumentsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutRailIssuedDocumentsInput, Prisma.UserUncheckedCreateWithoutRailIssuedDocumentsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRailIssuedDocumentsInput
+  upsert?: Prisma.UserUpsertWithoutRailIssuedDocumentsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutRailIssuedDocumentsInput, Prisma.UserUpdateWithoutRailIssuedDocumentsInput>, Prisma.UserUncheckedUpdateWithoutRailIssuedDocumentsInput>
+}
+
 export type UserCreateNestedOneWithoutIdempotencyKeysInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutIdempotencyKeysInput, Prisma.UserUncheckedCreateWithoutIdempotencyKeysInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutIdempotencyKeysInput
@@ -629,6 +650,7 @@ export type UserCreateWithoutUserRolesInput = {
   reservations?: Prisma.ReservationCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
   tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  railIssuedDocuments?: Prisma.RailIssuedDocumentCreateNestedManyWithoutUserInput
   idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorUserInput
 }
@@ -649,6 +671,7 @@ export type UserUncheckedCreateWithoutUserRolesInput = {
   reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  railIssuedDocuments?: Prisma.RailIssuedDocumentUncheckedCreateNestedManyWithoutUserInput
   idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorUserInput
 }
@@ -685,6 +708,7 @@ export type UserUpdateWithoutUserRolesInput = {
   reservations?: Prisma.ReservationUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
   tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  railIssuedDocuments?: Prisma.RailIssuedDocumentUpdateManyWithoutUserNestedInput
   idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorUserNestedInput
 }
@@ -705,6 +729,7 @@ export type UserUncheckedUpdateWithoutUserRolesInput = {
   reservations?: Prisma.ReservationUncheckedUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  railIssuedDocuments?: Prisma.RailIssuedDocumentUncheckedUpdateManyWithoutUserNestedInput
   idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorUserNestedInput
 }
@@ -724,6 +749,7 @@ export type UserCreateWithoutSessionsInput = {
   reservations?: Prisma.ReservationCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
   tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  railIssuedDocuments?: Prisma.RailIssuedDocumentCreateNestedManyWithoutUserInput
   idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorUserInput
   userRoles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
@@ -744,6 +770,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  railIssuedDocuments?: Prisma.RailIssuedDocumentUncheckedCreateNestedManyWithoutUserInput
   idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorUserInput
   userRoles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
@@ -780,6 +807,7 @@ export type UserUpdateWithoutSessionsInput = {
   reservations?: Prisma.ReservationUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
   tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  railIssuedDocuments?: Prisma.RailIssuedDocumentUpdateManyWithoutUserNestedInput
   idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorUserNestedInput
   userRoles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
@@ -800,6 +828,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   reservations?: Prisma.ReservationUncheckedUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  railIssuedDocuments?: Prisma.RailIssuedDocumentUncheckedUpdateManyWithoutUserNestedInput
   idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorUserNestedInput
   userRoles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
@@ -820,6 +849,7 @@ export type UserCreateWithoutApiKeysInput = {
   reservations?: Prisma.ReservationCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
   tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  railIssuedDocuments?: Prisma.RailIssuedDocumentCreateNestedManyWithoutUserInput
   idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorUserInput
   userRoles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
@@ -840,6 +870,7 @@ export type UserUncheckedCreateWithoutApiKeysInput = {
   reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  railIssuedDocuments?: Prisma.RailIssuedDocumentUncheckedCreateNestedManyWithoutUserInput
   idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorUserInput
   userRoles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
@@ -876,6 +907,7 @@ export type UserUpdateWithoutApiKeysInput = {
   reservations?: Prisma.ReservationUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
   tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  railIssuedDocuments?: Prisma.RailIssuedDocumentUpdateManyWithoutUserNestedInput
   idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorUserNestedInput
   userRoles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
@@ -896,6 +928,7 @@ export type UserUncheckedUpdateWithoutApiKeysInput = {
   reservations?: Prisma.ReservationUncheckedUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  railIssuedDocuments?: Prisma.RailIssuedDocumentUncheckedUpdateManyWithoutUserNestedInput
   idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorUserNestedInput
   userRoles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
@@ -916,6 +949,7 @@ export type UserCreateWithoutMembershipsInput = {
   reservations?: Prisma.ReservationCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
   tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  railIssuedDocuments?: Prisma.RailIssuedDocumentCreateNestedManyWithoutUserInput
   idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorUserInput
   userRoles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
@@ -936,6 +970,7 @@ export type UserUncheckedCreateWithoutMembershipsInput = {
   reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  railIssuedDocuments?: Prisma.RailIssuedDocumentUncheckedCreateNestedManyWithoutUserInput
   idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorUserInput
   userRoles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
@@ -972,6 +1007,7 @@ export type UserUpdateWithoutMembershipsInput = {
   reservations?: Prisma.ReservationUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
   tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  railIssuedDocuments?: Prisma.RailIssuedDocumentUpdateManyWithoutUserNestedInput
   idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorUserNestedInput
   userRoles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
@@ -992,6 +1028,7 @@ export type UserUncheckedUpdateWithoutMembershipsInput = {
   reservations?: Prisma.ReservationUncheckedUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  railIssuedDocuments?: Prisma.RailIssuedDocumentUncheckedUpdateManyWithoutUserNestedInput
   idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorUserNestedInput
   userRoles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
@@ -1012,6 +1049,7 @@ export type UserCreateWithoutReservationsInput = {
   bookings?: Prisma.BookingCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
   tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  railIssuedDocuments?: Prisma.RailIssuedDocumentCreateNestedManyWithoutUserInput
   idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorUserInput
   userRoles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
@@ -1032,6 +1070,7 @@ export type UserUncheckedCreateWithoutReservationsInput = {
   bookings?: Prisma.BookingUncheckedCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  railIssuedDocuments?: Prisma.RailIssuedDocumentUncheckedCreateNestedManyWithoutUserInput
   idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorUserInput
   userRoles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
@@ -1068,6 +1107,7 @@ export type UserUpdateWithoutReservationsInput = {
   bookings?: Prisma.BookingUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
   tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  railIssuedDocuments?: Prisma.RailIssuedDocumentUpdateManyWithoutUserNestedInput
   idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorUserNestedInput
   userRoles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
@@ -1088,6 +1128,7 @@ export type UserUncheckedUpdateWithoutReservationsInput = {
   bookings?: Prisma.BookingUncheckedUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  railIssuedDocuments?: Prisma.RailIssuedDocumentUncheckedUpdateManyWithoutUserNestedInput
   idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorUserNestedInput
   userRoles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
@@ -1108,6 +1149,7 @@ export type UserCreateWithoutBookingsInput = {
   reservations?: Prisma.ReservationCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
   tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  railIssuedDocuments?: Prisma.RailIssuedDocumentCreateNestedManyWithoutUserInput
   idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorUserInput
   userRoles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
@@ -1128,6 +1170,7 @@ export type UserUncheckedCreateWithoutBookingsInput = {
   reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  railIssuedDocuments?: Prisma.RailIssuedDocumentUncheckedCreateNestedManyWithoutUserInput
   idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorUserInput
   userRoles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
@@ -1164,6 +1207,7 @@ export type UserUpdateWithoutBookingsInput = {
   reservations?: Prisma.ReservationUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
   tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  railIssuedDocuments?: Prisma.RailIssuedDocumentUpdateManyWithoutUserNestedInput
   idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorUserNestedInput
   userRoles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
@@ -1184,6 +1228,7 @@ export type UserUncheckedUpdateWithoutBookingsInput = {
   reservations?: Prisma.ReservationUncheckedUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  railIssuedDocuments?: Prisma.RailIssuedDocumentUncheckedUpdateManyWithoutUserNestedInput
   idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorUserNestedInput
   userRoles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
@@ -1204,6 +1249,7 @@ export type UserCreateWithoutOrdersInput = {
   bookings?: Prisma.BookingCreateNestedManyWithoutUserInput
   reservations?: Prisma.ReservationCreateNestedManyWithoutUserInput
   tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  railIssuedDocuments?: Prisma.RailIssuedDocumentCreateNestedManyWithoutUserInput
   idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorUserInput
   userRoles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
@@ -1224,6 +1270,7 @@ export type UserUncheckedCreateWithoutOrdersInput = {
   bookings?: Prisma.BookingUncheckedCreateNestedManyWithoutUserInput
   reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutUserInput
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  railIssuedDocuments?: Prisma.RailIssuedDocumentUncheckedCreateNestedManyWithoutUserInput
   idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorUserInput
   userRoles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
@@ -1260,6 +1307,7 @@ export type UserUpdateWithoutOrdersInput = {
   bookings?: Prisma.BookingUpdateManyWithoutUserNestedInput
   reservations?: Prisma.ReservationUpdateManyWithoutUserNestedInput
   tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  railIssuedDocuments?: Prisma.RailIssuedDocumentUpdateManyWithoutUserNestedInput
   idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorUserNestedInput
   userRoles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
@@ -1280,6 +1328,7 @@ export type UserUncheckedUpdateWithoutOrdersInput = {
   bookings?: Prisma.BookingUncheckedUpdateManyWithoutUserNestedInput
   reservations?: Prisma.ReservationUncheckedUpdateManyWithoutUserNestedInput
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  railIssuedDocuments?: Prisma.RailIssuedDocumentUncheckedUpdateManyWithoutUserNestedInput
   idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorUserNestedInput
   userRoles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
@@ -1300,6 +1349,7 @@ export type UserCreateWithoutTicketsInput = {
   bookings?: Prisma.BookingCreateNestedManyWithoutUserInput
   reservations?: Prisma.ReservationCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
+  railIssuedDocuments?: Prisma.RailIssuedDocumentCreateNestedManyWithoutUserInput
   idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorUserInput
   userRoles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
@@ -1320,6 +1370,7 @@ export type UserUncheckedCreateWithoutTicketsInput = {
   bookings?: Prisma.BookingUncheckedCreateNestedManyWithoutUserInput
   reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
+  railIssuedDocuments?: Prisma.RailIssuedDocumentUncheckedCreateNestedManyWithoutUserInput
   idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorUserInput
   userRoles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
@@ -1356,6 +1407,7 @@ export type UserUpdateWithoutTicketsInput = {
   bookings?: Prisma.BookingUpdateManyWithoutUserNestedInput
   reservations?: Prisma.ReservationUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
+  railIssuedDocuments?: Prisma.RailIssuedDocumentUpdateManyWithoutUserNestedInput
   idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorUserNestedInput
   userRoles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
@@ -1376,6 +1428,107 @@ export type UserUncheckedUpdateWithoutTicketsInput = {
   bookings?: Prisma.BookingUncheckedUpdateManyWithoutUserNestedInput
   reservations?: Prisma.ReservationUncheckedUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
+  railIssuedDocuments?: Prisma.RailIssuedDocumentUncheckedUpdateManyWithoutUserNestedInput
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorUserNestedInput
+  userRoles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutRailIssuedDocumentsInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  displayName?: string | null
+  globalRole?: string
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.OrganizationMemberCreateNestedManyWithoutUserInput
+  sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
+  bookings?: Prisma.BookingCreateNestedManyWithoutUserInput
+  reservations?: Prisma.ReservationCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderCreateNestedManyWithoutUserInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorUserInput
+  userRoles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutRailIssuedDocumentsInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  displayName?: string | null
+  globalRole?: string
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.OrganizationMemberUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
+  bookings?: Prisma.BookingUncheckedCreateNestedManyWithoutUserInput
+  reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorUserInput
+  userRoles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutRailIssuedDocumentsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutRailIssuedDocumentsInput, Prisma.UserUncheckedCreateWithoutRailIssuedDocumentsInput>
+}
+
+export type UserUpsertWithoutRailIssuedDocumentsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutRailIssuedDocumentsInput, Prisma.UserUncheckedUpdateWithoutRailIssuedDocumentsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutRailIssuedDocumentsInput, Prisma.UserUncheckedCreateWithoutRailIssuedDocumentsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutRailIssuedDocumentsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutRailIssuedDocumentsInput, Prisma.UserUncheckedUpdateWithoutRailIssuedDocumentsInput>
+}
+
+export type UserUpdateWithoutRailIssuedDocumentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  globalRole?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.OrganizationMemberUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
+  bookings?: Prisma.BookingUpdateManyWithoutUserNestedInput
+  reservations?: Prisma.ReservationUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorUserNestedInput
+  userRoles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutRailIssuedDocumentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  globalRole?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.OrganizationMemberUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
+  bookings?: Prisma.BookingUncheckedUpdateManyWithoutUserNestedInput
+  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
   idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorUserNestedInput
   userRoles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
@@ -1397,6 +1550,7 @@ export type UserCreateWithoutIdempotencyKeysInput = {
   reservations?: Prisma.ReservationCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
   tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  railIssuedDocuments?: Prisma.RailIssuedDocumentCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorUserInput
   userRoles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
 }
@@ -1417,6 +1571,7 @@ export type UserUncheckedCreateWithoutIdempotencyKeysInput = {
   reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  railIssuedDocuments?: Prisma.RailIssuedDocumentUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorUserInput
   userRoles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
 }
@@ -1453,6 +1608,7 @@ export type UserUpdateWithoutIdempotencyKeysInput = {
   reservations?: Prisma.ReservationUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
   tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  railIssuedDocuments?: Prisma.RailIssuedDocumentUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorUserNestedInput
   userRoles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
 }
@@ -1473,6 +1629,7 @@ export type UserUncheckedUpdateWithoutIdempotencyKeysInput = {
   reservations?: Prisma.ReservationUncheckedUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  railIssuedDocuments?: Prisma.RailIssuedDocumentUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorUserNestedInput
   userRoles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -1493,6 +1650,7 @@ export type UserCreateWithoutAuditLogsInput = {
   reservations?: Prisma.ReservationCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
   tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  railIssuedDocuments?: Prisma.RailIssuedDocumentCreateNestedManyWithoutUserInput
   idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput
   userRoles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
 }
@@ -1513,6 +1671,7 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  railIssuedDocuments?: Prisma.RailIssuedDocumentUncheckedCreateNestedManyWithoutUserInput
   idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput
   userRoles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
 }
@@ -1549,6 +1708,7 @@ export type UserUpdateWithoutAuditLogsInput = {
   reservations?: Prisma.ReservationUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
   tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  railIssuedDocuments?: Prisma.RailIssuedDocumentUpdateManyWithoutUserNestedInput
   idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput
   userRoles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
 }
@@ -1569,6 +1729,7 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   reservations?: Prisma.ReservationUncheckedUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  railIssuedDocuments?: Prisma.RailIssuedDocumentUncheckedUpdateManyWithoutUserNestedInput
   idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput
   userRoles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -1586,6 +1747,7 @@ export type UserCountOutputType = {
   reservations: number
   orders: number
   tickets: number
+  railIssuedDocuments: number
   idempotencyKeys: number
   auditLogs: number
   userRoles: number
@@ -1599,6 +1761,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   reservations?: boolean | UserCountOutputTypeCountReservationsArgs
   orders?: boolean | UserCountOutputTypeCountOrdersArgs
   tickets?: boolean | UserCountOutputTypeCountTicketsArgs
+  railIssuedDocuments?: boolean | UserCountOutputTypeCountRailIssuedDocumentsArgs
   idempotencyKeys?: boolean | UserCountOutputTypeCountIdempotencyKeysArgs
   auditLogs?: boolean | UserCountOutputTypeCountAuditLogsArgs
   userRoles?: boolean | UserCountOutputTypeCountUserRolesArgs
@@ -1666,6 +1829,13 @@ export type UserCountOutputTypeCountTicketsArgs<ExtArgs extends runtime.Types.Ex
 /**
  * UserCountOutputType without action
  */
+export type UserCountOutputTypeCountRailIssuedDocumentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RailIssuedDocumentWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
 export type UserCountOutputTypeCountIdempotencyKeysArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.IdempotencyKeyWhereInput
 }
@@ -1701,6 +1871,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   reservations?: boolean | Prisma.User$reservationsArgs<ExtArgs>
   orders?: boolean | Prisma.User$ordersArgs<ExtArgs>
   tickets?: boolean | Prisma.User$ticketsArgs<ExtArgs>
+  railIssuedDocuments?: boolean | Prisma.User$railIssuedDocumentsArgs<ExtArgs>
   idempotencyKeys?: boolean | Prisma.User$idempotencyKeysArgs<ExtArgs>
   auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>
   userRoles?: boolean | Prisma.User$userRolesArgs<ExtArgs>
@@ -1749,6 +1920,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   reservations?: boolean | Prisma.User$reservationsArgs<ExtArgs>
   orders?: boolean | Prisma.User$ordersArgs<ExtArgs>
   tickets?: boolean | Prisma.User$ticketsArgs<ExtArgs>
+  railIssuedDocuments?: boolean | Prisma.User$railIssuedDocumentsArgs<ExtArgs>
   idempotencyKeys?: boolean | Prisma.User$idempotencyKeysArgs<ExtArgs>
   auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>
   userRoles?: boolean | Prisma.User$userRolesArgs<ExtArgs>
@@ -1767,6 +1939,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     reservations: Prisma.$ReservationPayload<ExtArgs>[]
     orders: Prisma.$OrderPayload<ExtArgs>[]
     tickets: Prisma.$TicketPayload<ExtArgs>[]
+    railIssuedDocuments: Prisma.$RailIssuedDocumentPayload<ExtArgs>[]
     idempotencyKeys: Prisma.$IdempotencyKeyPayload<ExtArgs>[]
     auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
     userRoles: Prisma.$UserRolePayload<ExtArgs>[]
@@ -2181,6 +2354,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   reservations<T extends Prisma.User$reservationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reservationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReservationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   orders<T extends Prisma.User$ordersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   tickets<T extends Prisma.User$ticketsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$ticketsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  railIssuedDocuments<T extends Prisma.User$railIssuedDocumentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$railIssuedDocumentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RailIssuedDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   idempotencyKeys<T extends Prisma.User$idempotencyKeysArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$idempotencyKeysArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$IdempotencyKeyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   auditLogs<T extends Prisma.User$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   userRoles<T extends Prisma.User$userRolesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$userRolesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserRolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -2774,6 +2948,30 @@ export type User$ticketsArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
   take?: number
   skip?: number
   distinct?: Prisma.TicketScalarFieldEnum | Prisma.TicketScalarFieldEnum[]
+}
+
+/**
+ * User.railIssuedDocuments
+ */
+export type User$railIssuedDocumentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the RailIssuedDocument
+   */
+  select?: Prisma.RailIssuedDocumentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the RailIssuedDocument
+   */
+  omit?: Prisma.RailIssuedDocumentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RailIssuedDocumentInclude<ExtArgs> | null
+  where?: Prisma.RailIssuedDocumentWhereInput
+  orderBy?: Prisma.RailIssuedDocumentOrderByWithRelationInput | Prisma.RailIssuedDocumentOrderByWithRelationInput[]
+  cursor?: Prisma.RailIssuedDocumentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RailIssuedDocumentScalarFieldEnum | Prisma.RailIssuedDocumentScalarFieldEnum[]
 }
 
 /**

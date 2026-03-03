@@ -19,13 +19,17 @@ export type IssuedDocumentRecord = {
   status: IssuedDocumentStatus;
   documentNumber: string;
   bookingId: string | null;
-  orderId: string;
+  orderId: string | null;
   ownerUserId: string;
   issuedAt: Date;
   metadata: {
     inventoryScopeId?: string;
     inventoryRefId?: string | null;
     categoryRefId?: string | null;
+    segmentRefId?: string | null;
+    seatLabel?: string | null;
+    boardingStationCode?: string | null;
+    dropStationCode?: string | null;
   };
 };
 
@@ -49,4 +53,17 @@ export type TicketIssuedDocumentRow = {
       bookingId: string | null;
     }>;
   };
+};
+
+export type RailIssuedDocumentRow = {
+  id: string;
+  status: 'ISSUED' | 'VOIDED' | 'REFUNDED';
+  code: string;
+  issuedAt: Date;
+  bookingId: string;
+  paymentId: string;
+  userId: string;
+  tripId: string;
+  tripSeatId: string;
+  metadata: unknown;
 };

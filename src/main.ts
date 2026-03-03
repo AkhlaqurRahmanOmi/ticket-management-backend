@@ -9,6 +9,7 @@ import {
   buildApiDocsDescription,
   buildApiDocsTitle,
 } from './common/constants/app';
+import { DomainRuntimeService } from './modules/domain-runtime/domain-runtime.service';
 
 async function bootstrap() {
   const logger = new Logger('Bootstrap');
@@ -20,6 +21,8 @@ async function bootstrap() {
   const appEnv = configService.get<string>('app.nodeEnv', 'development');
   const port = configService.get<number>('app.port', 3000);
   const deployedAt = new Date().toISOString();
+  const domainRuntimeService = app.get(DomainRuntimeService);
+  const activeDomainMetadata = domainRuntimeService.getActiveDomainMetadata();
   configureApp(app);
   app.setGlobalPrefix(apiPrefix);
   app.enableVersioning({
@@ -27,8 +30,10 @@ async function bootstrap() {
     defaultVersion: apiVersion,
   });
   const swaggerConfig = new DocumentBuilder()
-    .setTitle(buildApiDocsTitle(appEnv))
-    .setDescription(buildApiDocsDescription(deployedAt))
+    .setTitle(buildApiDocsTitle(appEnv, activeDomainMetadata.label))
+    .setDescription(
+      buildApiDocsDescription(deployedAt, activeDomainMetadata.label),
+    )
     .setVersion('1.0')
     .addBearerAuth(
       {
@@ -41,6 +46,7 @@ async function bootstrap() {
       'access-token',
     )
     .addServer(`http://localhost:${port}`)
+    .addTag(activeDomainMetadata.label)
     .build();
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
   OpenApiModule.setup(apiDocsPath, app, swaggerDocument);

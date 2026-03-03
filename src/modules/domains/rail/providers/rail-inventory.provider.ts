@@ -1,4 +1,5 @@
 import { Injectable, NotImplementedException } from '@nestjs/common';
+import { CreateRailHoldDto } from '@/modules/rail/dto/create-rail-hold.dto';
 import { GetRailTripAvailabilityQueryDto } from '@/modules/rail/dto/get-rail-trip-availability.query.dto';
 import { RailService } from '@/modules/rail/rail.service';
 
@@ -23,26 +24,18 @@ export class RailInventoryProvider {
   }
 
   createHold(
-    _userId: string,
-    _dto: Record<string, unknown>,
-    _correlationId?: string,
+    userId: string,
+    dto: CreateRailHoldDto & { tripId: string },
+    correlationId?: string,
   ) {
-    throw new NotImplementedException(
-      'Rail seat hold creation is not implemented yet.',
-    );
+    return this.railService.createHold(userId, dto.tripId, dto, correlationId);
   }
 
-  getHold(_holdId: string) {
-    throw new NotImplementedException(
-      'Rail hold retrieval is not implemented yet.',
-    );
+  getHold(holdId: string) {
+    return this.railService.getHoldById(holdId);
   }
 
-  expireHolds(_batchSize = 100) {
-    return {
-      scanned: 0,
-      expired: 0,
-      results: [],
-    };
+  expireHolds(batchSize = 100) {
+    return this.railService.processExpiredHolds(batchSize);
   }
 }

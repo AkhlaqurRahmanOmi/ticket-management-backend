@@ -1,3 +1,5 @@
+import type { BookingDomain } from '@/modules/domain-runtime/domain.types';
+
 export type BookingPaymentItemRecord = {
   quantity: number;
   unitPriceCents: number;
@@ -9,6 +11,7 @@ export type BookingPaymentItemRecord = {
 
 export type BookingPaymentTarget = {
   id: string;
+  domainType: BookingDomain;
   userId: string;
   status: string;
   holdExpiresAt: Date | null;

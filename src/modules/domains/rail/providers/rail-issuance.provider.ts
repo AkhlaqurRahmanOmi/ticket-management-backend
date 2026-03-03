@@ -1,43 +1,33 @@
-import { Injectable, Logger, NotImplementedException } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import type {
   FinalizePaymentSucceededInput,
   PaymentSucceededFinalizationResult,
 } from '@/modules/payments/interface/booking-finalizer.interface';
+import { IssuanceService } from '@/modules/issuance/issuance.service';
 
 @Injectable()
 export class RailIssuanceProvider {
   private readonly logger = new Logger(RailIssuanceProvider.name);
 
+  constructor(private readonly issuanceService: IssuanceService) {}
+
   async issueDocuments(
     input: FinalizePaymentSucceededInput,
   ): Promise<PaymentSucceededFinalizationResult> {
-    this.logger.warn(
-      `Rail issuance requested before rail domain implementation paymentId=${input.paymentId}`,
+    const result = await this.issuanceService.issueRailDocuments(input);
+
+    this.logger.log(
+      `Rail issuance handled paymentId=${input.paymentId} processed=${result.processed} idempotent=${result.idempotent} documents=${result.issuedDocumentIds.length}`,
     );
 
-    return {
-      processed: false,
-      idempotent: true,
-      paymentId: input.paymentId,
-      bookingId: input.bookingId ?? null,
-      orderId: null,
-      reservationId: input.reservationId ?? null,
-      inventoryScopeId: null,
-      issuedDocumentIds: [],
-      affectedInventoryRefIds: [],
-      reason: 'rail_domain_not_implemented',
-    };
+    return result;
   }
 
-  getIssuedDocument(_documentId: string) {
-    throw new NotImplementedException(
-      'Rail issued document lookup is not implemented yet.',
-    );
+  getIssuedDocument(documentId: string) {
+    return this.issuanceService.getRailIssuedDocument(documentId);
   }
 
-  getIssuedDocumentsForUser(_userId: string) {
-    throw new NotImplementedException(
-      'Rail issued documents lookup is not implemented yet.',
-    );
+  getIssuedDocumentsForUser(userId: string) {
+    return this.issuanceService.getRailIssuedDocumentsForUser(userId);
   }
 }

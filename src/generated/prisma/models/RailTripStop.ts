@@ -267,6 +267,8 @@ export type RailTripStopWhereInput = {
   trip?: Prisma.XOR<Prisma.RailTripScalarRelationFilter, Prisma.RailTripWhereInput>
   station?: Prisma.XOR<Prisma.RailStationScalarRelationFilter, Prisma.RailStationWhereInput>
   routeStop?: Prisma.XOR<Prisma.RailRouteStopNullableScalarRelationFilter, Prisma.RailRouteStopWhereInput> | null
+  boardingAllocations?: Prisma.RailSeatAllocationListRelationFilter
+  dropAllocations?: Prisma.RailSeatAllocationListRelationFilter
 }
 
 export type RailTripStopOrderByWithRelationInput = {
@@ -284,6 +286,8 @@ export type RailTripStopOrderByWithRelationInput = {
   trip?: Prisma.RailTripOrderByWithRelationInput
   station?: Prisma.RailStationOrderByWithRelationInput
   routeStop?: Prisma.RailRouteStopOrderByWithRelationInput
+  boardingAllocations?: Prisma.RailSeatAllocationOrderByRelationAggregateInput
+  dropAllocations?: Prisma.RailSeatAllocationOrderByRelationAggregateInput
 }
 
 export type RailTripStopWhereUniqueInput = Prisma.AtLeast<{
@@ -305,6 +309,8 @@ export type RailTripStopWhereUniqueInput = Prisma.AtLeast<{
   trip?: Prisma.XOR<Prisma.RailTripScalarRelationFilter, Prisma.RailTripWhereInput>
   station?: Prisma.XOR<Prisma.RailStationScalarRelationFilter, Prisma.RailStationWhereInput>
   routeStop?: Prisma.XOR<Prisma.RailRouteStopNullableScalarRelationFilter, Prisma.RailRouteStopWhereInput> | null
+  boardingAllocations?: Prisma.RailSeatAllocationListRelationFilter
+  dropAllocations?: Prisma.RailSeatAllocationListRelationFilter
 }, "id" | "tripId_sequence">
 
 export type RailTripStopOrderByWithAggregationInput = {
@@ -355,6 +361,8 @@ export type RailTripStopCreateInput = {
   trip: Prisma.RailTripCreateNestedOneWithoutStopsInput
   station: Prisma.RailStationCreateNestedOneWithoutTripStopsInput
   routeStop?: Prisma.RailRouteStopCreateNestedOneWithoutTripStopsInput
+  boardingAllocations?: Prisma.RailSeatAllocationCreateNestedManyWithoutBoardingTripStopInput
+  dropAllocations?: Prisma.RailSeatAllocationCreateNestedManyWithoutDropTripStopInput
 }
 
 export type RailTripStopUncheckedCreateInput = {
@@ -369,6 +377,8 @@ export type RailTripStopUncheckedCreateInput = {
   isDropAllowed?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  boardingAllocations?: Prisma.RailSeatAllocationUncheckedCreateNestedManyWithoutBoardingTripStopInput
+  dropAllocations?: Prisma.RailSeatAllocationUncheckedCreateNestedManyWithoutDropTripStopInput
 }
 
 export type RailTripStopUpdateInput = {
@@ -383,6 +393,8 @@ export type RailTripStopUpdateInput = {
   trip?: Prisma.RailTripUpdateOneRequiredWithoutStopsNestedInput
   station?: Prisma.RailStationUpdateOneRequiredWithoutTripStopsNestedInput
   routeStop?: Prisma.RailRouteStopUpdateOneWithoutTripStopsNestedInput
+  boardingAllocations?: Prisma.RailSeatAllocationUpdateManyWithoutBoardingTripStopNestedInput
+  dropAllocations?: Prisma.RailSeatAllocationUpdateManyWithoutDropTripStopNestedInput
 }
 
 export type RailTripStopUncheckedUpdateInput = {
@@ -397,6 +409,8 @@ export type RailTripStopUncheckedUpdateInput = {
   isDropAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  boardingAllocations?: Prisma.RailSeatAllocationUncheckedUpdateManyWithoutBoardingTripStopNestedInput
+  dropAllocations?: Prisma.RailSeatAllocationUncheckedUpdateManyWithoutDropTripStopNestedInput
 }
 
 export type RailTripStopCreateManyInput = {
@@ -501,6 +515,11 @@ export type RailTripStopMinOrderByAggregateInput = {
 
 export type RailTripStopSumOrderByAggregateInput = {
   sequence?: Prisma.SortOrder
+}
+
+export type RailTripStopScalarRelationFilter = {
+  is?: Prisma.RailTripStopWhereInput
+  isNot?: Prisma.RailTripStopWhereInput
 }
 
 export type RailTripStopCreateNestedManyWithoutStationInput = {
@@ -629,6 +648,34 @@ export type RailTripStopUncheckedUpdateManyWithoutTripNestedInput = {
   deleteMany?: Prisma.RailTripStopScalarWhereInput | Prisma.RailTripStopScalarWhereInput[]
 }
 
+export type RailTripStopCreateNestedOneWithoutBoardingAllocationsInput = {
+  create?: Prisma.XOR<Prisma.RailTripStopCreateWithoutBoardingAllocationsInput, Prisma.RailTripStopUncheckedCreateWithoutBoardingAllocationsInput>
+  connectOrCreate?: Prisma.RailTripStopCreateOrConnectWithoutBoardingAllocationsInput
+  connect?: Prisma.RailTripStopWhereUniqueInput
+}
+
+export type RailTripStopCreateNestedOneWithoutDropAllocationsInput = {
+  create?: Prisma.XOR<Prisma.RailTripStopCreateWithoutDropAllocationsInput, Prisma.RailTripStopUncheckedCreateWithoutDropAllocationsInput>
+  connectOrCreate?: Prisma.RailTripStopCreateOrConnectWithoutDropAllocationsInput
+  connect?: Prisma.RailTripStopWhereUniqueInput
+}
+
+export type RailTripStopUpdateOneRequiredWithoutBoardingAllocationsNestedInput = {
+  create?: Prisma.XOR<Prisma.RailTripStopCreateWithoutBoardingAllocationsInput, Prisma.RailTripStopUncheckedCreateWithoutBoardingAllocationsInput>
+  connectOrCreate?: Prisma.RailTripStopCreateOrConnectWithoutBoardingAllocationsInput
+  upsert?: Prisma.RailTripStopUpsertWithoutBoardingAllocationsInput
+  connect?: Prisma.RailTripStopWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.RailTripStopUpdateToOneWithWhereWithoutBoardingAllocationsInput, Prisma.RailTripStopUpdateWithoutBoardingAllocationsInput>, Prisma.RailTripStopUncheckedUpdateWithoutBoardingAllocationsInput>
+}
+
+export type RailTripStopUpdateOneRequiredWithoutDropAllocationsNestedInput = {
+  create?: Prisma.XOR<Prisma.RailTripStopCreateWithoutDropAllocationsInput, Prisma.RailTripStopUncheckedCreateWithoutDropAllocationsInput>
+  connectOrCreate?: Prisma.RailTripStopCreateOrConnectWithoutDropAllocationsInput
+  upsert?: Prisma.RailTripStopUpsertWithoutDropAllocationsInput
+  connect?: Prisma.RailTripStopWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.RailTripStopUpdateToOneWithWhereWithoutDropAllocationsInput, Prisma.RailTripStopUpdateWithoutDropAllocationsInput>, Prisma.RailTripStopUncheckedUpdateWithoutDropAllocationsInput>
+}
+
 export type RailTripStopCreateWithoutStationInput = {
   id?: string
   sequence: number
@@ -640,6 +687,8 @@ export type RailTripStopCreateWithoutStationInput = {
   updatedAt?: Date | string
   trip: Prisma.RailTripCreateNestedOneWithoutStopsInput
   routeStop?: Prisma.RailRouteStopCreateNestedOneWithoutTripStopsInput
+  boardingAllocations?: Prisma.RailSeatAllocationCreateNestedManyWithoutBoardingTripStopInput
+  dropAllocations?: Prisma.RailSeatAllocationCreateNestedManyWithoutDropTripStopInput
 }
 
 export type RailTripStopUncheckedCreateWithoutStationInput = {
@@ -653,6 +702,8 @@ export type RailTripStopUncheckedCreateWithoutStationInput = {
   isDropAllowed?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  boardingAllocations?: Prisma.RailSeatAllocationUncheckedCreateNestedManyWithoutBoardingTripStopInput
+  dropAllocations?: Prisma.RailSeatAllocationUncheckedCreateNestedManyWithoutDropTripStopInput
 }
 
 export type RailTripStopCreateOrConnectWithoutStationInput = {
@@ -709,6 +760,8 @@ export type RailTripStopCreateWithoutRouteStopInput = {
   updatedAt?: Date | string
   trip: Prisma.RailTripCreateNestedOneWithoutStopsInput
   station: Prisma.RailStationCreateNestedOneWithoutTripStopsInput
+  boardingAllocations?: Prisma.RailSeatAllocationCreateNestedManyWithoutBoardingTripStopInput
+  dropAllocations?: Prisma.RailSeatAllocationCreateNestedManyWithoutDropTripStopInput
 }
 
 export type RailTripStopUncheckedCreateWithoutRouteStopInput = {
@@ -722,6 +775,8 @@ export type RailTripStopUncheckedCreateWithoutRouteStopInput = {
   isDropAllowed?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  boardingAllocations?: Prisma.RailSeatAllocationUncheckedCreateNestedManyWithoutBoardingTripStopInput
+  dropAllocations?: Prisma.RailSeatAllocationUncheckedCreateNestedManyWithoutDropTripStopInput
 }
 
 export type RailTripStopCreateOrConnectWithoutRouteStopInput = {
@@ -761,6 +816,8 @@ export type RailTripStopCreateWithoutTripInput = {
   updatedAt?: Date | string
   station: Prisma.RailStationCreateNestedOneWithoutTripStopsInput
   routeStop?: Prisma.RailRouteStopCreateNestedOneWithoutTripStopsInput
+  boardingAllocations?: Prisma.RailSeatAllocationCreateNestedManyWithoutBoardingTripStopInput
+  dropAllocations?: Prisma.RailSeatAllocationCreateNestedManyWithoutDropTripStopInput
 }
 
 export type RailTripStopUncheckedCreateWithoutTripInput = {
@@ -774,6 +831,8 @@ export type RailTripStopUncheckedCreateWithoutTripInput = {
   isDropAllowed?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  boardingAllocations?: Prisma.RailSeatAllocationUncheckedCreateNestedManyWithoutBoardingTripStopInput
+  dropAllocations?: Prisma.RailSeatAllocationUncheckedCreateNestedManyWithoutDropTripStopInput
 }
 
 export type RailTripStopCreateOrConnectWithoutTripInput = {
@@ -802,6 +861,158 @@ export type RailTripStopUpdateManyWithWhereWithoutTripInput = {
   data: Prisma.XOR<Prisma.RailTripStopUpdateManyMutationInput, Prisma.RailTripStopUncheckedUpdateManyWithoutTripInput>
 }
 
+export type RailTripStopCreateWithoutBoardingAllocationsInput = {
+  id?: string
+  sequence: number
+  arrivalAt?: Date | string | null
+  departureAt?: Date | string | null
+  isBoardingAllowed?: boolean
+  isDropAllowed?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  trip: Prisma.RailTripCreateNestedOneWithoutStopsInput
+  station: Prisma.RailStationCreateNestedOneWithoutTripStopsInput
+  routeStop?: Prisma.RailRouteStopCreateNestedOneWithoutTripStopsInput
+  dropAllocations?: Prisma.RailSeatAllocationCreateNestedManyWithoutDropTripStopInput
+}
+
+export type RailTripStopUncheckedCreateWithoutBoardingAllocationsInput = {
+  id?: string
+  tripId: string
+  stationId: string
+  routeStopId?: string | null
+  sequence: number
+  arrivalAt?: Date | string | null
+  departureAt?: Date | string | null
+  isBoardingAllowed?: boolean
+  isDropAllowed?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  dropAllocations?: Prisma.RailSeatAllocationUncheckedCreateNestedManyWithoutDropTripStopInput
+}
+
+export type RailTripStopCreateOrConnectWithoutBoardingAllocationsInput = {
+  where: Prisma.RailTripStopWhereUniqueInput
+  create: Prisma.XOR<Prisma.RailTripStopCreateWithoutBoardingAllocationsInput, Prisma.RailTripStopUncheckedCreateWithoutBoardingAllocationsInput>
+}
+
+export type RailTripStopCreateWithoutDropAllocationsInput = {
+  id?: string
+  sequence: number
+  arrivalAt?: Date | string | null
+  departureAt?: Date | string | null
+  isBoardingAllowed?: boolean
+  isDropAllowed?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  trip: Prisma.RailTripCreateNestedOneWithoutStopsInput
+  station: Prisma.RailStationCreateNestedOneWithoutTripStopsInput
+  routeStop?: Prisma.RailRouteStopCreateNestedOneWithoutTripStopsInput
+  boardingAllocations?: Prisma.RailSeatAllocationCreateNestedManyWithoutBoardingTripStopInput
+}
+
+export type RailTripStopUncheckedCreateWithoutDropAllocationsInput = {
+  id?: string
+  tripId: string
+  stationId: string
+  routeStopId?: string | null
+  sequence: number
+  arrivalAt?: Date | string | null
+  departureAt?: Date | string | null
+  isBoardingAllowed?: boolean
+  isDropAllowed?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  boardingAllocations?: Prisma.RailSeatAllocationUncheckedCreateNestedManyWithoutBoardingTripStopInput
+}
+
+export type RailTripStopCreateOrConnectWithoutDropAllocationsInput = {
+  where: Prisma.RailTripStopWhereUniqueInput
+  create: Prisma.XOR<Prisma.RailTripStopCreateWithoutDropAllocationsInput, Prisma.RailTripStopUncheckedCreateWithoutDropAllocationsInput>
+}
+
+export type RailTripStopUpsertWithoutBoardingAllocationsInput = {
+  update: Prisma.XOR<Prisma.RailTripStopUpdateWithoutBoardingAllocationsInput, Prisma.RailTripStopUncheckedUpdateWithoutBoardingAllocationsInput>
+  create: Prisma.XOR<Prisma.RailTripStopCreateWithoutBoardingAllocationsInput, Prisma.RailTripStopUncheckedCreateWithoutBoardingAllocationsInput>
+  where?: Prisma.RailTripStopWhereInput
+}
+
+export type RailTripStopUpdateToOneWithWhereWithoutBoardingAllocationsInput = {
+  where?: Prisma.RailTripStopWhereInput
+  data: Prisma.XOR<Prisma.RailTripStopUpdateWithoutBoardingAllocationsInput, Prisma.RailTripStopUncheckedUpdateWithoutBoardingAllocationsInput>
+}
+
+export type RailTripStopUpdateWithoutBoardingAllocationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
+  arrivalAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  departureAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isBoardingAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDropAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  trip?: Prisma.RailTripUpdateOneRequiredWithoutStopsNestedInput
+  station?: Prisma.RailStationUpdateOneRequiredWithoutTripStopsNestedInput
+  routeStop?: Prisma.RailRouteStopUpdateOneWithoutTripStopsNestedInput
+  dropAllocations?: Prisma.RailSeatAllocationUpdateManyWithoutDropTripStopNestedInput
+}
+
+export type RailTripStopUncheckedUpdateWithoutBoardingAllocationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tripId?: Prisma.StringFieldUpdateOperationsInput | string
+  stationId?: Prisma.StringFieldUpdateOperationsInput | string
+  routeStopId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
+  arrivalAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  departureAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isBoardingAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDropAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dropAllocations?: Prisma.RailSeatAllocationUncheckedUpdateManyWithoutDropTripStopNestedInput
+}
+
+export type RailTripStopUpsertWithoutDropAllocationsInput = {
+  update: Prisma.XOR<Prisma.RailTripStopUpdateWithoutDropAllocationsInput, Prisma.RailTripStopUncheckedUpdateWithoutDropAllocationsInput>
+  create: Prisma.XOR<Prisma.RailTripStopCreateWithoutDropAllocationsInput, Prisma.RailTripStopUncheckedCreateWithoutDropAllocationsInput>
+  where?: Prisma.RailTripStopWhereInput
+}
+
+export type RailTripStopUpdateToOneWithWhereWithoutDropAllocationsInput = {
+  where?: Prisma.RailTripStopWhereInput
+  data: Prisma.XOR<Prisma.RailTripStopUpdateWithoutDropAllocationsInput, Prisma.RailTripStopUncheckedUpdateWithoutDropAllocationsInput>
+}
+
+export type RailTripStopUpdateWithoutDropAllocationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
+  arrivalAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  departureAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isBoardingAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDropAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  trip?: Prisma.RailTripUpdateOneRequiredWithoutStopsNestedInput
+  station?: Prisma.RailStationUpdateOneRequiredWithoutTripStopsNestedInput
+  routeStop?: Prisma.RailRouteStopUpdateOneWithoutTripStopsNestedInput
+  boardingAllocations?: Prisma.RailSeatAllocationUpdateManyWithoutBoardingTripStopNestedInput
+}
+
+export type RailTripStopUncheckedUpdateWithoutDropAllocationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tripId?: Prisma.StringFieldUpdateOperationsInput | string
+  stationId?: Prisma.StringFieldUpdateOperationsInput | string
+  routeStopId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
+  arrivalAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  departureAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isBoardingAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDropAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  boardingAllocations?: Prisma.RailSeatAllocationUncheckedUpdateManyWithoutBoardingTripStopNestedInput
+}
+
 export type RailTripStopCreateManyStationInput = {
   id?: string
   tripId: string
@@ -826,6 +1037,8 @@ export type RailTripStopUpdateWithoutStationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   trip?: Prisma.RailTripUpdateOneRequiredWithoutStopsNestedInput
   routeStop?: Prisma.RailRouteStopUpdateOneWithoutTripStopsNestedInput
+  boardingAllocations?: Prisma.RailSeatAllocationUpdateManyWithoutBoardingTripStopNestedInput
+  dropAllocations?: Prisma.RailSeatAllocationUpdateManyWithoutDropTripStopNestedInput
 }
 
 export type RailTripStopUncheckedUpdateWithoutStationInput = {
@@ -839,6 +1052,8 @@ export type RailTripStopUncheckedUpdateWithoutStationInput = {
   isDropAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  boardingAllocations?: Prisma.RailSeatAllocationUncheckedUpdateManyWithoutBoardingTripStopNestedInput
+  dropAllocations?: Prisma.RailSeatAllocationUncheckedUpdateManyWithoutDropTripStopNestedInput
 }
 
 export type RailTripStopUncheckedUpdateManyWithoutStationInput = {
@@ -878,6 +1093,8 @@ export type RailTripStopUpdateWithoutRouteStopInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   trip?: Prisma.RailTripUpdateOneRequiredWithoutStopsNestedInput
   station?: Prisma.RailStationUpdateOneRequiredWithoutTripStopsNestedInput
+  boardingAllocations?: Prisma.RailSeatAllocationUpdateManyWithoutBoardingTripStopNestedInput
+  dropAllocations?: Prisma.RailSeatAllocationUpdateManyWithoutDropTripStopNestedInput
 }
 
 export type RailTripStopUncheckedUpdateWithoutRouteStopInput = {
@@ -891,6 +1108,8 @@ export type RailTripStopUncheckedUpdateWithoutRouteStopInput = {
   isDropAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  boardingAllocations?: Prisma.RailSeatAllocationUncheckedUpdateManyWithoutBoardingTripStopNestedInput
+  dropAllocations?: Prisma.RailSeatAllocationUncheckedUpdateManyWithoutDropTripStopNestedInput
 }
 
 export type RailTripStopUncheckedUpdateManyWithoutRouteStopInput = {
@@ -930,6 +1149,8 @@ export type RailTripStopUpdateWithoutTripInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   station?: Prisma.RailStationUpdateOneRequiredWithoutTripStopsNestedInput
   routeStop?: Prisma.RailRouteStopUpdateOneWithoutTripStopsNestedInput
+  boardingAllocations?: Prisma.RailSeatAllocationUpdateManyWithoutBoardingTripStopNestedInput
+  dropAllocations?: Prisma.RailSeatAllocationUpdateManyWithoutDropTripStopNestedInput
 }
 
 export type RailTripStopUncheckedUpdateWithoutTripInput = {
@@ -943,6 +1164,8 @@ export type RailTripStopUncheckedUpdateWithoutTripInput = {
   isDropAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  boardingAllocations?: Prisma.RailSeatAllocationUncheckedUpdateManyWithoutBoardingTripStopNestedInput
+  dropAllocations?: Prisma.RailSeatAllocationUncheckedUpdateManyWithoutDropTripStopNestedInput
 }
 
 export type RailTripStopUncheckedUpdateManyWithoutTripInput = {
@@ -958,6 +1181,44 @@ export type RailTripStopUncheckedUpdateManyWithoutTripInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+
+/**
+ * Count Type RailTripStopCountOutputType
+ */
+
+export type RailTripStopCountOutputType = {
+  boardingAllocations: number
+  dropAllocations: number
+}
+
+export type RailTripStopCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  boardingAllocations?: boolean | RailTripStopCountOutputTypeCountBoardingAllocationsArgs
+  dropAllocations?: boolean | RailTripStopCountOutputTypeCountDropAllocationsArgs
+}
+
+/**
+ * RailTripStopCountOutputType without action
+ */
+export type RailTripStopCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the RailTripStopCountOutputType
+   */
+  select?: Prisma.RailTripStopCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * RailTripStopCountOutputType without action
+ */
+export type RailTripStopCountOutputTypeCountBoardingAllocationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RailSeatAllocationWhereInput
+}
+
+/**
+ * RailTripStopCountOutputType without action
+ */
+export type RailTripStopCountOutputTypeCountDropAllocationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RailSeatAllocationWhereInput
+}
 
 
 export type RailTripStopSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -975,6 +1236,9 @@ export type RailTripStopSelect<ExtArgs extends runtime.Types.Extensions.Internal
   trip?: boolean | Prisma.RailTripDefaultArgs<ExtArgs>
   station?: boolean | Prisma.RailStationDefaultArgs<ExtArgs>
   routeStop?: boolean | Prisma.RailTripStop$routeStopArgs<ExtArgs>
+  boardingAllocations?: boolean | Prisma.RailTripStop$boardingAllocationsArgs<ExtArgs>
+  dropAllocations?: boolean | Prisma.RailTripStop$dropAllocationsArgs<ExtArgs>
+  _count?: boolean | Prisma.RailTripStopCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["railTripStop"]>
 
 export type RailTripStopSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1030,6 +1294,9 @@ export type RailTripStopInclude<ExtArgs extends runtime.Types.Extensions.Interna
   trip?: boolean | Prisma.RailTripDefaultArgs<ExtArgs>
   station?: boolean | Prisma.RailStationDefaultArgs<ExtArgs>
   routeStop?: boolean | Prisma.RailTripStop$routeStopArgs<ExtArgs>
+  boardingAllocations?: boolean | Prisma.RailTripStop$boardingAllocationsArgs<ExtArgs>
+  dropAllocations?: boolean | Prisma.RailTripStop$dropAllocationsArgs<ExtArgs>
+  _count?: boolean | Prisma.RailTripStopCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type RailTripStopIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   trip?: boolean | Prisma.RailTripDefaultArgs<ExtArgs>
@@ -1048,6 +1315,8 @@ export type $RailTripStopPayload<ExtArgs extends runtime.Types.Extensions.Intern
     trip: Prisma.$RailTripPayload<ExtArgs>
     station: Prisma.$RailStationPayload<ExtArgs>
     routeStop: Prisma.$RailRouteStopPayload<ExtArgs> | null
+    boardingAllocations: Prisma.$RailSeatAllocationPayload<ExtArgs>[]
+    dropAllocations: Prisma.$RailSeatAllocationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1458,6 +1727,8 @@ export interface Prisma__RailTripStopClient<T, Null = never, ExtArgs extends run
   trip<T extends Prisma.RailTripDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RailTripDefaultArgs<ExtArgs>>): Prisma.Prisma__RailTripClient<runtime.Types.Result.GetResult<Prisma.$RailTripPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   station<T extends Prisma.RailStationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RailStationDefaultArgs<ExtArgs>>): Prisma.Prisma__RailStationClient<runtime.Types.Result.GetResult<Prisma.$RailStationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   routeStop<T extends Prisma.RailTripStop$routeStopArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RailTripStop$routeStopArgs<ExtArgs>>): Prisma.Prisma__RailRouteStopClient<runtime.Types.Result.GetResult<Prisma.$RailRouteStopPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  boardingAllocations<T extends Prisma.RailTripStop$boardingAllocationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RailTripStop$boardingAllocationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RailSeatAllocationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  dropAllocations<T extends Prisma.RailTripStop$dropAllocationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RailTripStop$dropAllocationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RailSeatAllocationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1910,6 +2181,54 @@ export type RailTripStop$routeStopArgs<ExtArgs extends runtime.Types.Extensions.
    */
   include?: Prisma.RailRouteStopInclude<ExtArgs> | null
   where?: Prisma.RailRouteStopWhereInput
+}
+
+/**
+ * RailTripStop.boardingAllocations
+ */
+export type RailTripStop$boardingAllocationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the RailSeatAllocation
+   */
+  select?: Prisma.RailSeatAllocationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the RailSeatAllocation
+   */
+  omit?: Prisma.RailSeatAllocationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RailSeatAllocationInclude<ExtArgs> | null
+  where?: Prisma.RailSeatAllocationWhereInput
+  orderBy?: Prisma.RailSeatAllocationOrderByWithRelationInput | Prisma.RailSeatAllocationOrderByWithRelationInput[]
+  cursor?: Prisma.RailSeatAllocationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RailSeatAllocationScalarFieldEnum | Prisma.RailSeatAllocationScalarFieldEnum[]
+}
+
+/**
+ * RailTripStop.dropAllocations
+ */
+export type RailTripStop$dropAllocationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the RailSeatAllocation
+   */
+  select?: Prisma.RailSeatAllocationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the RailSeatAllocation
+   */
+  omit?: Prisma.RailSeatAllocationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RailSeatAllocationInclude<ExtArgs> | null
+  where?: Prisma.RailSeatAllocationWhereInput
+  orderBy?: Prisma.RailSeatAllocationOrderByWithRelationInput | Prisma.RailSeatAllocationOrderByWithRelationInput[]
+  cursor?: Prisma.RailSeatAllocationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RailSeatAllocationScalarFieldEnum | Prisma.RailSeatAllocationScalarFieldEnum[]
 }
 
 /**

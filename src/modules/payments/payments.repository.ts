@@ -45,6 +45,7 @@ export class PaymentsRepository extends BaseRepository {
       return await this.prisma.payment.create({
         data: {
           bookingId: input.bookingId,
+          domainType: input.domainType.toUpperCase() as never,
           reservationId: input.reservationId ?? null,
           provider: input.provider,
           providerRef: input.providerRef,

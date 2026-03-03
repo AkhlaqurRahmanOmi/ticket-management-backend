@@ -7,6 +7,7 @@ import {
   Max,
   MaxLength,
   Min,
+  MinLength,
 } from 'class-validator';
 
 export class GetRailTripAvailabilityQueryDto {
@@ -37,4 +38,22 @@ export class GetRailTripAvailabilityQueryDto {
   @IsString()
   @MaxLength(32)
   coachCode?: string;
+
+  @IsOptional()
+  @Transform(({ value }) =>
+    typeof value === 'string' ? value.trim().toUpperCase() : value,
+  )
+  @IsString()
+  @MinLength(2)
+  @MaxLength(16)
+  boardingStationCode?: string;
+
+  @IsOptional()
+  @Transform(({ value }) =>
+    typeof value === 'string' ? value.trim().toUpperCase() : value,
+  )
+  @IsString()
+  @MinLength(2)
+  @MaxLength(16)
+  dropStationCode?: string;
 }

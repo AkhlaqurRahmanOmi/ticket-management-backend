@@ -307,6 +307,23 @@ export type EnumRailTripStatusWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumRailTripStatusFilter<$PrismaModel>
 }
 
+export type EnumFlightInstanceStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.FlightInstanceStatus | Prisma.EnumFlightInstanceStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.FlightInstanceStatus[] | Prisma.ListEnumFlightInstanceStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.FlightInstanceStatus[] | Prisma.ListEnumFlightInstanceStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumFlightInstanceStatusFilter<$PrismaModel> | $Enums.FlightInstanceStatus
+}
+
+export type EnumFlightInstanceStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.FlightInstanceStatus | Prisma.EnumFlightInstanceStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.FlightInstanceStatus[] | Prisma.ListEnumFlightInstanceStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.FlightInstanceStatus[] | Prisma.ListEnumFlightInstanceStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumFlightInstanceStatusWithAggregatesFilter<$PrismaModel> | $Enums.FlightInstanceStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumFlightInstanceStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumFlightInstanceStatusFilter<$PrismaModel>
+}
+
 export type EnumBookingDomainFilter<$PrismaModel = never> = {
   equals?: $Enums.BookingDomain | Prisma.EnumBookingDomainFieldRefInput<$PrismaModel>
   in?: $Enums.BookingDomain[] | Prisma.ListEnumBookingDomainFieldRefInput<$PrismaModel>
@@ -913,6 +930,23 @@ export type NestedEnumRailTripStatusWithAggregatesFilter<$PrismaModel = never> =
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumRailTripStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumRailTripStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumFlightInstanceStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.FlightInstanceStatus | Prisma.EnumFlightInstanceStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.FlightInstanceStatus[] | Prisma.ListEnumFlightInstanceStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.FlightInstanceStatus[] | Prisma.ListEnumFlightInstanceStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumFlightInstanceStatusFilter<$PrismaModel> | $Enums.FlightInstanceStatus
+}
+
+export type NestedEnumFlightInstanceStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.FlightInstanceStatus | Prisma.EnumFlightInstanceStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.FlightInstanceStatus[] | Prisma.ListEnumFlightInstanceStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.FlightInstanceStatus[] | Prisma.ListEnumFlightInstanceStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumFlightInstanceStatusWithAggregatesFilter<$PrismaModel> | $Enums.FlightInstanceStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumFlightInstanceStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumFlightInstanceStatusFilter<$PrismaModel>
 }
 
 export type NestedEnumBookingDomainFilter<$PrismaModel = never> = {

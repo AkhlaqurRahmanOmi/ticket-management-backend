@@ -10,6 +10,11 @@ import {
   type CreateSeatHoldResult,
   type SeatHoldInput,
 } from './types/booking-hold.types';
+import {
+  type CreateRailSeatHoldResult,
+  type RailBookingHoldRecord,
+  type RailSeatHoldInput,
+} from './types/rail-booking-hold.types';
 import { type BookingPaymentTarget } from './types/booking-payment.types';
 
 @Injectable()
@@ -92,10 +97,76 @@ export class BookingsService {
     }
   }
 
+  async createRailSeatHold(
+    userId: string,
+    input: RailSeatHoldInput,
+    correlationId?: string,
+  ): Promise<CreateRailSeatHoldResult> {
+    const existing =
+      await this.bookingsRepository.findRailHoldByUserAndIdempotencyKey(
+        userId,
+        input.idempotencyKey,
+      );
+
+    if (existing) {
+      return {
+        hold: existing,
+        correlationId: correlationId ?? randomUUID(),
+        resolution: 'existing',
+      };
+    }
+
+    const effectiveCorrelationId = correlationId ?? randomUUID();
+
+    try {
+      const hold = await this.bookingsRepository.createRailSeatHold({
+        ...input,
+        userId,
+        ttlMinutes: this.resolveHoldTtlMinutes(),
+        correlationId: effectiveCorrelationId,
+      });
+
+      if (!hold) {
+        throw new NotFoundException('Rail booking hold could not be created.');
+      }
+
+      return {
+        hold,
+        correlationId: effectiveCorrelationId,
+        resolution: 'created',
+      };
+    } catch (error) {
+      const recovered =
+        await this.bookingsRepository.findRailHoldByUserAndIdempotencyKey(
+          userId,
+          input.idempotencyKey,
+        );
+
+      if (recovered) {
+        return {
+          hold: recovered,
+          correlationId: effectiveCorrelationId,
+          resolution: 'recovered',
+        };
+      }
+
+      throw error;
+    }
+  }
+
   async getHoldOrThrow(holdId: string): Promise<BookingHoldRecord> {
     const hold = await this.bookingsRepository.findHoldById(holdId);
     if (!hold) {
       throw new NotFoundException('Reservation not found.');
+    }
+
+    return hold;
+  }
+
+  async getRailHoldOrThrow(holdId: string): Promise<RailBookingHoldRecord> {
+    const hold = await this.bookingsRepository.findRailHoldById(holdId);
+    if (!hold) {
+      throw new NotFoundException('Rail hold not found.');
     }
 
     return hold;

@@ -160,6 +160,36 @@ export type RailSeat = Prisma.RailSeatModel
  */
 export type RailTripSeat = Prisma.RailTripSeatModel
 /**
+ * Model RailSeatAllocation
+ * 
+ */
+export type RailSeatAllocation = Prisma.RailSeatAllocationModel
+/**
+ * Model Airport
+ * 
+ */
+export type Airport = Prisma.AirportModel
+/**
+ * Model Carrier
+ * 
+ */
+export type Carrier = Prisma.CarrierModel
+/**
+ * Model FlightService
+ * 
+ */
+export type FlightService = Prisma.FlightServiceModel
+/**
+ * Model FlightInstance
+ * 
+ */
+export type FlightInstance = Prisma.FlightInstanceModel
+/**
+ * Model FlightCabinInventory
+ * 
+ */
+export type FlightCabinInventory = Prisma.FlightCabinInventoryModel
+/**
  * Model Reservation
  * 
  */
@@ -215,6 +245,11 @@ export type PaymentWebhookEvent = Prisma.PaymentWebhookEventModel
  * 
  */
 export type Ticket = Prisma.TicketModel
+/**
+ * Model RailIssuedDocument
+ * 
+ */
+export type RailIssuedDocument = Prisma.RailIssuedDocumentModel
 /**
  * Model IdempotencyKey
  * Generic idempotency store to support safe retries across endpoints.

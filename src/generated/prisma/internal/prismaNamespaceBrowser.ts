@@ -75,6 +75,12 @@ export const ModelName = {
   RailCoach: 'RailCoach',
   RailSeat: 'RailSeat',
   RailTripSeat: 'RailTripSeat',
+  RailSeatAllocation: 'RailSeatAllocation',
+  Airport: 'Airport',
+  Carrier: 'Carrier',
+  FlightService: 'FlightService',
+  FlightInstance: 'FlightInstance',
+  FlightCabinInventory: 'FlightCabinInventory',
   Reservation: 'Reservation',
   ReservationItem: 'ReservationItem',
   Booking: 'Booking',
@@ -85,6 +91,7 @@ export const ModelName = {
   Payment: 'Payment',
   PaymentWebhookEvent: 'PaymentWebhookEvent',
   Ticket: 'Ticket',
+  RailIssuedDocument: 'RailIssuedDocument',
   IdempotencyKey: 'IdempotencyKey',
   OutboxEvent: 'OutboxEvent',
   AuditLog: 'AuditLog'
@@ -442,6 +449,100 @@ export const RailTripSeatScalarFieldEnum = {
 export type RailTripSeatScalarFieldEnum = (typeof RailTripSeatScalarFieldEnum)[keyof typeof RailTripSeatScalarFieldEnum]
 
 
+export const RailSeatAllocationScalarFieldEnum = {
+  id: 'id',
+  bookingId: 'bookingId',
+  bookingItemId: 'bookingItemId',
+  tripId: 'tripId',
+  tripSeatId: 'tripSeatId',
+  boardingTripStopId: 'boardingTripStopId',
+  dropTripStopId: 'dropTripStopId',
+  boardingSequence: 'boardingSequence',
+  dropSequence: 'dropSequence',
+  createdAt: 'createdAt',
+  confirmedAt: 'confirmedAt',
+  expiredAt: 'expiredAt',
+  cancelledAt: 'cancelledAt',
+  releasedAt: 'releasedAt'
+} as const
+
+export type RailSeatAllocationScalarFieldEnum = (typeof RailSeatAllocationScalarFieldEnum)[keyof typeof RailSeatAllocationScalarFieldEnum]
+
+
+export const AirportScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  code: 'code',
+  city: 'city',
+  country: 'country',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AirportScalarFieldEnum = (typeof AirportScalarFieldEnum)[keyof typeof AirportScalarFieldEnum]
+
+
+export const CarrierScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  code: 'code',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CarrierScalarFieldEnum = (typeof CarrierScalarFieldEnum)[keyof typeof CarrierScalarFieldEnum]
+
+
+export const FlightServiceScalarFieldEnum = {
+  id: 'id',
+  carrierId: 'carrierId',
+  originAirportId: 'originAirportId',
+  destinationAirportId: 'destinationAirportId',
+  flightNumber: 'flightNumber',
+  title: 'title',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FlightServiceScalarFieldEnum = (typeof FlightServiceScalarFieldEnum)[keyof typeof FlightServiceScalarFieldEnum]
+
+
+export const FlightInstanceScalarFieldEnum = {
+  id: 'id',
+  flightServiceId: 'flightServiceId',
+  originAirportId: 'originAirportId',
+  destinationAirportId: 'destinationAirportId',
+  departsAt: 'departsAt',
+  arrivesAt: 'arrivesAt',
+  status: 'status',
+  currency: 'currency',
+  basePriceCents: 'basePriceCents',
+  feesCents: 'feesCents',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FlightInstanceScalarFieldEnum = (typeof FlightInstanceScalarFieldEnum)[keyof typeof FlightInstanceScalarFieldEnum]
+
+
+export const FlightCabinInventoryScalarFieldEnum = {
+  id: 'id',
+  flightInstanceId: 'flightInstanceId',
+  cabinCode: 'cabinCode',
+  fareClassCode: 'fareClassCode',
+  quantityTotal: 'quantityTotal',
+  quantityAvailable: 'quantityAvailable',
+  quantityReserved: 'quantityReserved',
+  quantitySold: 'quantitySold',
+  priceCents: 'priceCents',
+  feesCents: 'feesCents',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FlightCabinInventoryScalarFieldEnum = (typeof FlightCabinInventoryScalarFieldEnum)[keyof typeof FlightCabinInventoryScalarFieldEnum]
+
+
 export const ReservationScalarFieldEnum = {
   id: 'id',
   eventId: 'eventId',
@@ -631,6 +732,27 @@ export const TicketScalarFieldEnum = {
 } as const
 
 export type TicketScalarFieldEnum = (typeof TicketScalarFieldEnum)[keyof typeof TicketScalarFieldEnum]
+
+
+export const RailIssuedDocumentScalarFieldEnum = {
+  id: 'id',
+  bookingId: 'bookingId',
+  bookingItemId: 'bookingItemId',
+  paymentId: 'paymentId',
+  userId: 'userId',
+  tripId: 'tripId',
+  tripSeatId: 'tripSeatId',
+  status: 'status',
+  code: 'code',
+  issuedAt: 'issuedAt',
+  voidedAt: 'voidedAt',
+  refundedAt: 'refundedAt',
+  metadata: 'metadata',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type RailIssuedDocumentScalarFieldEnum = (typeof RailIssuedDocumentScalarFieldEnum)[keyof typeof RailIssuedDocumentScalarFieldEnum]
 
 
 export const IdempotencyKeyScalarFieldEnum = {

@@ -8,6 +8,13 @@ export type RailStationSummary = {
   country: string | null;
 };
 
+export type RailRequestedSegment = {
+  boardingStationCode: string;
+  dropStationCode: string;
+  boardingSequence: number;
+  dropSequence: number;
+};
+
 export type RailTripAvailabilitySummary = {
   totalSeats: number;
   availableSeats: number;
@@ -32,6 +39,7 @@ export type RailTripSummary = {
 
 export type RailTripSearchItem = RailTripSummary & {
   availability: RailTripAvailabilitySummary;
+  requestedSegment: RailRequestedSegment;
 };
 
 export type RailTripSearchResult = {
@@ -54,6 +62,7 @@ export type RailTripAvailabilityItem = {
 
 export type RailTripSeatAvailabilityResult = {
   trip: RailTripSummary;
+  requestedSegment: RailRequestedSegment | null;
   items: RailTripAvailabilityItem[];
   meta: PaginationMeta;
 };

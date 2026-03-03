@@ -27,6 +27,15 @@ export const RailTripStatus = {
 export type RailTripStatus = (typeof RailTripStatus)[keyof typeof RailTripStatus]
 
 
+export const FlightInstanceStatus = {
+  DRAFT: 'DRAFT',
+  PUBLISHED: 'PUBLISHED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type FlightInstanceStatus = (typeof FlightInstanceStatus)[keyof typeof FlightInstanceStatus]
+
+
 export const BookingDomain = {
   EVENT: 'EVENT',
   RAIL: 'RAIL',

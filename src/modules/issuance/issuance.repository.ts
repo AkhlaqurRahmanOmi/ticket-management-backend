@@ -13,6 +13,7 @@ import type {
   IssuedDocumentRecord,
   IssueDocumentsInput,
   IssueDocumentsResult,
+  RailIssuedDocumentRow,
   TicketIssuedDocumentRow,
 } from './types/issued-document.types';
 
@@ -100,6 +101,52 @@ export class IssuanceRepository extends BaseRepository {
     });
 
     return tickets.map((ticket) => this.mapTicketToIssuedDocument(ticket));
+  }
+
+  async findRailIssuedDocumentById(
+    documentId: string,
+  ): Promise<IssuedDocumentRecord | null> {
+    const rows = await this.prisma.$queryRaw<RailIssuedDocumentRow[]>`
+      SELECT
+        "id",
+        "status",
+        "code",
+        "issuedAt",
+        "bookingId",
+        "paymentId",
+        "userId",
+        "tripId",
+        "tripSeatId",
+        "metadata"
+      FROM "RailIssuedDocument"
+      WHERE "id" = ${documentId}::uuid
+      LIMIT 1
+    `;
+
+    return rows[0] ? this.mapRailIssuedDocument(rows[0]) : null;
+  }
+
+  async findRailIssuedDocumentsByUserId(
+    userId: string,
+  ): Promise<IssuedDocumentRecord[]> {
+    const rows = await this.prisma.$queryRaw<RailIssuedDocumentRow[]>`
+      SELECT
+        "id",
+        "status",
+        "code",
+        "issuedAt",
+        "bookingId",
+        "paymentId",
+        "userId",
+        "tripId",
+        "tripSeatId",
+        "metadata"
+      FROM "RailIssuedDocument"
+      WHERE "userId" = ${userId}::uuid
+      ORDER BY "issuedAt" DESC
+    `;
+
+    return rows.map((row) => this.mapRailIssuedDocument(row));
   }
 
   async finalizeIssuedDocumentsFromPaymentSucceeded(
@@ -435,6 +482,327 @@ export class IssuanceRepository extends BaseRepository {
     });
   }
 
+  async finalizeRailIssuedDocumentsFromPaymentSucceeded(
+    input: IssueDocumentsInput,
+  ): Promise<IssueDocumentsResult> {
+    return this.withTransaction(async (tx) => {
+      const now = new Date();
+
+      await tx.$queryRaw`
+        SELECT "id"
+        FROM "Payment"
+        WHERE "id" = ${input.paymentId}::uuid
+        FOR UPDATE
+      `;
+
+      const payment = await tx.payment.findUnique({
+        where: { id: input.paymentId },
+        select: {
+          id: true,
+          bookingId: true,
+          domainType: true,
+          status: true,
+          amountCents: true,
+          currency: true,
+          reservationId: true,
+          booking: {
+            select: {
+              id: true,
+              userId: true,
+              domainType: true,
+              status: true,
+              holdExpiresAt: true,
+              currency: true,
+              metadata: true,
+              items: {
+                select: {
+                  id: true,
+                  status: true,
+                  quantity: true,
+                  unitPriceCents: true,
+                  feesCents: true,
+                  inventoryRefId: true,
+                  seatLabel: true,
+                  segmentRefId: true,
+                  railSeatAllocations: {
+                    where: {
+                      releasedAt: null,
+                      cancelledAt: null,
+                      expiredAt: null,
+                    },
+                    select: {
+                      id: true,
+                      tripId: true,
+                      tripSeatId: true,
+                      boardingSequence: true,
+                      dropSequence: true,
+                      boardingTripStop: {
+                        select: {
+                          station: {
+                            select: {
+                              code: true,
+                            },
+                          },
+                        },
+                      },
+                      dropTripStop: {
+                        select: {
+                          station: {
+                            select: {
+                              code: true,
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (!payment) {
+        throw new NotFoundException('Payment not found.');
+      }
+
+      const existingDocuments = await tx.$queryRaw<RailIssuedDocumentRow[]>`
+        SELECT
+          "id",
+          "status",
+          "code",
+          "issuedAt",
+          "bookingId",
+          "paymentId",
+          "userId",
+          "tripId",
+          "tripSeatId",
+          "metadata"
+        FROM "RailIssuedDocument"
+        WHERE "paymentId" = ${payment.id}::uuid
+        ORDER BY "issuedAt" DESC
+      `;
+
+      if (payment.status !== 'SUCCEEDED') {
+        return {
+          processed: false,
+          idempotent: true,
+          paymentId: payment.id,
+          bookingId: payment.bookingId,
+          orderId: null,
+          reservationId: payment.reservationId,
+          inventoryScopeId: payment.bookingId
+            ? this.getMetadataString(payment.booking?.metadata, 'inventoryScopeId')
+            : null,
+          issuedDocumentIds: existingDocuments.map((document) => document.id),
+          affectedInventoryRefIds: [],
+          reason: 'payment_not_succeeded',
+        };
+      }
+
+      if (existingDocuments.length > 0) {
+        return {
+          processed: false,
+          idempotent: true,
+          paymentId: payment.id,
+          bookingId: payment.bookingId,
+          orderId: null,
+          reservationId: payment.reservationId,
+          inventoryScopeId:
+            existingDocuments[0]?.tripId ??
+            this.getMetadataString(payment.booking?.metadata, 'inventoryScopeId'),
+          issuedDocumentIds: existingDocuments.map((document) => document.id),
+          affectedInventoryRefIds: [
+            ...new Set(existingDocuments.map((document) => document.tripSeatId)),
+          ],
+          reason: 'already_finalized',
+        };
+      }
+
+      const booking = payment.booking;
+      if (!booking || booking.domainType !== 'RAIL') {
+        throw new ConflictException(
+          'Payment is not linked to a rail booking. Manual remediation required.',
+        );
+      }
+
+      if (
+        booking.status === 'EXPIRED' ||
+        booking.status === 'CANCELLED' ||
+        (booking.status === 'HOLD' &&
+          booking.holdExpiresAt instanceof Date &&
+          booking.holdExpiresAt <= now)
+      ) {
+        throw new ConflictException(
+          'Rail booking is no longer active. Manual remediation/refund required.',
+        );
+      }
+
+      const totalCents = booking.items.reduce(
+        (sum, item) => sum + item.quantity * (item.unitPriceCents + item.feesCents),
+        0,
+      );
+
+      if (payment.amountCents !== totalCents) {
+        throw new ConflictException(
+          'Payment amount does not match rail booking total.',
+        );
+      }
+
+      if (payment.currency.toUpperCase() !== booking.currency.toUpperCase()) {
+        throw new ConflictException(
+          'Payment currency does not match rail booking currency.',
+        );
+      }
+
+      const issuedDocumentIds: string[] = [];
+      const affectedInventoryRefIds: string[] = [];
+
+      for (const item of booking.items) {
+        if (item.quantity !== 1) {
+          throw new ConflictException(
+            'Rail seat booking item quantity must be 1.',
+          );
+        }
+
+        const allocation = item.railSeatAllocations[0];
+        if (!allocation) {
+          throw new ConflictException(
+            `Rail booking item ${item.id} has no active seat allocation.`,
+          );
+        }
+
+        const documentId = randomUUID();
+        const documentCode = this.buildRailDocumentCode(
+          booking.id,
+          item.id,
+          issuedDocumentIds.length,
+        );
+        const metadata = {
+          inventoryScopeId: allocation.tripId,
+          inventoryRefId: allocation.tripSeatId,
+          segmentRefId: item.segmentRefId,
+          seatLabel: item.seatLabel,
+          boardingStationCode: allocation.boardingTripStop.station.code,
+          dropStationCode: allocation.dropTripStop.station.code,
+        };
+
+        await tx.$queryRaw`
+          INSERT INTO "RailIssuedDocument" (
+            "id",
+            "bookingId",
+            "bookingItemId",
+            "paymentId",
+            "userId",
+            "tripId",
+            "tripSeatId",
+            "status",
+            "code",
+            "issuedAt",
+            "metadata",
+            "createdAt",
+            "updatedAt"
+          )
+          VALUES (
+            ${documentId}::uuid,
+            ${booking.id}::uuid,
+            ${item.id}::uuid,
+            ${payment.id}::uuid,
+            ${booking.userId}::uuid,
+            ${allocation.tripId}::uuid,
+            ${allocation.tripSeatId}::uuid,
+            'ISSUED',
+            ${documentCode},
+            ${now},
+            CAST(${JSON.stringify(metadata)} AS jsonb),
+            ${now},
+            ${now}
+          )
+        `;
+
+        issuedDocumentIds.push(documentId);
+        affectedInventoryRefIds.push(allocation.tripSeatId);
+      }
+
+      await tx.booking.updateMany({
+        where: {
+          id: booking.id,
+          status: 'HOLD',
+        },
+        data: {
+          status: 'CONFIRMED',
+          confirmedAt: now,
+          holdExpiresAt: null,
+        } as never,
+      });
+
+      await tx.bookingItem.updateMany({
+        where: {
+          bookingId: booking.id,
+          status: 'HOLD',
+        },
+        data: {
+          status: 'CONFIRMED',
+          confirmedAt: now,
+        } as never,
+      });
+
+      await tx.railSeatAllocation.updateMany({
+        where: {
+          bookingId: booking.id,
+          releasedAt: null,
+          cancelledAt: null,
+          expiredAt: null,
+          confirmedAt: null,
+        },
+        data: {
+          confirmedAt: now,
+        },
+      });
+
+      await tx.outboxEvent.create({
+        data: {
+          topic: 'ticket.issued',
+          key: booking.id,
+          payload: {
+            eventId: randomUUID(),
+            occurredAt: now.toISOString(),
+            version: 1,
+            correlationId: input.correlationId ?? null,
+            actor: input.actor ?? booking.userId,
+            data: {
+              paymentId: payment.id,
+              bookingId: booking.id,
+              tripId:
+                this.getMetadataString(booking.metadata, 'tripId') ??
+                this.getMetadataString(booking.metadata, 'inventoryScopeId'),
+              issuedDocumentIds,
+              tripSeatIds: [...new Set(affectedInventoryRefIds)],
+            },
+          } as never,
+          status: 'PENDING',
+          correlationId: input.correlationId ?? null,
+          actorUserId: booking.userId,
+        },
+      });
+
+      return {
+        processed: true,
+        idempotent: false,
+        paymentId: payment.id,
+        bookingId: booking.id,
+        orderId: null,
+        reservationId: payment.reservationId,
+        inventoryScopeId:
+          this.getMetadataString(booking.metadata, 'tripId') ??
+          this.getMetadataString(booking.metadata, 'inventoryScopeId'),
+        issuedDocumentIds,
+        affectedInventoryRefIds: [...new Set(affectedInventoryRefIds)],
+      };
+    });
+  }
+
   private mapTicketToIssuedDocument(
     ticket: TicketIssuedDocumentRow,
   ): IssuedDocumentRecord {
@@ -452,6 +820,35 @@ export class IssuanceRepository extends BaseRepository {
         inventoryScopeId: ticket.eventId,
         inventoryRefId: ticket.eventSeatId,
         categoryRefId: ticket.ticketTypeId,
+      },
+    };
+  }
+
+  private mapRailIssuedDocument(
+    document: RailIssuedDocumentRow,
+  ): IssuedDocumentRecord {
+    const metadata = this.parseMetadata(document.metadata);
+
+    return {
+      id: document.id,
+      domainType: BookingDomain.RAIL,
+      kind: 'RAIL_TICKET',
+      status: document.status,
+      documentNumber: document.code,
+      bookingId: document.bookingId,
+      orderId: null,
+      ownerUserId: document.userId,
+      issuedAt: document.issuedAt,
+      metadata: {
+        inventoryScopeId: document.tripId,
+        inventoryRefId: document.tripSeatId,
+        segmentRefId: this.getMetadataString(metadata, 'segmentRefId'),
+        seatLabel: this.getMetadataString(metadata, 'seatLabel'),
+        boardingStationCode: this.getMetadataString(
+          metadata,
+          'boardingStationCode',
+        ),
+        dropStationCode: this.getMetadataString(metadata, 'dropStationCode'),
       },
     };
   }
@@ -474,5 +871,47 @@ export class IssuanceRepository extends BaseRepository {
     index: number,
   ): string {
     return `tkt_${orderId}_${reservationItemId}_${index + 1}`;
+  }
+
+  private buildRailDocumentCode(
+    bookingId: string,
+    bookingItemId: string,
+    index: number,
+  ): string {
+    return `rail_${bookingId.slice(0, 8)}_${bookingItemId.slice(0, 8)}_${index + 1}`;
+  }
+
+  private parseMetadata(metadata: unknown): Record<string, unknown> {
+    if (!metadata) {
+      return {};
+    }
+
+    if (typeof metadata === 'string') {
+      try {
+        const parsed = JSON.parse(metadata) as unknown;
+        return this.parseMetadata(parsed);
+      } catch {
+        return {};
+      }
+    }
+
+    if (typeof metadata === 'object' && !Array.isArray(metadata)) {
+      return metadata as Record<string, unknown>;
+    }
+
+    return {};
+  }
+
+  private getMetadataString(
+    metadata: Record<string, unknown> | unknown,
+    key: string,
+  ): string | null {
+    const source =
+      typeof metadata === 'object' && metadata !== null && !Array.isArray(metadata)
+        ? (metadata as Record<string, unknown>)
+        : {};
+    const value = source[key];
+
+    return typeof value === 'string' && value.length > 0 ? value : null;
   }
 }

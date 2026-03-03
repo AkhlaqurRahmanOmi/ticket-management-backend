@@ -9,6 +9,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CheckPolicies } from '@/common/decorators/check-policies.decorator';
 import { CurrentUser } from '@/common/decorators/current-user.decorator';
 import { Roles } from '@/common/decorators/roles.decorator';
@@ -24,6 +25,8 @@ import { EventsService } from './events.service';
 import { GetEventSeatsQueryDto } from './dto/get-event-seats.query.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 
+@ApiTags('Event Booking')
+@ApiBearerAuth('access-token')
 @Controller('events')
 export class EventsController {
   constructor(private readonly eventsService: EventsService) {}

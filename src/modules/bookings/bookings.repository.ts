@@ -10,7 +10,13 @@ import {
 } from './types/booking-hold.types';
 import { type BookingPaymentTarget } from './types/booking-payment.types';
 import {
+  type CreateRailSeatHoldInput,
+  type RailBookingHoldRecord,
+} from './types/rail-booking-hold.types';
+import {
   type BookingPaymentTargetRow,
+  type ExpiredHoldCandidate,
+  type RailHoldRow,
   type ReservationHoldRow,
 } from './types/booking-repository.types';
 
@@ -34,6 +40,7 @@ const reservationHoldSelect = {
 
 const bookingPaymentTargetSelect = {
   id: true,
+  domainType: true,
   userId: true,
   status: true,
   holdExpiresAt: true,
@@ -47,6 +54,74 @@ const bookingPaymentTargetSelect = {
       inventoryType: true,
       inventoryRefId: true,
       seatLabel: true,
+    },
+  },
+} as const;
+
+const railHoldSelect = {
+  id: true,
+  userId: true,
+  status: true,
+  holdExpiresAt: true,
+  idempotencyKey: true,
+  createdAt: true,
+  metadata: true,
+  items: {
+    select: {
+      id: true,
+      inventoryRefId: true,
+      quantity: true,
+      unitPriceCents: true,
+      feesCents: true,
+      seatLabel: true,
+      railSeatAllocations: {
+        where: {
+          releasedAt: null,
+          cancelledAt: null,
+        },
+        select: {
+          tripId: true,
+          tripSeatId: true,
+          boardingSequence: true,
+          dropSequence: true,
+          boardingTripStopId: true,
+          dropTripStopId: true,
+          boardingTripStop: {
+            select: {
+              station: {
+                select: {
+                  code: true,
+                },
+              },
+            },
+          },
+          dropTripStop: {
+            select: {
+              station: {
+                select: {
+                  code: true,
+                },
+              },
+            },
+          },
+          tripSeat: {
+            select: {
+              coach: {
+                select: {
+                  code: true,
+                },
+              },
+              seat: {
+                select: {
+                  seatNumber: true,
+                  code: true,
+                  label: true,
+                },
+              },
+            },
+          },
+        },
+      },
     },
   },
 } as const;
@@ -91,6 +166,36 @@ export class BookingsRepository extends BaseRepository {
         select: reservationHoldSelect,
       })
       .then((row) => this.mapReservationHold(row as ReservationHoldRow | null));
+  }
+
+  findRailHoldByUserAndIdempotencyKey(
+    userId: string,
+    idempotencyKey: string,
+  ): Promise<RailBookingHoldRecord | null> {
+    return this.prisma.booking
+      .findUnique({
+        where: {
+          userId_domainType_idempotencyKey: {
+            userId,
+            domainType: 'RAIL',
+            idempotencyKey,
+          },
+        },
+        select: railHoldSelect,
+      })
+      .then((row) => this.mapRailHold(row as RailHoldRow | null));
+  }
+
+  findRailHoldById(holdId: string): Promise<RailBookingHoldRecord | null> {
+    return this.prisma.booking
+      .findFirst({
+        where: {
+          id: holdId,
+          domainType: 'RAIL',
+        },
+        select: railHoldSelect,
+      })
+      .then((row) => this.mapRailHold(row as RailHoldRow | null));
   }
 
   async createSeatHold(
@@ -273,6 +378,193 @@ export class BookingsRepository extends BaseRepository {
     });
   }
 
+  async createRailSeatHold(
+    input: CreateRailSeatHoldInput,
+  ): Promise<RailBookingHoldRecord | null> {
+    return this.withTransaction(async (tx) => {
+      const now = new Date();
+      const expiresAt = new Date(now.getTime() + input.ttlMinutes * 60_000);
+
+      const tripSeat = await tx.railTripSeat.findUnique({
+        where: { id: input.tripSeatId },
+        select: {
+          id: true,
+          tripId: true,
+          status: true,
+          priceCents: true,
+          feesCents: true,
+          trip: {
+            select: {
+              orgId: true,
+              currency: true,
+              basePriceCents: true,
+              feesCents: true,
+              status: true,
+            },
+          },
+          coach: {
+            select: {
+              code: true,
+            },
+          },
+          seat: {
+            select: {
+              seatNumber: true,
+              code: true,
+              label: true,
+            },
+          },
+        },
+      });
+
+      if (!tripSeat || tripSeat.tripId !== input.tripId) {
+        throw new NotFoundException('Rail seat not found for the provided trip.');
+      }
+
+      if (tripSeat.trip.status !== 'PUBLISHED') {
+        throw new ConflictException(
+          'Rail seat cannot be held because the trip is not published.',
+        );
+      }
+
+      if (tripSeat.status === 'SOLD' || tripSeat.status === 'BLOCKED') {
+        throw new ConflictException('Rail seat is not available for booking.');
+      }
+
+      await this.releaseExpiredRailSeatAllocations(
+        tx,
+        input.tripId,
+        input.tripSeatId,
+        input.boardingSequence,
+        input.dropSequence,
+        now,
+      );
+
+      const overlappingAllocation = await tx.railSeatAllocation.findFirst({
+        where: {
+          tripId: input.tripId,
+          tripSeatId: input.tripSeatId,
+          releasedAt: null,
+          cancelledAt: null,
+          expiredAt: null,
+          NOT: [
+            {
+              dropSequence: {
+                lte: input.boardingSequence,
+              },
+            },
+            {
+              boardingSequence: {
+                gte: input.dropSequence,
+              },
+            },
+          ],
+          booking: {
+            OR: [
+              {
+                status: 'CONFIRMED',
+              },
+              {
+                status: 'HOLD',
+                holdExpiresAt: {
+                  gt: now,
+                },
+              },
+              {
+                status: 'HOLD',
+                holdExpiresAt: null,
+              },
+            ],
+          },
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      if (overlappingAllocation) {
+        throw new ConflictException(
+          'Rail seat is already held for the requested segment.',
+        );
+      }
+
+      const unitPriceCents = tripSeat.priceCents ?? tripSeat.trip.basePriceCents;
+      const feesCents = tripSeat.feesCents ?? tripSeat.trip.feesCents;
+      const seatLabel =
+        tripSeat.seat.label ?? tripSeat.seat.seatNumber ?? tripSeat.seat.code;
+
+      const booking = await tx.booking.create({
+        data: {
+          userId: input.userId,
+          orgId: tripSeat.trip.orgId,
+          domainType: 'RAIL',
+          status: 'HOLD',
+          currency: tripSeat.trip.currency,
+          holdExpiresAt: expiresAt,
+          idempotencyKey: input.idempotencyKey,
+          metadata: {
+            inventoryScopeId: input.tripId,
+            tripId: input.tripId,
+            boardingStationCode: input.boardingStationCode,
+            dropStationCode: input.dropStationCode,
+            boardingSequence: input.boardingSequence,
+            dropSequence: input.dropSequence,
+          } as never,
+        } as never,
+      });
+
+      const bookingItem = await tx.bookingItem.create({
+        data: {
+          bookingId: booking.id,
+          status: 'HOLD',
+          inventoryType: 'rail-trip-seat',
+          inventoryRefId: tripSeat.id,
+          segmentRefId: `${input.boardingTripStopId}:${input.dropTripStopId}`,
+          seatLabel,
+          quantity: 1,
+          unitPriceCents,
+          feesCents,
+          currency: tripSeat.trip.currency,
+          snapshot: {
+            tripId: input.tripId,
+            tripSeatId: tripSeat.id,
+            boardingTripStopId: input.boardingTripStopId,
+            dropTripStopId: input.dropTripStopId,
+            boardingStationCode: input.boardingStationCode,
+            dropStationCode: input.dropStationCode,
+            boardingSequence: input.boardingSequence,
+            dropSequence: input.dropSequence,
+            coachCode: tripSeat.coach.code,
+            seatCode: tripSeat.seat.code,
+          } as never,
+          metadata: {
+            inventoryScopeId: input.tripId,
+          } as never,
+        } as never,
+      });
+
+      await tx.railSeatAllocation.create({
+        data: {
+          bookingId: booking.id,
+          bookingItemId: bookingItem.id,
+          tripId: input.tripId,
+          tripSeatId: input.tripSeatId,
+          boardingTripStopId: input.boardingTripStopId,
+          dropTripStopId: input.dropTripStopId,
+          boardingSequence: input.boardingSequence,
+          dropSequence: input.dropSequence,
+        },
+      });
+
+      const createdBooking = await tx.booking.findUnique({
+        where: { id: booking.id },
+        select: railHoldSelect,
+      });
+
+      return this.mapRailHold(createdBooking as RailHoldRow | null);
+    });
+  }
+
   async findPaymentTarget(
     bookingId: string,
   ): Promise<BookingPaymentTarget | null> {
@@ -291,22 +583,64 @@ export class BookingsRepository extends BaseRepository {
     return projected;
   }
 
-  findExpiredActiveHolds(limit: number, now: Date) {
-    return this.prisma.reservation.findMany({
-      where: {
-        status: 'ACTIVE',
-        expiresAt: {
-          lte: now,
+  async findExpiredActiveHolds(
+    limit: number,
+    now: Date,
+  ): Promise<ExpiredHoldCandidate[]> {
+    const [expiredReservations, expiredRailBookings] = await Promise.all([
+      this.prisma.reservation.findMany({
+        where: {
+          status: 'ACTIVE',
+          expiresAt: {
+            lte: now,
+          },
         },
-      },
-      orderBy: {
-        expiresAt: 'asc',
-      },
-      take: limit,
-      select: {
-        id: true,
-      },
-    });
+        orderBy: {
+          expiresAt: 'asc',
+        },
+        take: limit,
+        select: {
+          id: true,
+          expiresAt: true,
+        },
+      }),
+      this.prisma.booking.findMany({
+        where: {
+          domainType: 'RAIL',
+          status: 'HOLD',
+          holdExpiresAt: {
+            lte: now,
+          },
+        },
+        orderBy: {
+          holdExpiresAt: 'asc',
+        },
+        take: limit,
+        select: {
+          id: true,
+          holdExpiresAt: true,
+        },
+      }),
+    ]);
+
+    return [
+      ...expiredReservations.map((row) => ({
+        id: row.id,
+        source: 'reservation' as const,
+        expiresAt: row.expiresAt,
+      })),
+      ...expiredRailBookings
+        .filter((row): row is { id: string; holdExpiresAt: Date } =>
+          row.holdExpiresAt instanceof Date,
+        )
+        .map((row) => ({
+          id: row.id,
+          source: 'rail-booking' as const,
+          expiresAt: row.holdExpiresAt,
+        })),
+    ]
+      .sort((left, right) => left.expiresAt.getTime() - right.expiresAt.getTime())
+      .slice(0, limit);
   }
 
   async expireHoldAndReleaseInventory(
@@ -332,12 +666,7 @@ export class BookingsRepository extends BaseRepository {
       });
 
       if (!reservation) {
-        return {
-          updated: false,
-          reservationId: holdId,
-          inventoryScopeId: '',
-          releasedInventoryRefIds: [],
-        };
+        return this.expireRailHoldAndReleaseInventory(tx, holdId, now);
       }
 
       const markExpired = await tx.reservation.updateMany({
@@ -515,18 +844,76 @@ export class BookingsRepository extends BaseRepository {
     };
   }
 
+  private mapRailHold(row: RailHoldRow | null): RailBookingHoldRecord | null {
+    if (!row || !row.holdExpiresAt) {
+      return null;
+    }
+
+    const firstAllocation = row.items
+      .flatMap((item) => item.railSeatAllocations)
+      .at(0);
+
+    if (!firstAllocation) {
+      return null;
+    }
+
+    return {
+      id: row.id,
+      bookingId: row.id,
+      tripId: firstAllocation.tripId,
+      userId: row.userId,
+      status: row.status,
+      expiresAt: row.holdExpiresAt,
+      idempotencyKey: row.idempotencyKey,
+      createdAt: row.createdAt,
+      requestedSegment: {
+        boardingTripStopId: firstAllocation.boardingTripStopId,
+        dropTripStopId: firstAllocation.dropTripStopId,
+        boardingStationCode: firstAllocation.boardingTripStop.station.code,
+        dropStationCode: firstAllocation.dropTripStop.station.code,
+        boardingSequence: firstAllocation.boardingSequence,
+        dropSequence: firstAllocation.dropSequence,
+      },
+      items: row.items.map((item) => {
+        const allocation = item.railSeatAllocations.at(0);
+
+        return {
+          tripSeatId: allocation?.tripSeatId ?? item.inventoryRefId,
+          coachCode: allocation?.tripSeat.coach.code ?? '',
+          seatNo: allocation?.tripSeat.seat.seatNumber ?? '',
+          seatCode: allocation?.tripSeat.seat.code ?? '',
+          quantity: item.quantity,
+          priceCents: item.unitPriceCents,
+          feesCents: item.feesCents,
+          seatLabel:
+            item.seatLabel ??
+            allocation?.tripSeat.seat.label ??
+            allocation?.tripSeat.seat.seatNumber ??
+            allocation?.tripSeat.seat.code ??
+            null,
+        };
+      }),
+    };
+  }
+
   private mapBookingPaymentTarget(
     row: BookingPaymentTargetRow,
   ): BookingPaymentTarget {
     return {
       id: row.id,
+      domainType: row.domainType.toLowerCase() as 'event' | 'rail' | 'air',
       userId: row.userId,
       status: row.status,
       holdExpiresAt: row.holdExpiresAt,
       currency: row.currency,
-      inventoryScopeId: this.getMetadataString(row.metadata, 'eventId'),
-      legacyReservationId:
-        this.getMetadataString(row.metadata, 'legacyReservationId') ?? row.id,
+      inventoryScopeId:
+        this.getMetadataString(row.metadata, 'inventoryScopeId') ??
+        this.getMetadataString(row.metadata, 'tripId') ??
+        this.getMetadataString(row.metadata, 'eventId'),
+      legacyReservationId: this.getMetadataString(
+        row.metadata,
+        'legacyReservationId',
+      ),
       items: row.items.map((item) => ({
         quantity: item.quantity,
         unitPriceCents: item.unitPriceCents,
@@ -693,6 +1080,210 @@ export class BookingsRepository extends BaseRepository {
 
     const value = (metadata as Record<string, unknown>)[key];
     return typeof value === 'string' && value.length > 0 ? value : null;
+  }
+
+  private async releaseExpiredRailSeatAllocations(
+    tx: PrismaService,
+    tripId: string,
+    tripSeatId: string,
+    boardingSequence: number,
+    dropSequence: number,
+    now: Date,
+  ): Promise<void> {
+    const expiredAllocations = await tx.railSeatAllocation.findMany({
+      where: {
+        tripId,
+        tripSeatId,
+        releasedAt: null,
+        cancelledAt: null,
+        expiredAt: null,
+        NOT: [
+          {
+            dropSequence: {
+              lte: boardingSequence,
+            },
+          },
+          {
+            boardingSequence: {
+              gte: dropSequence,
+            },
+          },
+        ],
+        booking: {
+          status: 'HOLD',
+          holdExpiresAt: {
+            lte: now,
+          },
+        },
+      },
+      select: {
+        id: true,
+        bookingId: true,
+      },
+    });
+
+    if (expiredAllocations.length === 0) {
+      return;
+    }
+
+    const bookingIds = [...new Set(expiredAllocations.map((item) => item.bookingId))];
+    const allocationIds = expiredAllocations.map((item) => item.id);
+
+    await tx.booking.updateMany({
+      where: {
+        id: {
+          in: bookingIds,
+        },
+        status: 'HOLD',
+      },
+      data: {
+        status: 'EXPIRED',
+        expiredAt: now,
+      } as never,
+    });
+
+    await tx.bookingItem.updateMany({
+      where: {
+        bookingId: {
+          in: bookingIds,
+        },
+        status: 'HOLD',
+      },
+      data: {
+        status: 'EXPIRED',
+        expiredAt: now,
+      } as never,
+    });
+
+    await tx.railSeatAllocation.updateMany({
+      where: {
+        id: {
+          in: allocationIds,
+        },
+        releasedAt: null,
+        cancelledAt: null,
+        expiredAt: null,
+      },
+      data: {
+        expiredAt: now,
+        releasedAt: now,
+      },
+    });
+  }
+
+  private async expireRailHoldAndReleaseInventory(
+    tx: PrismaService,
+    holdId: string,
+    now: Date,
+  ): Promise<ExpireBookingHoldResult> {
+    const booking = await tx.booking.findFirst({
+      where: {
+        id: holdId,
+        domainType: 'RAIL',
+      },
+      select: {
+        id: true,
+        status: true,
+        holdExpiresAt: true,
+        metadata: true,
+        items: {
+          select: {
+            inventoryRefId: true,
+          },
+        },
+      },
+    });
+
+    if (!booking) {
+      return {
+        updated: false,
+        reservationId: holdId,
+        inventoryScopeId: '',
+        releasedInventoryRefIds: [],
+      };
+    }
+
+    const markExpired = await tx.booking.updateMany({
+      where: {
+        id: booking.id,
+        domainType: 'RAIL',
+        status: 'HOLD',
+        holdExpiresAt: {
+          lte: now,
+        },
+      },
+      data: {
+        status: 'EXPIRED',
+        expiredAt: now,
+      } as never,
+    });
+
+    if (markExpired.count === 0) {
+      return {
+        updated: false,
+        reservationId: booking.id,
+        inventoryScopeId:
+          this.getMetadataString(booking.metadata, 'inventoryScopeId') ??
+          this.getMetadataString(booking.metadata, 'tripId') ??
+          '',
+        releasedInventoryRefIds: [],
+      };
+    }
+
+    await tx.bookingItem.updateMany({
+      where: {
+        bookingId: booking.id,
+        status: 'HOLD',
+      },
+      data: {
+        status: 'EXPIRED',
+        expiredAt: now,
+      } as never,
+    });
+
+    const activeAllocations = await tx.railSeatAllocation.findMany({
+      where: {
+        bookingId: booking.id,
+        releasedAt: null,
+        cancelledAt: null,
+        expiredAt: null,
+      },
+      select: {
+        id: true,
+        tripSeatId: true,
+        tripId: true,
+      },
+    });
+
+    if (activeAllocations.length > 0) {
+      await tx.railSeatAllocation.updateMany({
+        where: {
+          id: {
+            in: activeAllocations.map((allocation) => allocation.id),
+          },
+          releasedAt: null,
+          cancelledAt: null,
+          expiredAt: null,
+        },
+        data: {
+          expiredAt: now,
+          releasedAt: now,
+        },
+      });
+    }
+
+    return {
+      updated: true,
+      reservationId: booking.id,
+      inventoryScopeId:
+        activeAllocations[0]?.tripId ??
+        this.getMetadataString(booking.metadata, 'inventoryScopeId') ??
+        this.getMetadataString(booking.metadata, 'tripId') ??
+        '',
+      releasedInventoryRefIds: [
+        ...new Set(activeAllocations.map((allocation) => allocation.tripSeatId)),
+      ],
+    };
   }
 }
 

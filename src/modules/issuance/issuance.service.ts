@@ -32,4 +32,27 @@ export class IssuanceService {
       input,
     );
   }
+
+  async getRailIssuedDocument(documentId: string) {
+    const document =
+      await this.issuanceRepository.findRailIssuedDocumentById(documentId);
+
+    if (!document) {
+      throw new NotFoundException('Issued rail document not found.');
+    }
+
+    return document;
+  }
+
+  getRailIssuedDocumentsForUser(userId: string) {
+    return this.issuanceRepository.findRailIssuedDocumentsByUserId(userId);
+  }
+
+  issueRailDocuments(
+    input: IssueDocumentsInput,
+  ): Promise<IssueDocumentsResult> {
+    return this.issuanceRepository.finalizeRailIssuedDocumentsFromPaymentSucceeded(
+      input,
+    );
+  }
 }

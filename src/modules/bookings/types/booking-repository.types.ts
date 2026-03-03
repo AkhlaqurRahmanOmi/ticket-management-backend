@@ -25,10 +25,63 @@ export type BookingPaymentTargetItemRow = {
 
 export type BookingPaymentTargetRow = {
   id: string;
+  domainType: 'EVENT' | 'RAIL' | 'AIR';
   userId: string;
   status: string;
   holdExpiresAt: Date | null;
   currency: string;
   metadata: unknown;
   items: BookingPaymentTargetItemRow[];
+};
+
+export type ExpiredHoldCandidate = {
+  id: string;
+  source: 'reservation' | 'rail-booking';
+  expiresAt: Date;
+};
+
+export type RailHoldRow = {
+  id: string;
+  userId: string;
+  status: string;
+  holdExpiresAt: Date | null;
+  idempotencyKey: string;
+  createdAt: Date;
+  metadata: unknown;
+  items: Array<{
+    id: string;
+    inventoryRefId: string;
+    quantity: number;
+    unitPriceCents: number;
+    feesCents: number;
+    seatLabel: string | null;
+    railSeatAllocations: Array<{
+      tripId: string;
+      tripSeatId: string;
+      boardingSequence: number;
+      dropSequence: number;
+      boardingTripStopId: string;
+      dropTripStopId: string;
+      boardingTripStop: {
+        station: {
+          code: string;
+        };
+      };
+      dropTripStop: {
+        station: {
+          code: string;
+        };
+      };
+      tripSeat: {
+        coach: {
+          code: string;
+        };
+        seat: {
+          seatNumber: string;
+          code: string;
+          label: string | null;
+        };
+      };
+    }>;
+  }>;
 };

@@ -30,8 +30,8 @@ Verification checklist:
 
 Suggested task result format:
 
-- Status: `done` | `blocked` | `in_progress`
-- Dev server check: `pass` | `fail` | `not_run`
+- Status: `done`` | `blocked` | `in_progress`
+- Dev server check: `pass`` | `fail` | `not_run`
 - Notes: short summary or blocker
 
 ## Current Status
@@ -47,8 +47,8 @@ Goal: add runtime domain/client composition without breaking the current event f
 
 ### Task 1.1 Add domain and client config keys
 
-Status: `done`
-Dev server check: `pass`
+Status: `done``
+Dev server check: `pass``
 
 Notes:
 
@@ -79,8 +79,8 @@ Acceptance criteria:
 
 ### Task 1.2 Add Prisma transition groundwork
 
-Status: `done`
-Dev server check: `pass`
+Status: `done``
+Dev server check: `pass``
 
 Notes:
 
@@ -112,8 +112,8 @@ Acceptance criteria:
 
 ### Task 1.3 Add domain runtime contracts and metadata
 
-Status: `done`
-Dev server check: `pass`
+Status: `done``
+Dev server check: `pass``
 
 Notes:
 
@@ -145,8 +145,8 @@ Acceptance criteria:
 
 ### Task 1.4 Add client runtime contracts and metadata
 
-Status: `done`
-Dev server check: `pass`
+Status: `done``
+Dev server check: `pass``
 
 Notes:
 
@@ -175,8 +175,8 @@ Acceptance criteria:
 
 ### Task 1.5 Add default client pack
 
-Status: `done`
-Dev server check: `pass`
+Status: `done``
+Dev server check: `pass``
 
 Notes:
 
@@ -206,8 +206,8 @@ Acceptance criteria:
 
 ### Task 1.6 Wrap the existing event system as a domain pack
 
-Status: `done`
-Dev server check: `pass`
+Status: `done``
+Dev server check: `pass``
 
 Notes:
 
@@ -241,8 +241,8 @@ Acceptance criteria:
 
 ### Task 1.7 Refactor `AppModule` into a composition root
 
-Status: `done`
-Dev server check: `pass`
+Status: `done``
+Dev server check: `pass``
 
 Notes:
 
@@ -270,8 +270,8 @@ Acceptance criteria:
 
 ### Task 1.8 Make Kafka topic registration domain-aware
 
-Status: `done`
-Dev server check: `pass`
+Status: `done``
+Dev server check: `pass``
 
 Notes:
 
@@ -301,8 +301,8 @@ Acceptance criteria:
 
 ### Task 1.9 Add active domain/client info to health visibility
 
-Status: `done`
-Dev server check: `pass`
+Status: `done``
+Dev server check: `pass``
 
 Notes:
 
@@ -327,8 +327,8 @@ Acceptance criteria:
 
 ### Task 1.10 Phase 1 stabilization and review
 
-Status: `done`
-Dev server check: `pass`
+Status: `done``
+Dev server check: `pass``
 
 Notes:
 
@@ -356,8 +356,8 @@ Goal: introduce a seat-booking core without deleting the event flow immediately.
 
 ### Task 2.1 Add booking kernel module skeleton
 
-Status: `done`
-Dev server check: `pass`
+Status: `done``
+Dev server check: `pass``
 
 Notes:
 
@@ -376,8 +376,8 @@ Files to add:
 
 ### Task 2.2 Extract generic hold lifecycle from reservations
 
-Status: `done`
-Dev server check: `pass`
+Status: `done``
+Dev server check: `pass``
 
 Notes:
 
@@ -404,8 +404,8 @@ Files to modify:
 
 ### Task 2.3 Add booking persistence tables
 
-Status: `done`
-Dev server check: `pass`
+Status: `done``
+Dev server check: `pass``
 
 Notes:
 
@@ -432,8 +432,8 @@ Tables to add:
 
 ### Task 3.1 Change payment target from reservation to booking
 
-Status: `done`
-Dev server check: `pass`
+Status: `done``
+Dev server check: `pass``
 
 Notes:
 
@@ -454,8 +454,8 @@ Files to modify:
 
 ### Task 3.2 Add generic booking finalizer contract
 
-Status: `done`
-Dev server check: `pass`
+Status: `done``
+Dev server check: `pass``
 
 Notes:
 
@@ -472,8 +472,8 @@ Files to add:
 
 ### Task 3.3 Update payment success consumer to use finalizer contract
 
-Status: `done`
-Dev server check: `pass`
+Status: `done``
+Dev server check: `pass``
 
 Notes:
 
@@ -490,8 +490,8 @@ Files to modify:
 
 ### Task 4.1 Add issuance module skeleton
 
-Status: `done`
-Dev server check: `pass`
+Status: `done``
+Dev server check: `pass``
 
 Notes:
 
@@ -511,8 +511,8 @@ Files to add:
 
 ### Task 4.2 Remove event-only issuance logic from shared finalization path
 
-Status: `done`
-Dev server check: `pass`
+Status: `done``
+Dev server check: `pass``
 
 Notes:
 
@@ -533,8 +533,8 @@ Files to modify:
 
 ### Task 5.1 Move event inventory/finalization behind providers
 
-Status: `done`
-Dev server check: `pass`
+Status: `done``
+Dev server check: `pass``
 
 Notes:
 
@@ -553,8 +553,8 @@ Files to add:
 
 ### Task 5.2 Remove remaining event assumptions from core modules
 
-Status: `done`
-Dev server check: `pass`
+Status: `done``
+Dev server check: `pass``
 
 Notes:
 
@@ -572,84 +572,21 @@ Notes:
 
 ### Task 6.1 Add first real client pack example
 
-Status: `planned`
-Dev server check: `not_run`
+Status: `done``
+Dev server check: `pass``
 
-Files to add:
+Notes:
 
-- `src/modules/clients/acme-events/acme-events-client.module.ts`
-- `src/modules/clients/acme-events/providers/acme-booking-rules.provider.ts`
-- `src/modules/clients/acme-events/providers/acme-pricing-policy.provider.ts`
-- `src/modules/clients/acme-events/providers/acme-notification-policy.provider.ts`
-
-Files to modify:
-
-- `src/modules/client-runtime/client-runtime.module.ts`
-- `src/modules/client-runtime/client-runtime.service.ts`
-- `src/modules/bookings/bookings.service.ts`
-- `src/modules/health/providers/health.provider.ts`
-
-Goal of this example:
-
-- prove that a non-default client pack can be selected by config
-- prove that client-specific logic can override selected behavior without changing core modules through branching
-- prove that `CLIENT_PROFILE=default` still works unchanged
-
-Planned example client:
-
-- `acme-events`
-
-Planned custom config and custom logic:
-
-- custom booking rules:
-  - override hold TTL from default `5` minutes to `10` minutes
-- custom pricing policy:
-  - expose a simple client fee rule for event bookings
-  - Phase 6.1 only needs the provider and runtime registration if pricing is not yet consumed in the booking flow
-- custom notification policy:
-  - expose branded document/ticket issued message formatting for this client
-  - Phase 6.1 only needs the provider and runtime registration if notification dispatch is not yet consumed in the flow
-
-Required architecture rule for this task:
-
-- at least one client override must be consumed by a live core flow in this task
-- for Phase 6.1, that live override will be booking hold TTL through `BOOKING_RULES`
-- if no live core behavior changes when switching client profile, the task is not complete
-
-Implementation breakdown:
-
-- add `acme-events` client module and providers
-- wire client-runtime selection so `CLIENT_PROFILE=acme-events` resolves the client pack
-- inject `BOOKING_RULES` into `src/modules/bookings/bookings.service.ts`
-- replace hardcoded hold TTL with client-policy-driven TTL
-- keep all non-overridden policies resolving from `default`
-- expose active client profile and whether a custom override pack is active in health/readiness output
-
-Architecture verification checklist:
-
-- `CLIENT_PROFILE=default` boots with `BOOKING_DOMAIN=event`
-- `CLIENT_PROFILE=acme-events` boots with `BOOKING_DOMAIN=event`
-- health/readiness shows the selected client profile correctly
-- booking hold creation still works under `default`
-- booking hold creation still works under `acme-events`
-- hold expiry under `default` uses the default TTL behavior
-- hold expiry under `acme-events` uses the overridden TTL behavior
-- no direct `if (clientProfile === ...)` branching is introduced inside core booking/payment/issuance flows
-- unresolved client policies still fall back to `default` implementations
-- event-domain runtime composition remains unchanged except for client policy resolution
-
-Acceptance criteria:
-
-- switching only `CLIENT_PROFILE` changes selected client policy bindings
-- the booking flow observes the client-specific hold TTL override
-- `default` behavior remains backward compatible
-- no core module imports the `acme-events` client module directly
-- the client pack stays attachable/detachable through runtime composition only
+- Added `src/modules/clients/acme-events/acme-events-client.module.ts` plus concrete override providers for booking rules, pricing policy, and notification policy.
+- Refactored `src/modules/client-runtime/*` so client selection is runtime-driven and unresolved policies fall back to `default`.
+- Updated `src/modules/bookings/bookings.service.ts` to resolve hold TTL from `BOOKING_RULES`, making the `acme-events` override affect a live core flow.
+- Updated `src/modules/health/providers/health.provider.ts` to expose active client profile, override metadata, and default-client fallback visibility.
+- Dev server boot was verified by the user with no startup errors.
 
 ### Task 6.2 Support partial override composition
 
-Status: `done`
-Dev server check: `pass`
+Status: `done``
+Dev server check: `pass``
 
 Notes:
 
@@ -671,8 +608,8 @@ Work:
 
 ### Task 7.1 Add rail domain module and inventory provider
 
-Status: `done`
-Dev server check: `pass`
+Status: `done``
+Dev server check: `pass``
 
 Notes:
 
@@ -686,8 +623,8 @@ Notes:
 
 ### Task 7.2 Add rail persistence model and search APIs
 
-Status: `done`
-Dev server check: `pass`
+Status: `done``
+Dev server check: `pass``
 
 Notes:
 
@@ -703,8 +640,8 @@ Notes:
 
 ### Task 7.3 Add route and stop modeling for multi-stop rail trips
 
-Status: `done`
-Dev server check: `pass`
+Status: `done``
+Dev server check: `pass``
 
 Notes:
 
@@ -717,28 +654,135 @@ Notes:
 
 ### Task 7.4 Make rail availability segment-aware
 
-Status: `planned`
-Dev server check: `not_run`
+Status: `done``
+Dev server check: `pass``
+
+Notes:
+
+- Updated `src/modules/rail/rail.repository.ts` to search trips by `RailTripStop` ordering rather than only `RailTrip.originStationId` and `RailTrip.destinationStationId`.
+- Added requested boarding/drop segment support to `src/modules/rail/rail.service.ts` and `src/modules/rail/dto/get-rail-trip-availability.query.dto.ts`.
+- Extended rail search result types with `requestedSegment` metadata in `src/modules/rail/types/rail-search.types.ts`.
+- Added repository helper types in `src/modules/rail/types/rail-repository.types.ts` for stop-aware batched queries.
+- Kept the query path batched with DB-level pagination and no per-trip seat lookup loop.
+- `npx tsc -p tsconfig.json --noEmit --incremental false` passed.
+- Dev server boot was verified by the user with no startup errors.
+
+### Task 7.5 Add rail seat allocation and hold lifecycle
+
+Status: `done``
+Dev server check: `pass``
+
+Notes:
+
+- Added `RailSeatAllocation` in `prisma/schema.prisma` with the supporting booking, booking-item, trip, trip-seat, and stop relations, backed by `prisma/migrations/20260302094711_new_data_for_rail/migration.sql`.
+- Added rail hold contracts in `src/modules/bookings/types/rail-booking-hold.types.ts` and expanded `src/modules/bookings/types/booking-repository.types.ts` for rail hold and expiry query shapes.
+- Updated `src/modules/bookings/bookings.service.ts` and `src/modules/bookings/bookings.repository.ts` so the booking kernel now creates, reads, and expires rail holds using stop-range overlap checks and `RailSeatAllocation`.
+- Updated `src/modules/rail/rail.controller.ts`, `src/modules/rail/rail.service.ts`, and `src/modules/rail/dto/create-rail-hold.dto.ts` to expose `POST /trips/:tripId/holds` and `GET /trips/holds/:holdId`.
+- Updated `src/modules/rail/rail.repository.ts` so trip availability now reflects active overlapping rail allocations for the requested segment instead of only whole-trip `RailTripSeat.status`.
+- Updated `src/modules/domains/rail/providers/rail-inventory.provider.ts` to use the real rail hold lifecycle instead of placeholder behavior.
+- `npx tsc -p tsconfig.json --noEmit --incremental false` passed.
+- `npx prisma validate` passed.
+- Dev server boot was verified by the user with no startup errors.
+
+### Task 7.6 Add rail payment finalization and issuance path
+
+Status: `done``
+Dev server check: `pass``
+
+Notes:
+
+- Added `RailIssuedDocument` in `prisma/schema.prisma` and committed the schema change through `prisma/migrations/20260302104528_rail_releted_documents/migration.sql`.
+- Updated `src/modules/payments/*` and `src/modules/bookings/*` so payment creation/finalization now carries the booking `domainType`, allowing rail payments to remain rail-scoped instead of defaulting to event behavior.
+- Updated `src/modules/issuance/issuance.service.ts`, `src/modules/issuance/issuance.repository.ts`, and `src/modules/issuance/types/issued-document.types.ts` so rail payment success now confirms the booking, confirms `RailSeatAllocation`, persists `RailIssuedDocument` rows, and exposes rail issued-document reads through the issuance boundary.
+- Updated `src/modules/domains/rail/providers/rail-issuance.provider.ts` and `src/modules/domains/rail/providers/rail-booking-finalizer.provider.ts` so the rail domain now has a real finalization and issuance path instead of skeleton responses.
+- Updated `src/modules/domains/rail/rail-domain.module.ts` to import `IssuanceModule` and register the rail-domain Kafka topics needed by the finalization flow.
+- `npx tsc -p tsconfig.json --noEmit --incremental false` passed.
+- `npx prisma validate` passed.
+- Dev server boot was verified by the user with no startup errors.
+## Phase 8: Air Domain
+
+### Task 8.1 Add air domain module and inventory provider
+
+Status: `done`
+Dev server check: `pass`
+
+Notes:
+
+- Added `src/modules/domains/air-domain.module.ts` as the first bootable air domain pack, containing skeleton air inventory, issuance, finalizer, and realtime providers.
+- Updated `src/app.module.ts` so `BOOKING_DOMAIN=air` now loads `AirDomainModule` instead of failing startup.
+- Kept the air providers explicit about current status: the module boots cleanly, but air search, holds, and issuance remain skeleton behavior until the real feature module lands in Phase 8.2 and later.
+- `npx tsc -p tsconfig.json --noEmit --incremental false` passed.
+- Dev server boot was verified by the user with no startup errors.
+
+Files to add:
+
+- `src/modules/domains/air/air-domain.module.ts`
+- `src/modules/domains/air/providers/air-inventory.provider.ts`
+- `src/modules/domains/air/providers/air-issuance.provider.ts`
+- `src/modules/domains/air/providers/air-booking-finalizer.provider.ts`
+- `src/modules/domains/air/providers/air-realtime.provider.ts`
 
 Files to modify:
 
-- `src/modules/rail/rail.repository.ts`
-- `src/modules/rail/rail.service.ts`
-- `src/modules/rail/dto/*`
+- `src/app.module.ts`
 
 Work:
 
-- support boarding stop and drop stop inputs in rail search/availability
-- calculate seat availability by overlapping stop ranges instead of whole-trip seat status only
-- keep DB-level pagination and batched aggregation
+- add the first bootable air domain pack
+- make `BOOKING_DOMAIN=air` load `AirDomainModule`
+- satisfy the full domain-runtime contract set for air
+- keep the providers explicit about skeleton status until the real persistence/search flow lands
 
 Acceptance criteria:
 
-- a seat can be reused on a later non-overlapping segment of the same trip
-- overlapping stop ranges block the seat correctly
-- no per-trip or per-seat N+1 query pattern is introduced
+- app boots with `BOOKING_DOMAIN=air`
+- `SEAT_SEARCH_PROVIDER`, `INVENTORY_PROVIDER`, `BOOKING_FINALIZER`, `ISSUANCE_PROVIDER`, and `REALTIME_PROVIDER` resolve for air
+- no event or rail module is required for the air domain pack to boot
 
-### Task 7.5 Add rail seat allocation and hold lifecycle
+### Task 8.2 Add air persistence model and search APIs
+
+Status: `done`
+Dev server check: `pass`
+
+Notes:
+
+- Added the first air persistence layer in `prisma/schema.prisma` for `Airport`, `Carrier`, `FlightService`, `FlightInstance`, and `FlightCabinInventory`, backed by `prisma/migrations/20260303053126_air_domain/migration.sql`.
+- Added the air feature module under `src/modules/air/*` with `GET /flights/search` and `GET /flights/:flightInstanceId/availability`.
+- Implemented the search and availability query paths in `src/modules/air/air.repository.ts` with DB-level pagination and grouped inventory aggregation instead of per-flight lookup loops.
+- Updated `src/modules/domains/air-domain.module.ts` so the air inventory provider now delegates availability reads to the real `AirService` instead of returning only skeleton behavior.
+- `npx tsc -p tsconfig.json --noEmit --incremental false` passed.
+- `npx prisma validate` passed.
+- Dev server boot was verified by the user with no startup errors.
+
+Files to modify:
+
+- `prisma/schema.prisma`
+- new Prisma migration files
+
+Files to add:
+
+- `src/modules/air/air.module.ts`
+- `src/modules/air/air.controller.ts`
+- `src/modules/air/air.service.ts`
+- `src/modules/air/air.repository.ts`
+- `src/modules/air/dto/*`
+- `src/modules/air/types/*`
+
+Work:
+
+- add the first air persistence layer for airports, carriers, flight services, flight instances, and cabin/seat inventory
+- add the air feature module with search and availability APIs
+- wire the air domain inventory provider to the real air service instead of skeleton behavior
+- keep query paths batched and DB-paginated
+
+Acceptance criteria:
+
+- air search endpoint returns flight instances for a requested origin, destination, and departure date
+- air availability endpoint returns cabin/seat availability for one flight instance
+- query plan avoids N+1 lookups for leg or inventory summaries
+- Prisma schema and generated types remain valid
+
+### Task 8.3 Add airport, service, and leg modeling for multi-leg flights
 
 Status: `planned`
 Dev server check: `not_run`
@@ -747,58 +791,100 @@ Files to modify:
 
 - `prisma/schema.prisma`
 - new Prisma migration files
-- `src/modules/rail/rail.repository.ts`
-- `src/modules/rail/rail.service.ts`
-- `src/modules/domains/rail/providers/rail-inventory.provider.ts`
-- `src/modules/bookings/*`
+- `src/modules/air/air.repository.ts`
+- `src/modules/air/air.service.ts`
+- `src/modules/air/dto/*`
 
 Work:
 
-- add `RailSeatAllocation`
-- create rail hold logic using boarding and drop stop ranges
-- release expired rail holds cleanly
-- map rail inventory references into the shared booking kernel
+- add explicit airport/service/instance/leg modeling for air routes
+- support one flight service having multiple dated instances
+- support multi-leg or stop-based flights through ordered leg instances
+- keep the air schema aligned with the agreed instance-based transport model
 
 Acceptance criteria:
 
-- rail seat holds are stored against a stop range
-- expired holds release the seat range safely
-- the shared booking kernel can target rail inventory without event-specific assumptions
+- one flight number can have multiple dated flight instances
+- one flight instance can have one or more ordered legs
+- air search and availability can target a leg range instead of assuming a single direct leg only
 
-### Task 7.6 Add rail payment finalization and issuance path
+### Task 8.4 Make air availability leg-aware and cabin-aware
 
 Status: `planned`
 Dev server check: `not_run`
 
 Files to modify:
 
-- `src/modules/domains/rail/providers/rail-booking-finalizer.provider.ts`
-- `src/modules/domains/rail/providers/rail-issuance.provider.ts`
-- `src/modules/issuance/*`
-- `src/modules/rail/*`
+- `src/modules/air/air.repository.ts`
+- `src/modules/air/air.service.ts`
+- `src/modules/air/dto/*`
+- `src/modules/air/types/*`
 
 Work:
 
-- confirm rail bookings after payment success
-- persist issued rail travel documents/reference numbers
-- move rail domain from skeleton finalization to real issuance behavior
+- make air availability aware of the requested leg range
+- model availability primarily at cabin/fare inventory level
+- keep optional seat assignment separate from the first-pass availability model
+- expose requested leg metadata in air search and availability responses
 
 Acceptance criteria:
 
-- successful rail payment confirms the booking
-- issued rail documents can be retrieved through the issuance boundary
-- rail finalization stays isolated behind the domain provider contract
-## Phase 8: Air Domain
+- requested origin/destination is resolved to a valid leg range for the flight instance
+- unavailable overlapping leg inventory is not shown as open inventory
+- availability output is keyed by the requested leg range and cabin/fare data
 
-### Task 8.1 Add air domain module and inventory provider
+### Task 8.5 Add air hold lifecycle
+
+Status: `planned`
+Dev server check: `not_run`
+
+Files to modify:
+
+- `prisma/schema.prisma`
+- new Prisma migration files
+- `src/modules/bookings/*`
+- `src/modules/air/*`
+- `src/modules/domains/air/providers/air-inventory.provider.ts`
+
+Work:
+
+- add the air hold model needed for flight-instance and leg-aware booking holds
+- create air hold logic through the shared booking kernel
+- release expired air holds cleanly through the existing expiry worker flow
+- keep seat assignment optional so the first air hold flow can work at cabin/fare level if needed
+
+Acceptance criteria:
+
+- air holds can be created against the requested flight instance and leg range
+- expired air holds release inventory safely
+- the shared booking kernel can target air inventory without rail or event assumptions
+
+### Task 8.6 Add air payment finalization and issuance path
 
 Status: `planned`
 Dev server check: `not_run`
 
-### Task 8.2 Add air persistence model and search APIs
+Files to modify:
 
-Status: `planned`
-Dev server check: `not_run`
+- `src/modules/domains/air/providers/air-booking-finalizer.provider.ts`
+- `src/modules/domains/air/providers/air-issuance.provider.ts`
+- `src/modules/issuance/*`
+- `src/modules/air/*`
+- `prisma/schema.prisma`
+- new Prisma migration files
+
+Work:
+
+- confirm air bookings after payment success
+- persist issued air travel documents such as e-ticket or booking reference records
+- expose air issued-document reads through the issuance boundary
+- keep air finalization isolated behind the domain provider contract
+
+Acceptance criteria:
+
+- successful air payment confirms the booking
+- issued air documents can be retrieved through the issuance boundary
+- air finalization does not depend on event-specific or rail-specific order/ticket tables
 
 ## Cleanup Phase
 
@@ -822,6 +908,10 @@ Dev server check: `not_run`
 - Do not start schema replacement before runtime composition exists
 - Do not start rail or air before event domain isolation is stable
 - Update this file after every task completion
+
+
+
+
 
 
 

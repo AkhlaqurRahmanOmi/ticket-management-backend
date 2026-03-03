@@ -93,6 +93,7 @@ export class PaymentsService {
 
       const payment = await this.paymentsRepository.createPendingPayment({
         bookingId: booking.id,
+        domainType: booking.domainType,
         reservationId: booking.legacyReservationId,
         provider: paymentIntent.provider,
         providerRef: paymentIntent.providerRef,
