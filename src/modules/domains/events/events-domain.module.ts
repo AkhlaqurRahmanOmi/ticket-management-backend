@@ -12,7 +12,6 @@ import { EventsModule } from '@/modules/events/events.module';
 import { IssuanceModule } from '@/modules/issuance/issuance.module';
 import { IssuanceService } from '@/modules/issuance/issuance.service';
 import { RealtimeModule } from '@/modules/realtime/realtime.module';
-import { ReservationsModule } from '@/modules/reservations/reservations.module';
 import { TicketsModule } from '@/modules/tickets/tickets.module';
 import { EventBookingFinalizerProvider } from './providers/event-booking-finalizer.provider';
 import { EventInventoryProvider } from './providers/event-inventory.provider';
@@ -38,7 +37,6 @@ const eventDomainTopicRegistry: DomainTopicRegistry = {
 @Module({
   imports: [
     EventsModule,
-    ReservationsModule,
     TicketsModule,
     RealtimeModule,
     IssuanceModule,
@@ -81,7 +79,6 @@ const eventDomainTopicRegistry: DomainTopicRegistry = {
   ],
   exports: [
     EventsModule,
-    ReservationsModule,
     TicketsModule,
     RealtimeModule,
     EventInventoryProvider,

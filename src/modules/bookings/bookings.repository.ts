@@ -1,6 +1,7 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { BaseRepository } from '@/common/repositories/base.repository';
+import { Prisma } from '@/generated/prisma/client';
 import { PrismaService } from '@/infra/prisma/prisma/prisma.service';
 import { UnitOfWorkService } from '@/infra/prisma/unit-of-work.service';
 import {
@@ -10,10 +11,16 @@ import {
 } from './types/booking-hold.types';
 import { type BookingPaymentTarget } from './types/booking-payment.types';
 import {
+  type AirBookingHoldRecord,
+  type CreateAirCabinHoldInput,
+} from './types/air-booking-hold.types';
+import {
   type CreateRailSeatHoldInput,
   type RailBookingHoldRecord,
 } from './types/rail-booking-hold.types';
 import {
+  type AirHoldAllocationRow,
+  type AirHoldBookingRow,
   type BookingPaymentTargetRow,
   type ExpiredHoldCandidate,
   type RailHoldRow,
@@ -196,6 +203,54 @@ export class BookingsRepository extends BaseRepository {
         select: railHoldSelect,
       })
       .then((row) => this.mapRailHold(row as RailHoldRow | null));
+  }
+
+  async findAirHoldByUserAndIdempotencyKey(
+    userId: string,
+    idempotencyKey: string,
+  ): Promise<AirBookingHoldRecord | null> {
+    const booking = await this.prisma.booking.findFirst({
+      where: {
+        userId,
+        domainType: 'AIR',
+        idempotencyKey,
+      },
+      select: {
+        id: true,
+        userId: true,
+        status: true,
+        holdExpiresAt: true,
+        idempotencyKey: true,
+        createdAt: true,
+        metadata: true,
+      },
+    });
+
+    return booking
+      ? this.loadAirHold(booking as AirHoldBookingRow)
+      : null;
+  }
+
+  async findAirHoldById(holdId: string): Promise<AirBookingHoldRecord | null> {
+    const booking = await this.prisma.booking.findFirst({
+      where: {
+        id: holdId,
+        domainType: 'AIR',
+      },
+      select: {
+        id: true,
+        userId: true,
+        status: true,
+        holdExpiresAt: true,
+        idempotencyKey: true,
+        createdAt: true,
+        metadata: true,
+      },
+    });
+
+    return booking
+      ? this.loadAirHold(booking as AirHoldBookingRow)
+      : null;
   }
 
   async createSeatHold(
@@ -565,6 +620,200 @@ export class BookingsRepository extends BaseRepository {
     });
   }
 
+  async createAirCabinHold(
+    input: CreateAirCabinHoldInput,
+  ): Promise<AirBookingHoldRecord | null> {
+    return this.withTransaction(async (tx) => {
+      const now = new Date();
+      const expiresAt = new Date(now.getTime() + input.ttlMinutes * 60_000);
+
+      const cabinRows = await tx.$queryRaw<Array<{
+        id: string;
+        flightInstanceId: string;
+        cabinCode: string;
+        fareClassCode: string;
+        quantityTotal: number;
+        quantitySold: number;
+        priceCents: number | null;
+        feesCents: number | null;
+        status: string;
+        currency: string;
+        basePriceCents: number;
+        baseFeesCents: number;
+      }>>(Prisma.sql`
+        SELECT
+          ci."id",
+          ci."flightInstanceId",
+          ci."cabinCode",
+          ci."fareClassCode",
+          ci."quantityTotal",
+          ci."quantitySold",
+          ci."priceCents",
+          ci."feesCents",
+          fi."status",
+          fi."currency",
+          fi."basePriceCents",
+          fi."feesCents" AS "baseFeesCents"
+        FROM "FlightCabinInventory" ci
+        INNER JOIN "FlightInstance" fi ON fi."id" = ci."flightInstanceId"
+        WHERE ci."id" = ${input.flightCabinInventoryId}::uuid
+          AND ci."flightInstanceId" = ${input.flightInstanceId}::uuid
+        LIMIT 1
+      `);
+
+      const cabin = cabinRows[0];
+
+      if (!cabin) {
+        throw new NotFoundException(
+          'Flight cabin inventory not found for the provided flight instance.',
+        );
+      }
+
+      if (cabin.status !== 'PUBLISHED') {
+        throw new ConflictException(
+          'Air cabin inventory cannot be held because the flight instance is not published.',
+        );
+      }
+
+      await this.releaseExpiredAirCabinAllocations(
+        tx as PrismaService,
+        input.flightCabinInventoryId,
+        input.originSequence,
+        input.destinationSequence,
+        now,
+      );
+
+      const activeOverlapRows = await tx.$queryRaw<Array<{ quantity: number | null }>>(
+        Prisma.sql`
+          SELECT COALESCE(SUM(aca."quantity"), 0)::int AS "quantity"
+          FROM "AirCabinAllocation" aca
+          INNER JOIN "Booking" b ON b."id" = aca."bookingId"
+          WHERE aca."flightCabinInventoryId" = ${input.flightCabinInventoryId}::uuid
+            AND aca."releasedAt" IS NULL
+            AND aca."cancelledAt" IS NULL
+            AND aca."expiredAt" IS NULL
+            AND NOT (
+              aca."destinationSequence" < ${input.originSequence}
+              OR aca."originSequence" > ${input.destinationSequence}
+            )
+            AND (
+              b."status" = 'CONFIRMED'
+              OR (
+                b."status" = 'HOLD'
+                AND (b."holdExpiresAt" > ${now} OR b."holdExpiresAt" IS NULL)
+              )
+            )
+        `,
+      );
+
+      const activeOverlapQuantity = Number(activeOverlapRows[0]?.quantity ?? 0);
+      const effectiveAvailable = Math.max(
+        0,
+        cabin.quantityTotal - cabin.quantitySold - activeOverlapQuantity,
+      );
+
+      if (input.quantity > effectiveAvailable) {
+        throw new ConflictException(
+          'The requested air cabin inventory is not available for the selected leg range.',
+        );
+      }
+
+      const unitPriceCents = cabin.priceCents ?? cabin.basePriceCents;
+      const feesCents = cabin.feesCents ?? cabin.baseFeesCents;
+
+      const booking = await tx.booking.create({
+        data: {
+          userId: input.userId,
+          orgId: null,
+          domainType: 'AIR',
+          status: 'HOLD',
+          currency: cabin.currency,
+          holdExpiresAt: expiresAt,
+          idempotencyKey: input.idempotencyKey,
+          metadata: {
+            inventoryScopeId: input.flightInstanceId,
+            flightInstanceId: input.flightInstanceId,
+            originAirportCode: input.originAirportCode,
+            destinationAirportCode: input.destinationAirportCode,
+            originSequence: input.originSequence,
+            destinationSequence: input.destinationSequence,
+          } as never,
+        } as never,
+      });
+
+      const bookingItem = await tx.bookingItem.create({
+        data: {
+          bookingId: booking.id,
+          status: 'HOLD',
+          inventoryType: 'flight-cabin-fare',
+          inventoryRefId: input.flightCabinInventoryId,
+          segmentRefId: `${input.originSequence}:${input.destinationSequence}`,
+          seatLabel: `${cabin.cabinCode}:${cabin.fareClassCode}`,
+          quantity: input.quantity,
+          unitPriceCents,
+          feesCents,
+          currency: cabin.currency,
+          snapshot: {
+            flightInstanceId: input.flightInstanceId,
+            flightCabinInventoryId: input.flightCabinInventoryId,
+            cabinCode: cabin.cabinCode,
+            fareClassCode: cabin.fareClassCode,
+            originAirportCode: input.originAirportCode,
+            destinationAirportCode: input.destinationAirportCode,
+            originSequence: input.originSequence,
+            destinationSequence: input.destinationSequence,
+            originLegInstanceId: input.originLegInstanceId,
+            destinationLegInstanceId: input.destinationLegInstanceId,
+          } as never,
+          metadata: {
+            inventoryScopeId: input.flightInstanceId,
+          } as never,
+        } as never,
+      });
+
+      await tx.$executeRaw(
+        Prisma.sql`
+          INSERT INTO "AirCabinAllocation" (
+            "id",
+            "bookingId",
+            "bookingItemId",
+            "flightInstanceId",
+            "flightCabinInventoryId",
+            "originLegInstanceId",
+            "destinationLegInstanceId",
+            "originSequence",
+            "destinationSequence",
+            "quantity",
+            "createdAt"
+          )
+          VALUES (
+            ${randomUUID()}::uuid,
+            ${booking.id}::uuid,
+            ${bookingItem.id}::uuid,
+            ${input.flightInstanceId}::uuid,
+            ${input.flightCabinInventoryId}::uuid,
+            ${input.originLegInstanceId}::uuid,
+            ${input.destinationLegInstanceId}::uuid,
+            ${input.originSequence},
+            ${input.destinationSequence},
+            ${input.quantity},
+            ${now}
+          )
+        `,
+      );
+
+      return this.loadAirHold({
+        id: booking.id,
+        userId: booking.userId,
+        status: booking.status,
+        holdExpiresAt: booking.holdExpiresAt,
+        idempotencyKey: booking.idempotencyKey,
+        createdAt: booking.createdAt,
+        metadata: booking.metadata,
+      });
+    });
+  }
+
   async findPaymentTarget(
     bookingId: string,
   ): Promise<BookingPaymentTarget | null> {
@@ -587,7 +836,7 @@ export class BookingsRepository extends BaseRepository {
     limit: number,
     now: Date,
   ): Promise<ExpiredHoldCandidate[]> {
-    const [expiredReservations, expiredRailBookings] = await Promise.all([
+    const [expiredReservations, expiredRailBookings, expiredAirBookings] = await Promise.all([
       this.prisma.reservation.findMany({
         where: {
           status: 'ACTIVE',
@@ -621,6 +870,23 @@ export class BookingsRepository extends BaseRepository {
           holdExpiresAt: true,
         },
       }),
+      this.prisma.booking.findMany({
+        where: {
+          domainType: 'AIR',
+          status: 'HOLD',
+          holdExpiresAt: {
+            lte: now,
+          },
+        },
+        orderBy: {
+          holdExpiresAt: 'asc',
+        },
+        take: limit,
+        select: {
+          id: true,
+          holdExpiresAt: true,
+        },
+      }),
     ]);
 
     return [
@@ -636,6 +902,15 @@ export class BookingsRepository extends BaseRepository {
         .map((row) => ({
           id: row.id,
           source: 'rail-booking' as const,
+          expiresAt: row.holdExpiresAt,
+        })),
+      ...expiredAirBookings
+        .filter((row): row is { id: string; holdExpiresAt: Date } =>
+          row.holdExpiresAt instanceof Date,
+        )
+        .map((row) => ({
+          id: row.id,
+          source: 'air-booking' as const,
           expiresAt: row.holdExpiresAt,
         })),
     ]
@@ -666,7 +941,17 @@ export class BookingsRepository extends BaseRepository {
       });
 
       if (!reservation) {
-        return this.expireRailHoldAndReleaseInventory(tx, holdId, now);
+        const expiredRail = await this.expireRailHoldAndReleaseInventory(
+          tx,
+          holdId,
+          now,
+        );
+
+        if (expiredRail.inventoryScopeId || expiredRail.updated) {
+          return expiredRail;
+        }
+
+        return this.expireAirHoldAndReleaseInventory(tx as PrismaService, holdId, now);
       }
 
       const markExpired = await tx.reservation.updateMany({
@@ -833,6 +1118,38 @@ export class BookingsRepository extends BaseRepository {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
+  private async loadAirHold(
+    booking: AirHoldBookingRow,
+  ): Promise<AirBookingHoldRecord | null> {
+    if (!booking.holdExpiresAt) {
+      return null;
+    }
+
+    const allocations = await this.prisma.$queryRaw<AirHoldAllocationRow[]>(Prisma.sql`
+      SELECT
+        aca."flightInstanceId",
+        aca."flightCabinInventoryId",
+        aca."originLegInstanceId",
+        aca."destinationLegInstanceId",
+        aca."originSequence",
+        aca."destinationSequence",
+        aca."quantity",
+        bi."unitPriceCents",
+        bi."feesCents",
+        ci."cabinCode",
+        ci."fareClassCode"
+      FROM "AirCabinAllocation" aca
+      INNER JOIN "BookingItem" bi ON bi."id" = aca."bookingItemId"
+      INNER JOIN "FlightCabinInventory" ci ON ci."id" = aca."flightCabinInventoryId"
+      WHERE aca."bookingId" = ${booking.id}::uuid
+        AND aca."releasedAt" IS NULL
+        AND aca."cancelledAt" IS NULL
+      ORDER BY aca."createdAt" ASC
+    `);
+
+    return this.mapAirHold(booking, allocations);
+  }
+
   private mapReservationHold(row: ReservationHoldRow | null): BookingHoldRecord | null {
     if (!row) {
       return null;
@@ -893,6 +1210,46 @@ export class BookingsRepository extends BaseRepository {
             null,
         };
       }),
+    };
+  }
+
+  private mapAirHold(
+    booking: AirHoldBookingRow,
+    allocations: AirHoldAllocationRow[],
+  ): AirBookingHoldRecord | null {
+    if (!booking.holdExpiresAt || allocations.length === 0) {
+      return null;
+    }
+
+    const firstAllocation = allocations[0];
+
+    return {
+      id: booking.id,
+      bookingId: booking.id,
+      flightInstanceId: firstAllocation.flightInstanceId,
+      userId: booking.userId,
+      status: booking.status,
+      expiresAt: booking.holdExpiresAt,
+      idempotencyKey: booking.idempotencyKey,
+      createdAt: booking.createdAt,
+      requestedLegRange: {
+        originLegInstanceId: firstAllocation.originLegInstanceId,
+        destinationLegInstanceId: firstAllocation.destinationLegInstanceId,
+        originAirportCode:
+          this.getMetadataString(booking.metadata, 'originAirportCode') ?? '',
+        destinationAirportCode:
+          this.getMetadataString(booking.metadata, 'destinationAirportCode') ?? '',
+        originSequence: firstAllocation.originSequence,
+        destinationSequence: firstAllocation.destinationSequence,
+      },
+      items: allocations.map((allocation) => ({
+        flightCabinInventoryId: allocation.flightCabinInventoryId,
+        cabinCode: allocation.cabinCode,
+        fareClassCode: allocation.fareClassCode,
+        quantity: allocation.quantity,
+        priceCents: allocation.unitPriceCents,
+        feesCents: allocation.feesCents,
+      })),
     };
   }
 
@@ -1080,6 +1437,77 @@ export class BookingsRepository extends BaseRepository {
 
     const value = (metadata as Record<string, unknown>)[key];
     return typeof value === 'string' && value.length > 0 ? value : null;
+  }
+
+  private async releaseExpiredAirCabinAllocations(
+    tx: PrismaService,
+    flightCabinInventoryId: string,
+    originSequence: number,
+    destinationSequence: number,
+    now: Date,
+  ): Promise<void> {
+    const expiredAllocations = await tx.$queryRaw<Array<{ id: string; bookingId: string }>>(
+      Prisma.sql`
+        SELECT aca."id", aca."bookingId"
+        FROM "AirCabinAllocation" aca
+        INNER JOIN "Booking" b ON b."id" = aca."bookingId"
+        WHERE aca."flightCabinInventoryId" = ${flightCabinInventoryId}::uuid
+          AND aca."releasedAt" IS NULL
+          AND aca."cancelledAt" IS NULL
+          AND aca."expiredAt" IS NULL
+          AND NOT (
+            aca."destinationSequence" < ${originSequence}
+            OR aca."originSequence" > ${destinationSequence}
+          )
+          AND b."status" = 'HOLD'
+          AND b."holdExpiresAt" <= ${now}
+      `,
+    );
+
+    if (expiredAllocations.length === 0) {
+      return;
+    }
+
+    const bookingIds = [...new Set(expiredAllocations.map((item) => item.bookingId))];
+    const allocationIds = expiredAllocations.map((item) => item.id);
+
+    await tx.booking.updateMany({
+      where: {
+        id: {
+          in: bookingIds,
+        },
+        status: 'HOLD',
+      },
+      data: {
+        status: 'EXPIRED',
+        expiredAt: now,
+      } as never,
+    });
+
+    await tx.bookingItem.updateMany({
+      where: {
+        bookingId: {
+          in: bookingIds,
+        },
+        status: 'HOLD',
+      },
+      data: {
+        status: 'EXPIRED',
+        expiredAt: now,
+      } as never,
+    });
+
+    await tx.$executeRaw(
+      Prisma.sql`
+        UPDATE "AirCabinAllocation"
+        SET "expiredAt" = ${now},
+            "releasedAt" = ${now}
+        WHERE "id" IN (${Prisma.join(allocationIds.map((id) => Prisma.sql`${id}::uuid`))})
+          AND "releasedAt" IS NULL
+          AND "cancelledAt" IS NULL
+          AND "expiredAt" IS NULL
+      `,
+    );
   }
 
   private async releaseExpiredRailSeatAllocations(
@@ -1282,6 +1710,114 @@ export class BookingsRepository extends BaseRepository {
         '',
       releasedInventoryRefIds: [
         ...new Set(activeAllocations.map((allocation) => allocation.tripSeatId)),
+      ],
+    };
+  }
+
+  private async expireAirHoldAndReleaseInventory(
+    tx: PrismaService,
+    holdId: string,
+    now: Date,
+  ): Promise<ExpireBookingHoldResult> {
+    const booking = await tx.booking.findFirst({
+      where: {
+        id: holdId,
+        domainType: 'AIR',
+      },
+      select: {
+        id: true,
+        status: true,
+        holdExpiresAt: true,
+        metadata: true,
+      },
+    });
+
+    if (!booking) {
+      return {
+        updated: false,
+        reservationId: holdId,
+        inventoryScopeId: '',
+        releasedInventoryRefIds: [],
+      };
+    }
+
+    const markExpired = await tx.booking.updateMany({
+      where: {
+        id: booking.id,
+        domainType: 'AIR',
+        status: 'HOLD',
+        holdExpiresAt: {
+          lte: now,
+        },
+      },
+      data: {
+        status: 'EXPIRED',
+        expiredAt: now,
+      } as never,
+    });
+
+    if (markExpired.count === 0) {
+      return {
+        updated: false,
+        reservationId: booking.id,
+        inventoryScopeId:
+          this.getMetadataString(booking.metadata, 'inventoryScopeId') ??
+          this.getMetadataString(booking.metadata, 'flightInstanceId') ??
+          '',
+        releasedInventoryRefIds: [],
+      };
+    }
+
+    await tx.bookingItem.updateMany({
+      where: {
+        bookingId: booking.id,
+        status: 'HOLD',
+      },
+      data: {
+        status: 'EXPIRED',
+        expiredAt: now,
+      } as never,
+    });
+
+    const activeAllocations = await tx.$queryRaw<Array<{
+      id: string;
+      flightInstanceId: string;
+      flightCabinInventoryId: string;
+    }>>(Prisma.sql`
+      SELECT "id", "flightInstanceId", "flightCabinInventoryId"
+      FROM "AirCabinAllocation"
+      WHERE "bookingId" = ${booking.id}::uuid
+        AND "releasedAt" IS NULL
+        AND "cancelledAt" IS NULL
+        AND "expiredAt" IS NULL
+    `);
+
+    if (activeAllocations.length > 0) {
+      await tx.$executeRaw(
+        Prisma.sql`
+          UPDATE "AirCabinAllocation"
+          SET "expiredAt" = ${now},
+              "releasedAt" = ${now}
+          WHERE "id" IN (${Prisma.join(activeAllocations.map((allocation) => Prisma.sql`${allocation.id}::uuid`))})
+            AND "releasedAt" IS NULL
+            AND "cancelledAt" IS NULL
+            AND "expiredAt" IS NULL
+        `,
+      );
+    }
+
+    return {
+      updated: true,
+      reservationId: booking.id,
+      inventoryScopeId:
+        activeAllocations[0]?.flightInstanceId ??
+        this.getMetadataString(booking.metadata, 'inventoryScopeId') ??
+        this.getMetadataString(booking.metadata, 'flightInstanceId') ??
+        '',
+      releasedInventoryRefIds: [
+        ...new Set(
+          activeAllocations.map((allocation) => allocation.flightCabinInventoryId),
+        ),
       ],
     };
   }

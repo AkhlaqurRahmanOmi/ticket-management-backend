@@ -14,6 +14,28 @@ export type CarrierSummary = {
   name: string;
 };
 
+export type FlightLegSummary = {
+  id: string;
+  sequence: number;
+  origin: AirportSummary;
+  destination: AirportSummary;
+  departsAt: Date;
+  arrivesAt: Date;
+};
+
+export type FlightRequestedLegRange = {
+  originAirportCode: string;
+  destinationAirportCode: string;
+  originSequence: number;
+  destinationSequence: number;
+};
+
+export type FlightInventoryModel = {
+  inventoryLevel: 'CABIN_FARE';
+  seatAssignmentMode: 'OPTIONAL';
+  legAware: true;
+};
+
 export type FlightAvailabilitySummary = {
   totalSeats: number;
   availableSeats: number;
@@ -38,11 +60,13 @@ export type FlightInstanceSummary = {
 
 export type FlightSearchItem = FlightInstanceSummary & {
   availability: FlightAvailabilitySummary;
+  requestedLegRange: FlightRequestedLegRange;
 };
 
 export type FlightSearchResult = {
   items: FlightSearchItem[];
   meta: PaginationMeta;
+  inventoryModel: FlightInventoryModel;
 };
 
 export type FlightCabinAvailabilityItem = {
@@ -57,8 +81,14 @@ export type FlightCabinAvailabilityItem = {
   feesCents: number;
 };
 
+export type FlightInstanceDetail = FlightInstanceSummary & {
+  legs: FlightLegSummary[];
+};
+
 export type FlightCabinAvailabilityResult = {
-  flight: FlightInstanceSummary;
+  flight: FlightInstanceDetail;
+  requestedLegRange: FlightRequestedLegRange | null;
   items: FlightCabinAvailabilityItem[];
   meta: PaginationMeta;
+  inventoryModel: FlightInventoryModel;
 };

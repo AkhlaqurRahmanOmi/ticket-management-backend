@@ -180,15 +180,30 @@ export type Carrier = Prisma.CarrierModel
  */
 export type FlightService = Prisma.FlightServiceModel
 /**
+ * Model FlightServiceLeg
+ * 
+ */
+export type FlightServiceLeg = Prisma.FlightServiceLegModel
+/**
  * Model FlightInstance
  * 
  */
 export type FlightInstance = Prisma.FlightInstanceModel
 /**
+ * Model FlightLegInstance
+ * 
+ */
+export type FlightLegInstance = Prisma.FlightLegInstanceModel
+/**
  * Model FlightCabinInventory
  * 
  */
 export type FlightCabinInventory = Prisma.FlightCabinInventoryModel
+/**
+ * Model AirCabinAllocation
+ * 
+ */
+export type AirCabinAllocation = Prisma.AirCabinAllocationModel
 /**
  * Model Reservation
  * 
@@ -250,6 +265,11 @@ export type Ticket = Prisma.TicketModel
  * 
  */
 export type RailIssuedDocument = Prisma.RailIssuedDocumentModel
+/**
+ * Model AirIssuedDocument
+ * 
+ */
+export type AirIssuedDocument = Prisma.AirIssuedDocumentModel
 /**
  * Model IdempotencyKey
  * Generic idempotency store to support safe retries across endpoints.

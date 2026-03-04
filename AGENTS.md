@@ -20,7 +20,7 @@ This file provides guidance to WARP (warp.dev) when working with code in this re
 ## Local services
 - Bring up Postgres, Redis, and Kafka for local dev: `docker compose up -d`
 - Stop services: `docker compose down`
-- Current mapped ports: Postgres `5555`, Redis `6379`, Kafka `9092`
+- Current mapped ports: Postgres `5555`, Redis `6380`, Kafka `9092`
 
 ## Architecture snapshot
 - App is organized as a modular monolith in NestJS. `src/app.module.ts` composes infra modules (`PrismaModule`, `RedisModule`, `KafkaModule`, `OutboxModule`) and domain modules (`Organizations`, `Events`, `Reservations`, `Payments`, `Tickets`, `Realtime`) plus `WorkersModule`.

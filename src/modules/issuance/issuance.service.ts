@@ -55,4 +55,27 @@ export class IssuanceService {
       input,
     );
   }
+
+  async getAirIssuedDocument(documentId: string) {
+    const document =
+      await this.issuanceRepository.findAirIssuedDocumentById(documentId);
+
+    if (!document) {
+      throw new NotFoundException('Issued air document not found.');
+    }
+
+    return document;
+  }
+
+  getAirIssuedDocumentsForUser(userId: string) {
+    return this.issuanceRepository.findAirIssuedDocumentsByUserId(userId);
+  }
+
+  issueAirDocuments(
+    input: IssueDocumentsInput,
+  ): Promise<IssueDocumentsResult> {
+    return this.issuanceRepository.finalizeAirIssuedDocumentsFromPaymentSucceeded(
+      input,
+    );
+  }
 }

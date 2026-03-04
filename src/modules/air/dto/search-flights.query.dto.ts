@@ -35,6 +35,24 @@ export class SearchFlightsQueryDto {
   @Transform(({ value }) =>
     typeof value === 'string' ? value.trim().toUpperCase() : value,
   )
+  @IsString()
+  @MinLength(1)
+  @MaxLength(16)
+  cabinCode?: string;
+
+  @IsOptional()
+  @Transform(({ value }) =>
+    typeof value === 'string' ? value.trim().toUpperCase() : value,
+  )
+  @IsString()
+  @MinLength(1)
+  @MaxLength(32)
+  fareClassCode?: string;
+
+  @IsOptional()
+  @Transform(({ value }) =>
+    typeof value === 'string' ? value.trim().toUpperCase() : value,
+  )
   @IsIn(['DRAFT', 'PUBLISHED', 'CANCELLED'])
   status?: 'DRAFT' | 'PUBLISHED' | 'CANCELLED';
 

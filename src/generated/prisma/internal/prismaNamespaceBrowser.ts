@@ -79,8 +79,11 @@ export const ModelName = {
   Airport: 'Airport',
   Carrier: 'Carrier',
   FlightService: 'FlightService',
+  FlightServiceLeg: 'FlightServiceLeg',
   FlightInstance: 'FlightInstance',
+  FlightLegInstance: 'FlightLegInstance',
   FlightCabinInventory: 'FlightCabinInventory',
+  AirCabinAllocation: 'AirCabinAllocation',
   Reservation: 'Reservation',
   ReservationItem: 'ReservationItem',
   Booking: 'Booking',
@@ -92,6 +95,7 @@ export const ModelName = {
   PaymentWebhookEvent: 'PaymentWebhookEvent',
   Ticket: 'Ticket',
   RailIssuedDocument: 'RailIssuedDocument',
+  AirIssuedDocument: 'AirIssuedDocument',
   IdempotencyKey: 'IdempotencyKey',
   OutboxEvent: 'OutboxEvent',
   AuditLog: 'AuditLog'
@@ -507,6 +511,20 @@ export const FlightServiceScalarFieldEnum = {
 export type FlightServiceScalarFieldEnum = (typeof FlightServiceScalarFieldEnum)[keyof typeof FlightServiceScalarFieldEnum]
 
 
+export const FlightServiceLegScalarFieldEnum = {
+  id: 'id',
+  flightServiceId: 'flightServiceId',
+  originAirportId: 'originAirportId',
+  destinationAirportId: 'destinationAirportId',
+  sequence: 'sequence',
+  title: 'title',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FlightServiceLegScalarFieldEnum = (typeof FlightServiceLegScalarFieldEnum)[keyof typeof FlightServiceLegScalarFieldEnum]
+
+
 export const FlightInstanceScalarFieldEnum = {
   id: 'id',
   flightServiceId: 'flightServiceId',
@@ -525,6 +543,22 @@ export const FlightInstanceScalarFieldEnum = {
 export type FlightInstanceScalarFieldEnum = (typeof FlightInstanceScalarFieldEnum)[keyof typeof FlightInstanceScalarFieldEnum]
 
 
+export const FlightLegInstanceScalarFieldEnum = {
+  id: 'id',
+  flightInstanceId: 'flightInstanceId',
+  flightServiceLegId: 'flightServiceLegId',
+  originAirportId: 'originAirportId',
+  destinationAirportId: 'destinationAirportId',
+  sequence: 'sequence',
+  departsAt: 'departsAt',
+  arrivesAt: 'arrivesAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FlightLegInstanceScalarFieldEnum = (typeof FlightLegInstanceScalarFieldEnum)[keyof typeof FlightLegInstanceScalarFieldEnum]
+
+
 export const FlightCabinInventoryScalarFieldEnum = {
   id: 'id',
   flightInstanceId: 'flightInstanceId',
@@ -541,6 +575,27 @@ export const FlightCabinInventoryScalarFieldEnum = {
 } as const
 
 export type FlightCabinInventoryScalarFieldEnum = (typeof FlightCabinInventoryScalarFieldEnum)[keyof typeof FlightCabinInventoryScalarFieldEnum]
+
+
+export const AirCabinAllocationScalarFieldEnum = {
+  id: 'id',
+  bookingId: 'bookingId',
+  bookingItemId: 'bookingItemId',
+  flightInstanceId: 'flightInstanceId',
+  flightCabinInventoryId: 'flightCabinInventoryId',
+  originLegInstanceId: 'originLegInstanceId',
+  destinationLegInstanceId: 'destinationLegInstanceId',
+  originSequence: 'originSequence',
+  destinationSequence: 'destinationSequence',
+  quantity: 'quantity',
+  createdAt: 'createdAt',
+  confirmedAt: 'confirmedAt',
+  expiredAt: 'expiredAt',
+  cancelledAt: 'cancelledAt',
+  releasedAt: 'releasedAt'
+} as const
+
+export type AirCabinAllocationScalarFieldEnum = (typeof AirCabinAllocationScalarFieldEnum)[keyof typeof AirCabinAllocationScalarFieldEnum]
 
 
 export const ReservationScalarFieldEnum = {
@@ -753,6 +808,27 @@ export const RailIssuedDocumentScalarFieldEnum = {
 } as const
 
 export type RailIssuedDocumentScalarFieldEnum = (typeof RailIssuedDocumentScalarFieldEnum)[keyof typeof RailIssuedDocumentScalarFieldEnum]
+
+
+export const AirIssuedDocumentScalarFieldEnum = {
+  id: 'id',
+  bookingId: 'bookingId',
+  bookingItemId: 'bookingItemId',
+  paymentId: 'paymentId',
+  userId: 'userId',
+  flightInstanceId: 'flightInstanceId',
+  flightCabinInventoryId: 'flightCabinInventoryId',
+  status: 'status',
+  code: 'code',
+  issuedAt: 'issuedAt',
+  voidedAt: 'voidedAt',
+  refundedAt: 'refundedAt',
+  metadata: 'metadata',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AirIssuedDocumentScalarFieldEnum = (typeof AirIssuedDocumentScalarFieldEnum)[keyof typeof AirIssuedDocumentScalarFieldEnum]
 
 
 export const IdempotencyKeyScalarFieldEnum = {

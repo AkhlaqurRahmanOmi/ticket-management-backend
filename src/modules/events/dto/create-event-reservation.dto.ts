@@ -1,7 +1,7 @@
 import { Transform } from 'class-transformer';
 import { IsString, IsUUID, MaxLength, MinLength } from 'class-validator';
 
-export class CreateReservationDto {
+export class CreateEventReservationDto {
   @IsUUID()
   eventId!: string;
 

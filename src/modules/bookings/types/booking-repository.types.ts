@@ -36,7 +36,7 @@ export type BookingPaymentTargetRow = {
 
 export type ExpiredHoldCandidate = {
   id: string;
-  source: 'reservation' | 'rail-booking';
+  source: 'reservation' | 'rail-booking' | 'air-booking';
   expiresAt: Date;
 };
 
@@ -84,4 +84,28 @@ export type RailHoldRow = {
       };
     }>;
   }>;
+};
+
+export type AirHoldBookingRow = {
+  id: string;
+  userId: string;
+  status: string;
+  holdExpiresAt: Date | null;
+  idempotencyKey: string;
+  createdAt: Date;
+  metadata: unknown;
+};
+
+export type AirHoldAllocationRow = {
+  flightInstanceId: string;
+  flightCabinInventoryId: string;
+  originLegInstanceId: string | null;
+  destinationLegInstanceId: string | null;
+  originSequence: number;
+  destinationSequence: number;
+  quantity: number;
+  unitPriceCents: number;
+  feesCents: number;
+  cabinCode: string;
+  fareClassCode: string;
 };

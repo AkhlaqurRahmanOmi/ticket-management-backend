@@ -300,6 +300,7 @@ export type PaymentWhereInput = {
   booking?: Prisma.XOR<Prisma.BookingNullableScalarRelationFilter, Prisma.BookingWhereInput> | null
   reservation?: Prisma.XOR<Prisma.ReservationNullableScalarRelationFilter, Prisma.ReservationWhereInput> | null
   railIssuedDocuments?: Prisma.RailIssuedDocumentListRelationFilter
+  airIssuedDocuments?: Prisma.AirIssuedDocumentListRelationFilter
   webhookEvents?: Prisma.PaymentWebhookEventListRelationFilter
 }
 
@@ -323,6 +324,7 @@ export type PaymentOrderByWithRelationInput = {
   booking?: Prisma.BookingOrderByWithRelationInput
   reservation?: Prisma.ReservationOrderByWithRelationInput
   railIssuedDocuments?: Prisma.RailIssuedDocumentOrderByRelationAggregateInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentOrderByRelationAggregateInput
   webhookEvents?: Prisma.PaymentWebhookEventOrderByRelationAggregateInput
 }
 
@@ -350,6 +352,7 @@ export type PaymentWhereUniqueInput = Prisma.AtLeast<{
   booking?: Prisma.XOR<Prisma.BookingNullableScalarRelationFilter, Prisma.BookingWhereInput> | null
   reservation?: Prisma.XOR<Prisma.ReservationNullableScalarRelationFilter, Prisma.ReservationWhereInput> | null
   railIssuedDocuments?: Prisma.RailIssuedDocumentListRelationFilter
+  airIssuedDocuments?: Prisma.AirIssuedDocumentListRelationFilter
   webhookEvents?: Prisma.PaymentWebhookEventListRelationFilter
 }, "id" | "provider_providerRef">
 
@@ -414,6 +417,7 @@ export type PaymentCreateInput = {
   booking?: Prisma.BookingCreateNestedOneWithoutPaymentsInput
   reservation?: Prisma.ReservationCreateNestedOneWithoutPaymentLinksInput
   railIssuedDocuments?: Prisma.RailIssuedDocumentCreateNestedManyWithoutPaymentInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentCreateNestedManyWithoutPaymentInput
   webhookEvents?: Prisma.PaymentWebhookEventCreateNestedManyWithoutPaymentInput
 }
 
@@ -434,6 +438,7 @@ export type PaymentUncheckedCreateInput = {
   failedAt?: Date | string | null
   refundedAt?: Date | string | null
   railIssuedDocuments?: Prisma.RailIssuedDocumentUncheckedCreateNestedManyWithoutPaymentInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUncheckedCreateNestedManyWithoutPaymentInput
   webhookEvents?: Prisma.PaymentWebhookEventUncheckedCreateNestedManyWithoutPaymentInput
 }
 
@@ -454,6 +459,7 @@ export type PaymentUpdateInput = {
   booking?: Prisma.BookingUpdateOneWithoutPaymentsNestedInput
   reservation?: Prisma.ReservationUpdateOneWithoutPaymentLinksNestedInput
   railIssuedDocuments?: Prisma.RailIssuedDocumentUpdateManyWithoutPaymentNestedInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUpdateManyWithoutPaymentNestedInput
   webhookEvents?: Prisma.PaymentWebhookEventUpdateManyWithoutPaymentNestedInput
 }
 
@@ -474,6 +480,7 @@ export type PaymentUncheckedUpdateInput = {
   failedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   railIssuedDocuments?: Prisma.RailIssuedDocumentUncheckedUpdateManyWithoutPaymentNestedInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUncheckedUpdateManyWithoutPaymentNestedInput
   webhookEvents?: Prisma.PaymentWebhookEventUncheckedUpdateManyWithoutPaymentNestedInput
 }
 
@@ -775,6 +782,20 @@ export type PaymentUpdateOneRequiredWithoutRailIssuedDocumentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.PaymentUpdateToOneWithWhereWithoutRailIssuedDocumentsInput, Prisma.PaymentUpdateWithoutRailIssuedDocumentsInput>, Prisma.PaymentUncheckedUpdateWithoutRailIssuedDocumentsInput>
 }
 
+export type PaymentCreateNestedOneWithoutAirIssuedDocumentsInput = {
+  create?: Prisma.XOR<Prisma.PaymentCreateWithoutAirIssuedDocumentsInput, Prisma.PaymentUncheckedCreateWithoutAirIssuedDocumentsInput>
+  connectOrCreate?: Prisma.PaymentCreateOrConnectWithoutAirIssuedDocumentsInput
+  connect?: Prisma.PaymentWhereUniqueInput
+}
+
+export type PaymentUpdateOneRequiredWithoutAirIssuedDocumentsNestedInput = {
+  create?: Prisma.XOR<Prisma.PaymentCreateWithoutAirIssuedDocumentsInput, Prisma.PaymentUncheckedCreateWithoutAirIssuedDocumentsInput>
+  connectOrCreate?: Prisma.PaymentCreateOrConnectWithoutAirIssuedDocumentsInput
+  upsert?: Prisma.PaymentUpsertWithoutAirIssuedDocumentsInput
+  connect?: Prisma.PaymentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PaymentUpdateToOneWithWhereWithoutAirIssuedDocumentsInput, Prisma.PaymentUpdateWithoutAirIssuedDocumentsInput>, Prisma.PaymentUncheckedUpdateWithoutAirIssuedDocumentsInput>
+}
+
 export type PaymentCreateWithoutReservationInput = {
   id?: string
   domainType?: $Enums.BookingDomain
@@ -791,6 +812,7 @@ export type PaymentCreateWithoutReservationInput = {
   order?: Prisma.OrderCreateNestedOneWithoutPaymentsInput
   booking?: Prisma.BookingCreateNestedOneWithoutPaymentsInput
   railIssuedDocuments?: Prisma.RailIssuedDocumentCreateNestedManyWithoutPaymentInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentCreateNestedManyWithoutPaymentInput
   webhookEvents?: Prisma.PaymentWebhookEventCreateNestedManyWithoutPaymentInput
 }
 
@@ -810,6 +832,7 @@ export type PaymentUncheckedCreateWithoutReservationInput = {
   failedAt?: Date | string | null
   refundedAt?: Date | string | null
   railIssuedDocuments?: Prisma.RailIssuedDocumentUncheckedCreateNestedManyWithoutPaymentInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUncheckedCreateNestedManyWithoutPaymentInput
   webhookEvents?: Prisma.PaymentWebhookEventUncheckedCreateNestedManyWithoutPaymentInput
 }
 
@@ -876,6 +899,7 @@ export type PaymentCreateWithoutBookingInput = {
   order?: Prisma.OrderCreateNestedOneWithoutPaymentsInput
   reservation?: Prisma.ReservationCreateNestedOneWithoutPaymentLinksInput
   railIssuedDocuments?: Prisma.RailIssuedDocumentCreateNestedManyWithoutPaymentInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentCreateNestedManyWithoutPaymentInput
   webhookEvents?: Prisma.PaymentWebhookEventCreateNestedManyWithoutPaymentInput
 }
 
@@ -895,6 +919,7 @@ export type PaymentUncheckedCreateWithoutBookingInput = {
   failedAt?: Date | string | null
   refundedAt?: Date | string | null
   railIssuedDocuments?: Prisma.RailIssuedDocumentUncheckedCreateNestedManyWithoutPaymentInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUncheckedCreateNestedManyWithoutPaymentInput
   webhookEvents?: Prisma.PaymentWebhookEventUncheckedCreateNestedManyWithoutPaymentInput
 }
 
@@ -940,6 +965,7 @@ export type PaymentCreateWithoutOrderInput = {
   booking?: Prisma.BookingCreateNestedOneWithoutPaymentsInput
   reservation?: Prisma.ReservationCreateNestedOneWithoutPaymentLinksInput
   railIssuedDocuments?: Prisma.RailIssuedDocumentCreateNestedManyWithoutPaymentInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentCreateNestedManyWithoutPaymentInput
   webhookEvents?: Prisma.PaymentWebhookEventCreateNestedManyWithoutPaymentInput
 }
 
@@ -959,6 +985,7 @@ export type PaymentUncheckedCreateWithoutOrderInput = {
   failedAt?: Date | string | null
   refundedAt?: Date | string | null
   railIssuedDocuments?: Prisma.RailIssuedDocumentUncheckedCreateNestedManyWithoutPaymentInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUncheckedCreateNestedManyWithoutPaymentInput
   webhookEvents?: Prisma.PaymentWebhookEventUncheckedCreateNestedManyWithoutPaymentInput
 }
 
@@ -1005,6 +1032,7 @@ export type PaymentCreateWithoutWebhookEventsInput = {
   booking?: Prisma.BookingCreateNestedOneWithoutPaymentsInput
   reservation?: Prisma.ReservationCreateNestedOneWithoutPaymentLinksInput
   railIssuedDocuments?: Prisma.RailIssuedDocumentCreateNestedManyWithoutPaymentInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentCreateNestedManyWithoutPaymentInput
 }
 
 export type PaymentUncheckedCreateWithoutWebhookEventsInput = {
@@ -1024,6 +1052,7 @@ export type PaymentUncheckedCreateWithoutWebhookEventsInput = {
   failedAt?: Date | string | null
   refundedAt?: Date | string | null
   railIssuedDocuments?: Prisma.RailIssuedDocumentUncheckedCreateNestedManyWithoutPaymentInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUncheckedCreateNestedManyWithoutPaymentInput
 }
 
 export type PaymentCreateOrConnectWithoutWebhookEventsInput = {
@@ -1059,6 +1088,7 @@ export type PaymentUpdateWithoutWebhookEventsInput = {
   booking?: Prisma.BookingUpdateOneWithoutPaymentsNestedInput
   reservation?: Prisma.ReservationUpdateOneWithoutPaymentLinksNestedInput
   railIssuedDocuments?: Prisma.RailIssuedDocumentUpdateManyWithoutPaymentNestedInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUpdateManyWithoutPaymentNestedInput
 }
 
 export type PaymentUncheckedUpdateWithoutWebhookEventsInput = {
@@ -1078,6 +1108,7 @@ export type PaymentUncheckedUpdateWithoutWebhookEventsInput = {
   failedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   railIssuedDocuments?: Prisma.RailIssuedDocumentUncheckedUpdateManyWithoutPaymentNestedInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUncheckedUpdateManyWithoutPaymentNestedInput
 }
 
 export type PaymentCreateWithoutRailIssuedDocumentsInput = {
@@ -1096,6 +1127,7 @@ export type PaymentCreateWithoutRailIssuedDocumentsInput = {
   order?: Prisma.OrderCreateNestedOneWithoutPaymentsInput
   booking?: Prisma.BookingCreateNestedOneWithoutPaymentsInput
   reservation?: Prisma.ReservationCreateNestedOneWithoutPaymentLinksInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentCreateNestedManyWithoutPaymentInput
   webhookEvents?: Prisma.PaymentWebhookEventCreateNestedManyWithoutPaymentInput
 }
 
@@ -1115,6 +1147,7 @@ export type PaymentUncheckedCreateWithoutRailIssuedDocumentsInput = {
   succeededAt?: Date | string | null
   failedAt?: Date | string | null
   refundedAt?: Date | string | null
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUncheckedCreateNestedManyWithoutPaymentInput
   webhookEvents?: Prisma.PaymentWebhookEventUncheckedCreateNestedManyWithoutPaymentInput
 }
 
@@ -1150,6 +1183,7 @@ export type PaymentUpdateWithoutRailIssuedDocumentsInput = {
   order?: Prisma.OrderUpdateOneWithoutPaymentsNestedInput
   booking?: Prisma.BookingUpdateOneWithoutPaymentsNestedInput
   reservation?: Prisma.ReservationUpdateOneWithoutPaymentLinksNestedInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUpdateManyWithoutPaymentNestedInput
   webhookEvents?: Prisma.PaymentWebhookEventUpdateManyWithoutPaymentNestedInput
 }
 
@@ -1169,6 +1203,103 @@ export type PaymentUncheckedUpdateWithoutRailIssuedDocumentsInput = {
   succeededAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   failedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUncheckedUpdateManyWithoutPaymentNestedInput
+  webhookEvents?: Prisma.PaymentWebhookEventUncheckedUpdateManyWithoutPaymentNestedInput
+}
+
+export type PaymentCreateWithoutAirIssuedDocumentsInput = {
+  id?: string
+  domainType?: $Enums.BookingDomain
+  provider: string
+  providerRef: string
+  status?: $Enums.PaymentStatus
+  amountCents: number
+  currency: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  succeededAt?: Date | string | null
+  failedAt?: Date | string | null
+  refundedAt?: Date | string | null
+  order?: Prisma.OrderCreateNestedOneWithoutPaymentsInput
+  booking?: Prisma.BookingCreateNestedOneWithoutPaymentsInput
+  reservation?: Prisma.ReservationCreateNestedOneWithoutPaymentLinksInput
+  railIssuedDocuments?: Prisma.RailIssuedDocumentCreateNestedManyWithoutPaymentInput
+  webhookEvents?: Prisma.PaymentWebhookEventCreateNestedManyWithoutPaymentInput
+}
+
+export type PaymentUncheckedCreateWithoutAirIssuedDocumentsInput = {
+  id?: string
+  orderId?: string | null
+  bookingId?: string | null
+  reservationId?: string | null
+  domainType?: $Enums.BookingDomain
+  provider: string
+  providerRef: string
+  status?: $Enums.PaymentStatus
+  amountCents: number
+  currency: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  succeededAt?: Date | string | null
+  failedAt?: Date | string | null
+  refundedAt?: Date | string | null
+  railIssuedDocuments?: Prisma.RailIssuedDocumentUncheckedCreateNestedManyWithoutPaymentInput
+  webhookEvents?: Prisma.PaymentWebhookEventUncheckedCreateNestedManyWithoutPaymentInput
+}
+
+export type PaymentCreateOrConnectWithoutAirIssuedDocumentsInput = {
+  where: Prisma.PaymentWhereUniqueInput
+  create: Prisma.XOR<Prisma.PaymentCreateWithoutAirIssuedDocumentsInput, Prisma.PaymentUncheckedCreateWithoutAirIssuedDocumentsInput>
+}
+
+export type PaymentUpsertWithoutAirIssuedDocumentsInput = {
+  update: Prisma.XOR<Prisma.PaymentUpdateWithoutAirIssuedDocumentsInput, Prisma.PaymentUncheckedUpdateWithoutAirIssuedDocumentsInput>
+  create: Prisma.XOR<Prisma.PaymentCreateWithoutAirIssuedDocumentsInput, Prisma.PaymentUncheckedCreateWithoutAirIssuedDocumentsInput>
+  where?: Prisma.PaymentWhereInput
+}
+
+export type PaymentUpdateToOneWithWhereWithoutAirIssuedDocumentsInput = {
+  where?: Prisma.PaymentWhereInput
+  data: Prisma.XOR<Prisma.PaymentUpdateWithoutAirIssuedDocumentsInput, Prisma.PaymentUncheckedUpdateWithoutAirIssuedDocumentsInput>
+}
+
+export type PaymentUpdateWithoutAirIssuedDocumentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
+  provider?: Prisma.StringFieldUpdateOperationsInput | string
+  providerRef?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+  amountCents?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  succeededAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  failedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  order?: Prisma.OrderUpdateOneWithoutPaymentsNestedInput
+  booking?: Prisma.BookingUpdateOneWithoutPaymentsNestedInput
+  reservation?: Prisma.ReservationUpdateOneWithoutPaymentLinksNestedInput
+  railIssuedDocuments?: Prisma.RailIssuedDocumentUpdateManyWithoutPaymentNestedInput
+  webhookEvents?: Prisma.PaymentWebhookEventUpdateManyWithoutPaymentNestedInput
+}
+
+export type PaymentUncheckedUpdateWithoutAirIssuedDocumentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  orderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bookingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reservationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  domainType?: Prisma.EnumBookingDomainFieldUpdateOperationsInput | $Enums.BookingDomain
+  provider?: Prisma.StringFieldUpdateOperationsInput | string
+  providerRef?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+  amountCents?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  succeededAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  failedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  railIssuedDocuments?: Prisma.RailIssuedDocumentUncheckedUpdateManyWithoutPaymentNestedInput
   webhookEvents?: Prisma.PaymentWebhookEventUncheckedUpdateManyWithoutPaymentNestedInput
 }
 
@@ -1205,6 +1336,7 @@ export type PaymentUpdateWithoutReservationInput = {
   order?: Prisma.OrderUpdateOneWithoutPaymentsNestedInput
   booking?: Prisma.BookingUpdateOneWithoutPaymentsNestedInput
   railIssuedDocuments?: Prisma.RailIssuedDocumentUpdateManyWithoutPaymentNestedInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUpdateManyWithoutPaymentNestedInput
   webhookEvents?: Prisma.PaymentWebhookEventUpdateManyWithoutPaymentNestedInput
 }
 
@@ -1224,6 +1356,7 @@ export type PaymentUncheckedUpdateWithoutReservationInput = {
   failedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   railIssuedDocuments?: Prisma.RailIssuedDocumentUncheckedUpdateManyWithoutPaymentNestedInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUncheckedUpdateManyWithoutPaymentNestedInput
   webhookEvents?: Prisma.PaymentWebhookEventUncheckedUpdateManyWithoutPaymentNestedInput
 }
 
@@ -1277,6 +1410,7 @@ export type PaymentUpdateWithoutBookingInput = {
   order?: Prisma.OrderUpdateOneWithoutPaymentsNestedInput
   reservation?: Prisma.ReservationUpdateOneWithoutPaymentLinksNestedInput
   railIssuedDocuments?: Prisma.RailIssuedDocumentUpdateManyWithoutPaymentNestedInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUpdateManyWithoutPaymentNestedInput
   webhookEvents?: Prisma.PaymentWebhookEventUpdateManyWithoutPaymentNestedInput
 }
 
@@ -1296,6 +1430,7 @@ export type PaymentUncheckedUpdateWithoutBookingInput = {
   failedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   railIssuedDocuments?: Prisma.RailIssuedDocumentUncheckedUpdateManyWithoutPaymentNestedInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUncheckedUpdateManyWithoutPaymentNestedInput
   webhookEvents?: Prisma.PaymentWebhookEventUncheckedUpdateManyWithoutPaymentNestedInput
 }
 
@@ -1349,6 +1484,7 @@ export type PaymentUpdateWithoutOrderInput = {
   booking?: Prisma.BookingUpdateOneWithoutPaymentsNestedInput
   reservation?: Prisma.ReservationUpdateOneWithoutPaymentLinksNestedInput
   railIssuedDocuments?: Prisma.RailIssuedDocumentUpdateManyWithoutPaymentNestedInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUpdateManyWithoutPaymentNestedInput
   webhookEvents?: Prisma.PaymentWebhookEventUpdateManyWithoutPaymentNestedInput
 }
 
@@ -1368,6 +1504,7 @@ export type PaymentUncheckedUpdateWithoutOrderInput = {
   failedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   railIssuedDocuments?: Prisma.RailIssuedDocumentUncheckedUpdateManyWithoutPaymentNestedInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUncheckedUpdateManyWithoutPaymentNestedInput
   webhookEvents?: Prisma.PaymentWebhookEventUncheckedUpdateManyWithoutPaymentNestedInput
 }
 
@@ -1395,11 +1532,13 @@ export type PaymentUncheckedUpdateManyWithoutOrderInput = {
 
 export type PaymentCountOutputType = {
   railIssuedDocuments: number
+  airIssuedDocuments: number
   webhookEvents: number
 }
 
 export type PaymentCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   railIssuedDocuments?: boolean | PaymentCountOutputTypeCountRailIssuedDocumentsArgs
+  airIssuedDocuments?: boolean | PaymentCountOutputTypeCountAirIssuedDocumentsArgs
   webhookEvents?: boolean | PaymentCountOutputTypeCountWebhookEventsArgs
 }
 
@@ -1418,6 +1557,13 @@ export type PaymentCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exte
  */
 export type PaymentCountOutputTypeCountRailIssuedDocumentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.RailIssuedDocumentWhereInput
+}
+
+/**
+ * PaymentCountOutputType without action
+ */
+export type PaymentCountOutputTypeCountAirIssuedDocumentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AirIssuedDocumentWhereInput
 }
 
 /**
@@ -1448,6 +1594,7 @@ export type PaymentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   booking?: boolean | Prisma.Payment$bookingArgs<ExtArgs>
   reservation?: boolean | Prisma.Payment$reservationArgs<ExtArgs>
   railIssuedDocuments?: boolean | Prisma.Payment$railIssuedDocumentsArgs<ExtArgs>
+  airIssuedDocuments?: boolean | Prisma.Payment$airIssuedDocumentsArgs<ExtArgs>
   webhookEvents?: boolean | Prisma.Payment$webhookEventsArgs<ExtArgs>
   _count?: boolean | Prisma.PaymentCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["payment"]>
@@ -1518,6 +1665,7 @@ export type PaymentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   booking?: boolean | Prisma.Payment$bookingArgs<ExtArgs>
   reservation?: boolean | Prisma.Payment$reservationArgs<ExtArgs>
   railIssuedDocuments?: boolean | Prisma.Payment$railIssuedDocumentsArgs<ExtArgs>
+  airIssuedDocuments?: boolean | Prisma.Payment$airIssuedDocumentsArgs<ExtArgs>
   webhookEvents?: boolean | Prisma.Payment$webhookEventsArgs<ExtArgs>
   _count?: boolean | Prisma.PaymentCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -1539,6 +1687,7 @@ export type $PaymentPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     booking: Prisma.$BookingPayload<ExtArgs> | null
     reservation: Prisma.$ReservationPayload<ExtArgs> | null
     railIssuedDocuments: Prisma.$RailIssuedDocumentPayload<ExtArgs>[]
+    airIssuedDocuments: Prisma.$AirIssuedDocumentPayload<ExtArgs>[]
     webhookEvents: Prisma.$PaymentWebhookEventPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1955,6 +2104,7 @@ export interface Prisma__PaymentClient<T, Null = never, ExtArgs extends runtime.
   booking<T extends Prisma.Payment$bookingArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Payment$bookingArgs<ExtArgs>>): Prisma.Prisma__BookingClient<runtime.Types.Result.GetResult<Prisma.$BookingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   reservation<T extends Prisma.Payment$reservationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Payment$reservationArgs<ExtArgs>>): Prisma.Prisma__ReservationClient<runtime.Types.Result.GetResult<Prisma.$ReservationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   railIssuedDocuments<T extends Prisma.Payment$railIssuedDocumentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Payment$railIssuedDocumentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RailIssuedDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  airIssuedDocuments<T extends Prisma.Payment$airIssuedDocumentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Payment$airIssuedDocumentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AirIssuedDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   webhookEvents<T extends Prisma.Payment$webhookEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Payment$webhookEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentWebhookEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -2474,6 +2624,30 @@ export type Payment$railIssuedDocumentsArgs<ExtArgs extends runtime.Types.Extens
   take?: number
   skip?: number
   distinct?: Prisma.RailIssuedDocumentScalarFieldEnum | Prisma.RailIssuedDocumentScalarFieldEnum[]
+}
+
+/**
+ * Payment.airIssuedDocuments
+ */
+export type Payment$airIssuedDocumentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AirIssuedDocument
+   */
+  select?: Prisma.AirIssuedDocumentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AirIssuedDocument
+   */
+  omit?: Prisma.AirIssuedDocumentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AirIssuedDocumentInclude<ExtArgs> | null
+  where?: Prisma.AirIssuedDocumentWhereInput
+  orderBy?: Prisma.AirIssuedDocumentOrderByWithRelationInput | Prisma.AirIssuedDocumentOrderByWithRelationInput[]
+  cursor?: Prisma.AirIssuedDocumentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AirIssuedDocumentScalarFieldEnum | Prisma.AirIssuedDocumentScalarFieldEnum[]
 }
 
 /**

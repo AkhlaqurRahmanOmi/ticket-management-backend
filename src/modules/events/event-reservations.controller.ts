@@ -8,6 +8,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import type { Request } from 'express';
 import { CheckPolicies } from '@/common/decorators/check-policies.decorator';
 import { CurrentUser } from '@/common/decorators/current-user.decorator';
@@ -18,12 +19,16 @@ import { PolicyGuard } from '@/common/guards/policy.guard';
 import { RateLimitGuard } from '@/common/guards/rate-limit.guard';
 import { RolesGuard } from '@/common/guards/roles.guard';
 import { RESERVATION_READ_POLICY } from '@/modules/iam/provider/authorization/policy-tokens';
-import { CreateReservationDto } from './dto/create-reservation.dto';
-import { ReservationsService } from './reservations.service';
+import { CreateEventReservationDto } from './dto/create-event-reservation.dto';
+import { EventReservationsService } from './event-reservations.service';
 
+@ApiTags('Event Booking')
+@ApiBearerAuth('access-token')
 @Controller('reservations')
-export class ReservationsController {
-  constructor(private readonly reservationsService: ReservationsService) {}
+export class EventReservationsController {
+  constructor(
+    private readonly eventReservationsService: EventReservationsService,
+  ) {}
 
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard, RateLimitGuard)
@@ -31,10 +36,10 @@ export class ReservationsController {
   @RateLimit({ limit: 15, windowSeconds: 60, keyPrefix: 'reservations:create' })
   createReservation(
     @CurrentUser('id') userId: string,
-    @Body() dto: CreateReservationDto,
+    @Body() dto: CreateEventReservationDto,
     @Req() request: Request,
   ) {
-    return this.reservationsService.createReservation(
+    return this.eventReservationsService.createReservation(
       userId,
       dto,
       request.requestId,
@@ -45,6 +50,6 @@ export class ReservationsController {
   @UseGuards(JwtAuthGuard, PolicyGuard)
   @CheckPolicies(RESERVATION_READ_POLICY)
   getReservation(@Param('reservationId', ParseUUIDPipe) reservationId: string) {
-    return this.reservationsService.getReservation(reservationId);
+    return this.eventReservationsService.getReservation(reservationId);
   }
 }

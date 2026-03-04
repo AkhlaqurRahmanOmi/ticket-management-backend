@@ -1,14 +1,14 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { randomUUID } from 'crypto';
-import { buildLogContext } from '@/common/utils/log-context';
 import { MetricsProvider } from '@/common/providers/metrics.provider';
+import { buildLogContext } from '@/common/utils/log-context';
 import { BookingsService } from '@/modules/bookings/bookings.service';
 import { RealtimeService } from '@/modules/realtime/realtime.service';
-import { CreateReservationDto } from './dto/create-reservation.dto';
+import { CreateEventReservationDto } from './dto/create-event-reservation.dto';
 
 @Injectable()
-export class ReservationsService {
-  private readonly logger = new Logger(ReservationsService.name);
+export class EventReservationsService {
+  private readonly logger = new Logger(EventReservationsService.name);
 
   constructor(
     private readonly bookingsService: BookingsService,
@@ -18,7 +18,7 @@ export class ReservationsService {
 
   async createReservation(
     userId: string,
-    dto: CreateReservationDto,
+    dto: CreateEventReservationDto,
     correlationId?: string,
   ) {
     const startTime = Date.now();
@@ -39,8 +39,8 @@ export class ReservationsService {
         this.logger.log(
           'Returning existing reservation for idempotency key',
           buildLogContext({
-            module: 'reservations',
-            action: 'create',
+            module: 'events',
+            action: 'createReservation',
             userId,
             reservationId: reservation.id,
             eventId: reservation.eventId,
@@ -58,8 +58,8 @@ export class ReservationsService {
         this.logger.warn(
           'Recovered reservation after concurrent create race',
           buildLogContext({
-            module: 'reservations',
-            action: 'create',
+            module: 'events',
+            action: 'createReservation',
             userId,
             reservationId: reservation.id,
             eventId: reservation.eventId,
@@ -84,8 +84,8 @@ export class ReservationsService {
       this.logger.log(
         'Reservation created',
         buildLogContext({
-          module: 'reservations',
-          action: 'create',
+          module: 'events',
+          action: 'createReservation',
           correlationId: result.correlationId,
           userId,
           reservationId: reservation.id,
@@ -108,8 +108,8 @@ export class ReservationsService {
       this.logger.error(
         `Reservation creation failed ${JSON.stringify(
           buildLogContext({
-            module: 'reservations',
-            action: 'create',
+            module: 'events',
+            action: 'createReservation',
             userId,
             eventId: dto.eventId,
             meta: { idempotencyKey: dto.idempotencyKey },

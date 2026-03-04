@@ -142,6 +142,7 @@ model User {
   orders          Order[]
   tickets         Ticket[]
   railIssuedDocuments RailIssuedDocument[]
+  airIssuedDocuments  AirIssuedDocument[]
   idempotencyKeys IdempotencyKey[]
   auditLogs       AuditLog[]           @relation("AuditLogUser")
   userRoles       UserRole[]
@@ -733,8 +734,12 @@ model Airport {
 
   originFlightServices      FlightService[]  @relation("FlightServiceOriginAirport")
   destinationFlightServices FlightService[]  @relation("FlightServiceDestinationAirport")
+  originFlightServiceLegs   FlightServiceLeg[] @relation("FlightServiceLegOriginAirport")
+  destinationFlightServiceLegs FlightServiceLeg[] @relation("FlightServiceLegDestinationAirport")
   originFlightInstances     FlightInstance[] @relation("FlightInstanceOriginAirport")
   destinationFlightInstances FlightInstance[] @relation("FlightInstanceDestinationAirport")
+  originFlightLegInstances  FlightLegInstance[] @relation("FlightLegInstanceOriginAirport")
+  destinationFlightLegInstances FlightLegInstance[] @relation("FlightLegInstanceDestinationAirport")
 
   @@index([name])
   @@index([city])
@@ -771,8 +776,33 @@ model FlightService {
   updatedAt DateTime @updatedAt
 
   instances FlightInstance[]
+  legs      FlightServiceLeg[]
 
   @@unique([carrierId, flightNumber])
+  @@index([originAirportId, destinationAirportId])
+}
+
+model FlightServiceLeg {
+  id String @id @default(uuid()) @db.Uuid
+
+  flightServiceId      String @db.Uuid
+  originAirportId      String @db.Uuid
+  destinationAirportId String @db.Uuid
+
+  flightService      FlightService @relation(fields: [flightServiceId], references: [id], onDelete: Cascade)
+  originAirport      Airport       @relation("FlightServiceLegOriginAirport", fields: [originAirportId], references: [id], onDelete: Restrict)
+  destinationAirport Airport       @relation("FlightServiceLegDestinationAirport", fields: [destinationAirportId], references: [id], onDelete: Restrict)
+
+  sequence Int
+  title    String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  instances FlightLegInstance[]
+
+  @@unique([flightServiceId, sequence])
+  @@index([flightServiceId])
   @@index([originAirportId, destinationAirportId])
 }
 
@@ -798,10 +828,42 @@ model FlightInstance {
   updatedAt DateTime @updatedAt
 
   cabinInventory FlightCabinInventory[]
+  legs           FlightLegInstance[]
+  airCabinAllocations AirCabinAllocation[]
+  airIssuedDocuments  AirIssuedDocument[]
 
   @@index([flightServiceId])
   @@index([status, departsAt])
   @@index([originAirportId, destinationAirportId, departsAt])
+}
+
+model FlightLegInstance {
+  id String @id @default(uuid()) @db.Uuid
+
+  flightInstanceId   String @db.Uuid
+  flightServiceLegId String? @db.Uuid
+  originAirportId    String @db.Uuid
+  destinationAirportId String @db.Uuid
+
+  flightInstance   FlightInstance   @relation(fields: [flightInstanceId], references: [id], onDelete: Cascade)
+  flightServiceLeg FlightServiceLeg? @relation(fields: [flightServiceLegId], references: [id], onDelete: SetNull)
+  originAirport    Airport          @relation("FlightLegInstanceOriginAirport", fields: [originAirportId], references: [id], onDelete: Restrict)
+  destinationAirport Airport        @relation("FlightLegInstanceDestinationAirport", fields: [destinationAirportId], references: [id], onDelete: Restrict)
+
+  sequence  Int
+  departsAt DateTime
+  arrivesAt DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  originAirCabinAllocations      AirCabinAllocation[] @relation("AirCabinAllocationOriginLeg")
+  destinationAirCabinAllocations AirCabinAllocation[] @relation("AirCabinAllocationDestinationLeg")
+
+  @@unique([flightInstanceId, sequence])
+  @@index([flightInstanceId])
+  @@index([flightServiceLegId])
+  @@index([originAirportId, destinationAirportId])
 }
 
 model FlightCabinInventory {
@@ -824,9 +886,45 @@ model FlightCabinInventory {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  airCabinAllocations AirCabinAllocation[]
+  airIssuedDocuments  AirIssuedDocument[]
+
   @@unique([flightInstanceId, cabinCode, fareClassCode])
   @@index([flightInstanceId])
   @@index([flightInstanceId, cabinCode])
+}
+
+model AirCabinAllocation {
+  id                       String @id @default(uuid()) @db.Uuid
+  bookingId                String @db.Uuid
+  bookingItemId            String @db.Uuid
+  flightInstanceId         String @db.Uuid
+  flightCabinInventoryId   String @db.Uuid
+  originLegInstanceId      String? @db.Uuid
+  destinationLegInstanceId String? @db.Uuid
+
+  booking                Booking              @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  bookingItem            BookingItem          @relation(fields: [bookingItemId], references: [id], onDelete: Cascade)
+  flightInstance         FlightInstance       @relation(fields: [flightInstanceId], references: [id], onDelete: Cascade)
+  flightCabinInventory   FlightCabinInventory @relation(fields: [flightCabinInventoryId], references: [id], onDelete: Cascade)
+  originLegInstance      FlightLegInstance?   @relation("AirCabinAllocationOriginLeg", fields: [originLegInstanceId], references: [id], onDelete: SetNull)
+  destinationLegInstance FlightLegInstance?   @relation("AirCabinAllocationDestinationLeg", fields: [destinationLegInstanceId], references: [id], onDelete: SetNull)
+
+  originSequence      Int
+  destinationSequence Int
+  quantity            Int @default(1)
+
+  createdAt   DateTime  @default(now())
+  confirmedAt DateTime?
+  expiredAt   DateTime?
+  cancelledAt DateTime?
+  releasedAt  DateTime?
+
+  @@index([bookingId])
+  @@index([bookingItemId])
+  @@index([flightInstanceId, flightCabinInventoryId])
+  @@index([flightCabinInventoryId, originSequence, destinationSequence])
+  @@index([releasedAt])
 }
 
 /**
@@ -936,7 +1034,9 @@ model Booking {
   passengers          Passenger[]
   payments            Payment[]
   railSeatAllocations RailSeatAllocation[]
+  airCabinAllocations AirCabinAllocation[]
   railIssuedDocuments RailIssuedDocument[]
+  airIssuedDocuments  AirIssuedDocument[]
 
   @@unique([userId, domainType, idempotencyKey])
   @@index([orgId])
@@ -1004,7 +1104,9 @@ model BookingItem {
   expiredAt   DateTime?
 
   railSeatAllocations RailSeatAllocation[]
+  airCabinAllocations AirCabinAllocation[]
   railIssuedDocuments RailIssuedDocument[]
+  airIssuedDocuments  AirIssuedDocument[]
 
   @@index([bookingId])
   @@index([passengerId])
@@ -1110,6 +1212,7 @@ model Payment {
   refundedAt  DateTime?
 
   railIssuedDocuments RailIssuedDocument[]
+  airIssuedDocuments  AirIssuedDocument[]
   webhookEvents PaymentWebhookEvent[]
 
   @@unique([provider, providerRef])
@@ -1218,6 +1321,42 @@ model RailIssuedDocument {
   @@index([userId])
   @@index([tripId])
   @@index([tripSeatId])
+  @@index([issuedAt])
+}
+
+model AirIssuedDocument {
+  id                     String @id @default(uuid()) @db.Uuid
+  bookingId              String @db.Uuid
+  bookingItemId          String @db.Uuid
+  paymentId              String @db.Uuid
+  userId                 String @db.Uuid
+  flightInstanceId       String @db.Uuid
+  flightCabinInventoryId String @db.Uuid
+
+  booking              Booking              @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  bookingItem          BookingItem          @relation(fields: [bookingItemId], references: [id], onDelete: Cascade)
+  payment              Payment              @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  user                 User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  flightInstance       FlightInstance       @relation(fields: [flightInstanceId], references: [id], onDelete: Cascade)
+  flightCabinInventory FlightCabinInventory @relation(fields: [flightCabinInventoryId], references: [id], onDelete: Cascade)
+
+  status TicketStatus @default(ISSUED)
+
+  code       String   @unique
+  issuedAt   DateTime @default(now())
+  voidedAt   DateTime?
+  refundedAt DateTime?
+  metadata   Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([bookingId])
+  @@index([bookingItemId])
+  @@index([paymentId])
+  @@index([userId])
+  @@index([flightInstanceId])
+  @@index([flightCabinInventoryId])
   @@index([issuedAt])
 }
 

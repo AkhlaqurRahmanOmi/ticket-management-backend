@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { AirModule } from '@/modules/air/air.module';
+import { CreateAirHoldDto } from '@/modules/air/dto/create-air-hold.dto';
 import { AirService } from '@/modules/air/air.service';
 import {
   BOOKING_FINALIZER,
@@ -18,6 +19,8 @@ import {
 } from '@/modules/domain-runtime/domain.tokens';
 import type { DomainTopicRegistry } from '@/modules/domain-runtime/domain-topic-registry.interface';
 import type { DomainRealtimeProvider } from '@/modules/domain-runtime/realtime-provider.interface';
+import { IssuanceService } from '@/modules/issuance/issuance.service';
+import { IssuanceModule } from '@/modules/issuance/issuance.module';
 import type {
   BookingFinalizer,
   FinalizePaymentSucceededInput,
@@ -48,27 +51,24 @@ export class AirInventoryProvider {
   }
 
   createHold(
-    _userId: string,
-    _dto: Record<string, unknown>,
-    _correlationId?: string,
+    userId: string,
+    dto: CreateAirHoldDto & { flightInstanceId: string },
+    correlationId?: string,
   ) {
-    throw new NotImplementedException(
-      'Air hold creation is not implemented yet.',
+    return this.airService.createHold(
+      userId,
+      dto.flightInstanceId,
+      dto,
+      correlationId,
     );
   }
 
-  getHold(_holdId: string) {
-    throw new NotImplementedException(
-      'Air hold retrieval is not implemented yet.',
-    );
+  getHold(holdId: string) {
+    return this.airService.getHoldById(holdId);
   }
 
-  expireHolds(_batchSize = 100) {
-    return {
-      scanned: 0,
-      expired: 0,
-      results: [],
-    };
+  expireHolds(batchSize = 100) {
+    return this.airService.processExpiredHolds(batchSize);
   }
 }
 
@@ -76,56 +76,26 @@ export class AirInventoryProvider {
 export class AirIssuanceProvider {
   private readonly logger = new Logger(AirIssuanceProvider.name);
 
+  constructor(private readonly issuanceService: IssuanceService) {}
+
   async issueDocuments(
     input: FinalizePaymentSucceededInput,
   ): Promise<PaymentSucceededFinalizationResult> {
-    this.logger.warn(
-      `Air issuance requested before air domain implementation paymentId=${input.paymentId}`,
-    );
+    const result = await this.issuanceService.issueAirDocuments(input);
 
-    return {
-      processed: false,
-      idempotent: true,
-      paymentId: input.paymentId,
-      bookingId: input.bookingId ?? null,
-      orderId: null,
-      reservationId: input.reservationId ?? null,
-      inventoryScopeId: null,
-      issuedDocumentIds: [],
-      affectedInventoryRefIds: [],
-      reason: 'air_domain_not_implemented',
-    };
-  }
-
-  getIssuedDocument(_documentId: string) {
-    throw new NotImplementedException(
-      'Air issued document lookup is not implemented yet.',
-    );
-  }
-
-  getIssuedDocumentsForUser(_userId: string) {
-    throw new NotImplementedException(
-      'Air issued documents lookup is not implemented yet.',
-    );
-  }
-}
-
-@Injectable()
-export class AirBookingFinalizerProvider implements BookingFinalizer {
-  private readonly logger = new Logger(AirBookingFinalizerProvider.name);
-
-  constructor(private readonly airIssuanceProvider: AirIssuanceProvider) {}
-
-  async finalizePaymentSucceeded(
-    input: FinalizePaymentSucceededInput,
-  ): Promise<PaymentSucceededFinalizationResult> {
-    const result = await this.airIssuanceProvider.issueDocuments(input);
-
-    this.logger.warn(
-      `air payment finalization is still a skeleton paymentId=${input.paymentId} processed=${result.processed} reason=${result.reason ?? 'n/a'}`,
+    this.logger.log(
+      `Air issuance handled paymentId=${input.paymentId} processed=${result.processed} idempotent=${result.idempotent} documents=${result.issuedDocumentIds.length}`,
     );
 
     return result;
+  }
+
+  getIssuedDocument(documentId: string) {
+    return this.issuanceService.getAirIssuedDocument(documentId);
+  }
+
+  getIssuedDocumentsForUser(userId: string) {
+    return this.issuanceService.getAirIssuedDocumentsForUser(userId);
   }
 }
 
@@ -157,6 +127,43 @@ export class AirRealtimeProvider implements DomainRealtimeProvider {
   }
 }
 
+@Injectable()
+export class AirBookingFinalizerProvider implements BookingFinalizer {
+  private readonly logger = new Logger(AirBookingFinalizerProvider.name);
+
+  constructor(
+    private readonly airIssuanceProvider: AirIssuanceProvider,
+    private readonly airRealtimeProvider: AirRealtimeProvider,
+  ) {}
+
+  async finalizePaymentSucceeded(
+    input: FinalizePaymentSucceededInput,
+  ): Promise<PaymentSucceededFinalizationResult> {
+    const result = await this.airIssuanceProvider.issueDocuments(input);
+
+    if (
+      result.processed &&
+      result.inventoryScopeId &&
+      result.affectedInventoryRefIds.length > 0
+    ) {
+      await this.airRealtimeProvider.publishInventoryUpdates(
+        result.inventoryScopeId,
+        {
+          type: 'payment.succeeded',
+          paymentId: input.paymentId,
+          flightCabinInventoryIds: result.affectedInventoryRefIds,
+        },
+      );
+    }
+
+    this.logger.log(
+      `air payment finalization handled paymentId=${input.paymentId} processed=${result.processed} idempotent=${result.idempotent} documents=${result.issuedDocumentIds.length}`,
+    );
+
+    return result;
+  }
+}
+
 const AIR_DOMAIN_TOPICS = [
   'payment.succeeded',
   'payment.failed',
@@ -169,7 +176,7 @@ const airDomainTopicRegistry: DomainTopicRegistry = {
 };
 
 @Module({
-  imports: [AirModule],
+  imports: [AirModule, IssuanceModule],
   providers: [
     AirInventoryProvider,
     AirIssuanceProvider,
