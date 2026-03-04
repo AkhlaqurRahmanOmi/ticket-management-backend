@@ -16,6 +16,24 @@ export class GetFlightAvailabilityQueryDto {
     typeof value === 'string' ? value.trim().toUpperCase() : value,
   )
   @IsString()
+  @MinLength(2)
+  @MaxLength(16)
+  originCode?: string;
+
+  @IsOptional()
+  @Transform(({ value }) =>
+    typeof value === 'string' ? value.trim().toUpperCase() : value,
+  )
+  @IsString()
+  @MinLength(2)
+  @MaxLength(16)
+  destinationCode?: string;
+
+  @IsOptional()
+  @Transform(({ value }) =>
+    typeof value === 'string' ? value.trim().toUpperCase() : value,
+  )
+  @IsString()
   @MinLength(1)
   @MaxLength(16)
   cabinCode?: string;

@@ -9,6 +9,7 @@ import { BaseRepository } from '@/common/repositories/base.repository';
 import { PrismaService } from '@/infra/prisma/prisma/prisma.service';
 import { UnitOfWorkService } from '@/infra/prisma/unit-of-work.service';
 import type {
+  AirIssuedDocumentRow,
   IssuedDocumentKind,
   IssuedDocumentRecord,
   IssueDocumentsInput,
@@ -147,6 +148,52 @@ export class IssuanceRepository extends BaseRepository {
     `;
 
     return rows.map((row) => this.mapRailIssuedDocument(row));
+  }
+
+  async findAirIssuedDocumentById(
+    documentId: string,
+  ): Promise<IssuedDocumentRecord | null> {
+    const rows = await this.prisma.$queryRaw<AirIssuedDocumentRow[]>`
+      SELECT
+        "id",
+        "status",
+        "code",
+        "issuedAt",
+        "bookingId",
+        "paymentId",
+        "userId",
+        "flightInstanceId",
+        "flightCabinInventoryId",
+        "metadata"
+      FROM "AirIssuedDocument"
+      WHERE "id" = ${documentId}::uuid
+      LIMIT 1
+    `;
+
+    return rows[0] ? this.mapAirIssuedDocument(rows[0]) : null;
+  }
+
+  async findAirIssuedDocumentsByUserId(
+    userId: string,
+  ): Promise<IssuedDocumentRecord[]> {
+    const rows = await this.prisma.$queryRaw<AirIssuedDocumentRow[]>`
+      SELECT
+        "id",
+        "status",
+        "code",
+        "issuedAt",
+        "bookingId",
+        "paymentId",
+        "userId",
+        "flightInstanceId",
+        "flightCabinInventoryId",
+        "metadata"
+      FROM "AirIssuedDocument"
+      WHERE "userId" = ${userId}::uuid
+      ORDER BY "issuedAt" DESC
+    `;
+
+    return rows.map((row) => this.mapAirIssuedDocument(row));
   }
 
   async finalizeIssuedDocumentsFromPaymentSucceeded(
@@ -803,6 +850,330 @@ export class IssuanceRepository extends BaseRepository {
     });
   }
 
+  async finalizeAirIssuedDocumentsFromPaymentSucceeded(
+    input: IssueDocumentsInput,
+  ): Promise<IssueDocumentsResult> {
+    return this.withTransaction(async (tx) => {
+      const now = new Date();
+
+      await tx.$queryRaw`
+        SELECT "id"
+        FROM "Payment"
+        WHERE "id" = ${input.paymentId}::uuid
+        FOR UPDATE
+      `;
+
+      const payment = await tx.payment.findUnique({
+        where: { id: input.paymentId },
+        select: {
+          id: true,
+          bookingId: true,
+          domainType: true,
+          status: true,
+          amountCents: true,
+          currency: true,
+          reservationId: true,
+          booking: {
+            select: {
+              id: true,
+              userId: true,
+              domainType: true,
+              status: true,
+              holdExpiresAt: true,
+              currency: true,
+              metadata: true,
+              items: {
+                select: {
+                  id: true,
+                  status: true,
+                  quantity: true,
+                  unitPriceCents: true,
+                  feesCents: true,
+                  inventoryRefId: true,
+                  seatLabel: true,
+                  segmentRefId: true,
+                  snapshot: true,
+                  airCabinAllocations: {
+                    where: {
+                      releasedAt: null,
+                      cancelledAt: null,
+                      expiredAt: null,
+                    },
+                    select: {
+                      id: true,
+                      flightInstanceId: true,
+                      flightCabinInventoryId: true,
+                      originSequence: true,
+                      destinationSequence: true,
+                      quantity: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (!payment) {
+        throw new NotFoundException('Payment not found.');
+      }
+
+      const existingDocuments = await tx.$queryRaw<AirIssuedDocumentRow[]>`
+        SELECT
+          "id",
+          "status",
+          "code",
+          "issuedAt",
+          "bookingId",
+          "paymentId",
+          "userId",
+          "flightInstanceId",
+          "flightCabinInventoryId",
+          "metadata"
+        FROM "AirIssuedDocument"
+        WHERE "paymentId" = ${payment.id}::uuid
+        ORDER BY "issuedAt" DESC
+      `;
+
+      if (payment.status !== 'SUCCEEDED') {
+        return {
+          processed: false,
+          idempotent: true,
+          paymentId: payment.id,
+          bookingId: payment.bookingId,
+          orderId: null,
+          reservationId: payment.reservationId,
+          inventoryScopeId: payment.bookingId
+            ? this.getMetadataString(payment.booking?.metadata, 'inventoryScopeId')
+            : null,
+          issuedDocumentIds: existingDocuments.map((document) => document.id),
+          affectedInventoryRefIds: [],
+          reason: 'payment_not_succeeded',
+        };
+      }
+
+      if (existingDocuments.length > 0) {
+        return {
+          processed: false,
+          idempotent: true,
+          paymentId: payment.id,
+          bookingId: payment.bookingId,
+          orderId: null,
+          reservationId: payment.reservationId,
+          inventoryScopeId:
+            existingDocuments[0]?.flightInstanceId ??
+            this.getMetadataString(payment.booking?.metadata, 'inventoryScopeId'),
+          issuedDocumentIds: existingDocuments.map((document) => document.id),
+          affectedInventoryRefIds: [
+            ...new Set(
+              existingDocuments.map(
+                (document) => document.flightCabinInventoryId,
+              ),
+            ),
+          ],
+          reason: 'already_finalized',
+        };
+      }
+
+      const booking = payment.booking;
+      if (!booking || booking.domainType !== 'AIR') {
+        throw new ConflictException(
+          'Payment is not linked to an air booking. Manual remediation required.',
+        );
+      }
+
+      if (
+        booking.status === 'EXPIRED' ||
+        booking.status === 'CANCELLED' ||
+        (booking.status === 'HOLD' &&
+          booking.holdExpiresAt instanceof Date &&
+          booking.holdExpiresAt <= now)
+      ) {
+        throw new ConflictException(
+          'Air booking is no longer active. Manual remediation/refund required.',
+        );
+      }
+
+      const totalCents = booking.items.reduce(
+        (sum, item) => sum + item.quantity * (item.unitPriceCents + item.feesCents),
+        0,
+      );
+
+      if (payment.amountCents !== totalCents) {
+        throw new ConflictException(
+          'Payment amount does not match air booking total.',
+        );
+      }
+
+      if (payment.currency.toUpperCase() !== booking.currency.toUpperCase()) {
+        throw new ConflictException(
+          'Payment currency does not match air booking currency.',
+        );
+      }
+
+      const issuedDocumentIds: string[] = [];
+      const affectedInventoryRefIds: string[] = [];
+      const bookingReference = this.buildAirBookingReference(booking.id);
+
+      for (const item of booking.items) {
+        const allocation = item.airCabinAllocations[0];
+        if (!allocation) {
+          throw new ConflictException(
+            `Air booking item ${item.id} has no active cabin allocation.`,
+          );
+        }
+
+        const snapshot = this.parseMetadata(item.snapshot);
+        const cabinCode = this.getMetadataString(snapshot, 'cabinCode');
+        const fareClassCode = this.getMetadataString(snapshot, 'fareClassCode');
+        const originAirportCode = this.getMetadataString(
+          snapshot,
+          'originAirportCode',
+        );
+        const destinationAirportCode = this.getMetadataString(
+          snapshot,
+          'destinationAirportCode',
+        );
+
+        for (let index = 0; index < item.quantity; index++) {
+          const documentId = randomUUID();
+          const documentCode = this.buildAirDocumentCode(
+            booking.id,
+            item.id,
+            index,
+          );
+          const metadata = {
+            inventoryScopeId: allocation.flightInstanceId,
+            inventoryRefId: allocation.flightCabinInventoryId,
+            categoryRefId: fareClassCode,
+            segmentRefId: item.segmentRefId,
+            seatLabel: item.seatLabel,
+            originAirportCode,
+            destinationAirportCode,
+            cabinCode,
+            fareClassCode,
+            bookingReference,
+            quantityIndex: index + 1,
+          };
+
+          await tx.$executeRaw`
+            INSERT INTO "AirIssuedDocument" (
+              "id",
+              "bookingId",
+              "bookingItemId",
+              "paymentId",
+              "userId",
+              "flightInstanceId",
+              "flightCabinInventoryId",
+              "status",
+              "code",
+              "issuedAt",
+              "metadata",
+              "createdAt",
+              "updatedAt"
+            )
+            VALUES (
+              ${documentId}::uuid,
+              ${booking.id}::uuid,
+              ${item.id}::uuid,
+              ${payment.id}::uuid,
+              ${booking.userId}::uuid,
+              ${allocation.flightInstanceId}::uuid,
+              ${allocation.flightCabinInventoryId}::uuid,
+              'ISSUED',
+              ${documentCode},
+              ${now},
+              CAST(${JSON.stringify(metadata)} AS jsonb),
+              ${now},
+              ${now}
+            )
+          `;
+
+          issuedDocumentIds.push(documentId);
+        }
+
+        affectedInventoryRefIds.push(allocation.flightCabinInventoryId);
+      }
+
+      await tx.booking.updateMany({
+        where: {
+          id: booking.id,
+          status: 'HOLD',
+        },
+        data: {
+          status: 'CONFIRMED',
+          confirmedAt: now,
+          holdExpiresAt: null,
+        } as never,
+      });
+
+      await tx.bookingItem.updateMany({
+        where: {
+          bookingId: booking.id,
+          status: 'HOLD',
+        },
+        data: {
+          status: 'CONFIRMED',
+          confirmedAt: now,
+        } as never,
+      });
+
+      await tx.$executeRaw`
+        UPDATE "AirCabinAllocation"
+        SET "confirmedAt" = ${now}
+        WHERE "bookingId" = ${booking.id}::uuid
+          AND "releasedAt" IS NULL
+          AND "cancelledAt" IS NULL
+          AND "expiredAt" IS NULL
+          AND "confirmedAt" IS NULL
+      `;
+
+      await tx.outboxEvent.create({
+        data: {
+          topic: 'ticket.issued',
+          key: booking.id,
+          payload: {
+            eventId: randomUUID(),
+            occurredAt: now.toISOString(),
+            version: 1,
+            correlationId: input.correlationId ?? null,
+            actor: input.actor ?? booking.userId,
+            data: {
+              paymentId: payment.id,
+              bookingId: booking.id,
+              flightInstanceId:
+                this.getMetadataString(booking.metadata, 'flightInstanceId') ??
+                this.getMetadataString(booking.metadata, 'inventoryScopeId'),
+              bookingReference,
+              issuedDocumentIds,
+              flightCabinInventoryIds: [
+                ...new Set(affectedInventoryRefIds),
+              ],
+            },
+          } as never,
+          status: 'PENDING',
+          correlationId: input.correlationId ?? null,
+          actorUserId: booking.userId,
+        },
+      });
+
+      return {
+        processed: true,
+        idempotent: false,
+        paymentId: payment.id,
+        bookingId: booking.id,
+        orderId: null,
+        reservationId: payment.reservationId,
+        inventoryScopeId:
+          this.getMetadataString(booking.metadata, 'flightInstanceId') ??
+          this.getMetadataString(booking.metadata, 'inventoryScopeId'),
+        issuedDocumentIds,
+        affectedInventoryRefIds: [...new Set(affectedInventoryRefIds)],
+      };
+    });
+  }
+
   private mapTicketToIssuedDocument(
     ticket: TicketIssuedDocumentRow,
   ): IssuedDocumentRecord {
@@ -853,6 +1224,39 @@ export class IssuanceRepository extends BaseRepository {
     };
   }
 
+  private mapAirIssuedDocument(
+    document: AirIssuedDocumentRow,
+  ): IssuedDocumentRecord {
+    const metadata = this.parseMetadata(document.metadata);
+
+    return {
+      id: document.id,
+      domainType: BookingDomain.AIR,
+      kind: 'AIR_TICKET',
+      status: document.status,
+      documentNumber: document.code,
+      bookingId: document.bookingId,
+      orderId: null,
+      ownerUserId: document.userId,
+      issuedAt: document.issuedAt,
+      metadata: {
+        inventoryScopeId: document.flightInstanceId,
+        inventoryRefId: document.flightCabinInventoryId,
+        categoryRefId: this.getMetadataString(metadata, 'categoryRefId'),
+        segmentRefId: this.getMetadataString(metadata, 'segmentRefId'),
+        seatLabel: this.getMetadataString(metadata, 'seatLabel'),
+        originAirportCode: this.getMetadataString(metadata, 'originAirportCode'),
+        destinationAirportCode: this.getMetadataString(
+          metadata,
+          'destinationAirportCode',
+        ),
+        cabinCode: this.getMetadataString(metadata, 'cabinCode'),
+        fareClassCode: this.getMetadataString(metadata, 'fareClassCode'),
+        bookingReference: this.getMetadataString(metadata, 'bookingReference'),
+      },
+    };
+  }
+
   private resolveDocumentKind(domainType: BookingDomain): IssuedDocumentKind {
     switch (domainType) {
       case BookingDomain.RAIL:
@@ -879,6 +1283,18 @@ export class IssuanceRepository extends BaseRepository {
     index: number,
   ): string {
     return `rail_${bookingId.slice(0, 8)}_${bookingItemId.slice(0, 8)}_${index + 1}`;
+  }
+
+  private buildAirDocumentCode(
+    bookingId: string,
+    bookingItemId: string,
+    index: number,
+  ): string {
+    return `air_${bookingId.slice(0, 8)}_${bookingItemId.slice(0, 8)}_${index + 1}`;
+  }
+
+  private buildAirBookingReference(bookingId: string): string {
+    return `PNR${bookingId.replace(/-/g, '').slice(0, 6).toUpperCase()}`;
   }
 
   private parseMetadata(metadata: unknown): Record<string, unknown> {

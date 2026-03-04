@@ -412,8 +412,11 @@ export const ModelName = {
   Airport: 'Airport',
   Carrier: 'Carrier',
   FlightService: 'FlightService',
+  FlightServiceLeg: 'FlightServiceLeg',
   FlightInstance: 'FlightInstance',
+  FlightLegInstance: 'FlightLegInstance',
   FlightCabinInventory: 'FlightCabinInventory',
+  AirCabinAllocation: 'AirCabinAllocation',
   Reservation: 'Reservation',
   ReservationItem: 'ReservationItem',
   Booking: 'Booking',
@@ -425,6 +428,7 @@ export const ModelName = {
   PaymentWebhookEvent: 'PaymentWebhookEvent',
   Ticket: 'Ticket',
   RailIssuedDocument: 'RailIssuedDocument',
+  AirIssuedDocument: 'AirIssuedDocument',
   IdempotencyKey: 'IdempotencyKey',
   OutboxEvent: 'OutboxEvent',
   AuditLog: 'AuditLog'
@@ -443,7 +447,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "role" | "permission" | "userRole" | "rolePermission" | "authSession" | "apiKey" | "organization" | "organizationMember" | "venue" | "venueSection" | "venueRow" | "venueSeat" | "event" | "eventTicketType" | "eventSeat" | "railStation" | "railRoute" | "railRouteStop" | "railTrip" | "railTripStop" | "railCoach" | "railSeat" | "railTripSeat" | "railSeatAllocation" | "airport" | "carrier" | "flightService" | "flightInstance" | "flightCabinInventory" | "reservation" | "reservationItem" | "booking" | "passenger" | "bookingItem" | "order" | "orderItem" | "payment" | "paymentWebhookEvent" | "ticket" | "railIssuedDocument" | "idempotencyKey" | "outboxEvent" | "auditLog"
+    modelProps: "user" | "role" | "permission" | "userRole" | "rolePermission" | "authSession" | "apiKey" | "organization" | "organizationMember" | "venue" | "venueSection" | "venueRow" | "venueSeat" | "event" | "eventTicketType" | "eventSeat" | "railStation" | "railRoute" | "railRouteStop" | "railTrip" | "railTripStop" | "railCoach" | "railSeat" | "railTripSeat" | "railSeatAllocation" | "airport" | "carrier" | "flightService" | "flightServiceLeg" | "flightInstance" | "flightLegInstance" | "flightCabinInventory" | "airCabinAllocation" | "reservation" | "reservationItem" | "booking" | "passenger" | "bookingItem" | "order" | "orderItem" | "payment" | "paymentWebhookEvent" | "ticket" | "railIssuedDocument" | "airIssuedDocument" | "idempotencyKey" | "outboxEvent" | "auditLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2519,6 +2523,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    FlightServiceLeg: {
+      payload: Prisma.$FlightServiceLegPayload<ExtArgs>
+      fields: Prisma.FlightServiceLegFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.FlightServiceLegFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FlightServiceLegPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.FlightServiceLegFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FlightServiceLegPayload>
+        }
+        findFirst: {
+          args: Prisma.FlightServiceLegFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FlightServiceLegPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.FlightServiceLegFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FlightServiceLegPayload>
+        }
+        findMany: {
+          args: Prisma.FlightServiceLegFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FlightServiceLegPayload>[]
+        }
+        create: {
+          args: Prisma.FlightServiceLegCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FlightServiceLegPayload>
+        }
+        createMany: {
+          args: Prisma.FlightServiceLegCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.FlightServiceLegCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FlightServiceLegPayload>[]
+        }
+        delete: {
+          args: Prisma.FlightServiceLegDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FlightServiceLegPayload>
+        }
+        update: {
+          args: Prisma.FlightServiceLegUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FlightServiceLegPayload>
+        }
+        deleteMany: {
+          args: Prisma.FlightServiceLegDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.FlightServiceLegUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.FlightServiceLegUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FlightServiceLegPayload>[]
+        }
+        upsert: {
+          args: Prisma.FlightServiceLegUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FlightServiceLegPayload>
+        }
+        aggregate: {
+          args: Prisma.FlightServiceLegAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateFlightServiceLeg>
+        }
+        groupBy: {
+          args: Prisma.FlightServiceLegGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FlightServiceLegGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.FlightServiceLegCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FlightServiceLegCountAggregateOutputType> | number
+        }
+      }
+    }
     FlightInstance: {
       payload: Prisma.$FlightInstancePayload<ExtArgs>
       fields: Prisma.FlightInstanceFieldRefs
@@ -2593,6 +2671,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    FlightLegInstance: {
+      payload: Prisma.$FlightLegInstancePayload<ExtArgs>
+      fields: Prisma.FlightLegInstanceFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.FlightLegInstanceFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FlightLegInstancePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.FlightLegInstanceFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FlightLegInstancePayload>
+        }
+        findFirst: {
+          args: Prisma.FlightLegInstanceFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FlightLegInstancePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.FlightLegInstanceFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FlightLegInstancePayload>
+        }
+        findMany: {
+          args: Prisma.FlightLegInstanceFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FlightLegInstancePayload>[]
+        }
+        create: {
+          args: Prisma.FlightLegInstanceCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FlightLegInstancePayload>
+        }
+        createMany: {
+          args: Prisma.FlightLegInstanceCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.FlightLegInstanceCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FlightLegInstancePayload>[]
+        }
+        delete: {
+          args: Prisma.FlightLegInstanceDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FlightLegInstancePayload>
+        }
+        update: {
+          args: Prisma.FlightLegInstanceUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FlightLegInstancePayload>
+        }
+        deleteMany: {
+          args: Prisma.FlightLegInstanceDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.FlightLegInstanceUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.FlightLegInstanceUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FlightLegInstancePayload>[]
+        }
+        upsert: {
+          args: Prisma.FlightLegInstanceUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FlightLegInstancePayload>
+        }
+        aggregate: {
+          args: Prisma.FlightLegInstanceAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateFlightLegInstance>
+        }
+        groupBy: {
+          args: Prisma.FlightLegInstanceGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FlightLegInstanceGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.FlightLegInstanceCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FlightLegInstanceCountAggregateOutputType> | number
+        }
+      }
+    }
     FlightCabinInventory: {
       payload: Prisma.$FlightCabinInventoryPayload<ExtArgs>
       fields: Prisma.FlightCabinInventoryFieldRefs
@@ -2664,6 +2816,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.FlightCabinInventoryCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.FlightCabinInventoryCountAggregateOutputType> | number
+        }
+      }
+    }
+    AirCabinAllocation: {
+      payload: Prisma.$AirCabinAllocationPayload<ExtArgs>
+      fields: Prisma.AirCabinAllocationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AirCabinAllocationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AirCabinAllocationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AirCabinAllocationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AirCabinAllocationPayload>
+        }
+        findFirst: {
+          args: Prisma.AirCabinAllocationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AirCabinAllocationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AirCabinAllocationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AirCabinAllocationPayload>
+        }
+        findMany: {
+          args: Prisma.AirCabinAllocationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AirCabinAllocationPayload>[]
+        }
+        create: {
+          args: Prisma.AirCabinAllocationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AirCabinAllocationPayload>
+        }
+        createMany: {
+          args: Prisma.AirCabinAllocationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AirCabinAllocationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AirCabinAllocationPayload>[]
+        }
+        delete: {
+          args: Prisma.AirCabinAllocationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AirCabinAllocationPayload>
+        }
+        update: {
+          args: Prisma.AirCabinAllocationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AirCabinAllocationPayload>
+        }
+        deleteMany: {
+          args: Prisma.AirCabinAllocationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AirCabinAllocationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AirCabinAllocationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AirCabinAllocationPayload>[]
+        }
+        upsert: {
+          args: Prisma.AirCabinAllocationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AirCabinAllocationPayload>
+        }
+        aggregate: {
+          args: Prisma.AirCabinAllocationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAirCabinAllocation>
+        }
+        groupBy: {
+          args: Prisma.AirCabinAllocationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AirCabinAllocationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AirCabinAllocationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AirCabinAllocationCountAggregateOutputType> | number
         }
       }
     }
@@ -3481,6 +3707,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    AirIssuedDocument: {
+      payload: Prisma.$AirIssuedDocumentPayload<ExtArgs>
+      fields: Prisma.AirIssuedDocumentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AirIssuedDocumentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AirIssuedDocumentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AirIssuedDocumentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AirIssuedDocumentPayload>
+        }
+        findFirst: {
+          args: Prisma.AirIssuedDocumentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AirIssuedDocumentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AirIssuedDocumentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AirIssuedDocumentPayload>
+        }
+        findMany: {
+          args: Prisma.AirIssuedDocumentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AirIssuedDocumentPayload>[]
+        }
+        create: {
+          args: Prisma.AirIssuedDocumentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AirIssuedDocumentPayload>
+        }
+        createMany: {
+          args: Prisma.AirIssuedDocumentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AirIssuedDocumentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AirIssuedDocumentPayload>[]
+        }
+        delete: {
+          args: Prisma.AirIssuedDocumentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AirIssuedDocumentPayload>
+        }
+        update: {
+          args: Prisma.AirIssuedDocumentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AirIssuedDocumentPayload>
+        }
+        deleteMany: {
+          args: Prisma.AirIssuedDocumentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AirIssuedDocumentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AirIssuedDocumentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AirIssuedDocumentPayload>[]
+        }
+        upsert: {
+          args: Prisma.AirIssuedDocumentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AirIssuedDocumentPayload>
+        }
+        aggregate: {
+          args: Prisma.AirIssuedDocumentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAirIssuedDocument>
+        }
+        groupBy: {
+          args: Prisma.AirIssuedDocumentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AirIssuedDocumentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AirIssuedDocumentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AirIssuedDocumentCountAggregateOutputType> | number
+        }
+      }
+    }
     IdempotencyKey: {
       payload: Prisma.$IdempotencyKeyPayload<ExtArgs>
       fields: Prisma.IdempotencyKeyFieldRefs
@@ -4136,6 +4436,20 @@ export const FlightServiceScalarFieldEnum = {
 export type FlightServiceScalarFieldEnum = (typeof FlightServiceScalarFieldEnum)[keyof typeof FlightServiceScalarFieldEnum]
 
 
+export const FlightServiceLegScalarFieldEnum = {
+  id: 'id',
+  flightServiceId: 'flightServiceId',
+  originAirportId: 'originAirportId',
+  destinationAirportId: 'destinationAirportId',
+  sequence: 'sequence',
+  title: 'title',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FlightServiceLegScalarFieldEnum = (typeof FlightServiceLegScalarFieldEnum)[keyof typeof FlightServiceLegScalarFieldEnum]
+
+
 export const FlightInstanceScalarFieldEnum = {
   id: 'id',
   flightServiceId: 'flightServiceId',
@@ -4154,6 +4468,22 @@ export const FlightInstanceScalarFieldEnum = {
 export type FlightInstanceScalarFieldEnum = (typeof FlightInstanceScalarFieldEnum)[keyof typeof FlightInstanceScalarFieldEnum]
 
 
+export const FlightLegInstanceScalarFieldEnum = {
+  id: 'id',
+  flightInstanceId: 'flightInstanceId',
+  flightServiceLegId: 'flightServiceLegId',
+  originAirportId: 'originAirportId',
+  destinationAirportId: 'destinationAirportId',
+  sequence: 'sequence',
+  departsAt: 'departsAt',
+  arrivesAt: 'arrivesAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FlightLegInstanceScalarFieldEnum = (typeof FlightLegInstanceScalarFieldEnum)[keyof typeof FlightLegInstanceScalarFieldEnum]
+
+
 export const FlightCabinInventoryScalarFieldEnum = {
   id: 'id',
   flightInstanceId: 'flightInstanceId',
@@ -4170,6 +4500,27 @@ export const FlightCabinInventoryScalarFieldEnum = {
 } as const
 
 export type FlightCabinInventoryScalarFieldEnum = (typeof FlightCabinInventoryScalarFieldEnum)[keyof typeof FlightCabinInventoryScalarFieldEnum]
+
+
+export const AirCabinAllocationScalarFieldEnum = {
+  id: 'id',
+  bookingId: 'bookingId',
+  bookingItemId: 'bookingItemId',
+  flightInstanceId: 'flightInstanceId',
+  flightCabinInventoryId: 'flightCabinInventoryId',
+  originLegInstanceId: 'originLegInstanceId',
+  destinationLegInstanceId: 'destinationLegInstanceId',
+  originSequence: 'originSequence',
+  destinationSequence: 'destinationSequence',
+  quantity: 'quantity',
+  createdAt: 'createdAt',
+  confirmedAt: 'confirmedAt',
+  expiredAt: 'expiredAt',
+  cancelledAt: 'cancelledAt',
+  releasedAt: 'releasedAt'
+} as const
+
+export type AirCabinAllocationScalarFieldEnum = (typeof AirCabinAllocationScalarFieldEnum)[keyof typeof AirCabinAllocationScalarFieldEnum]
 
 
 export const ReservationScalarFieldEnum = {
@@ -4382,6 +4733,27 @@ export const RailIssuedDocumentScalarFieldEnum = {
 } as const
 
 export type RailIssuedDocumentScalarFieldEnum = (typeof RailIssuedDocumentScalarFieldEnum)[keyof typeof RailIssuedDocumentScalarFieldEnum]
+
+
+export const AirIssuedDocumentScalarFieldEnum = {
+  id: 'id',
+  bookingId: 'bookingId',
+  bookingItemId: 'bookingItemId',
+  paymentId: 'paymentId',
+  userId: 'userId',
+  flightInstanceId: 'flightInstanceId',
+  flightCabinInventoryId: 'flightCabinInventoryId',
+  status: 'status',
+  code: 'code',
+  issuedAt: 'issuedAt',
+  voidedAt: 'voidedAt',
+  refundedAt: 'refundedAt',
+  metadata: 'metadata',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AirIssuedDocumentScalarFieldEnum = (typeof AirIssuedDocumentScalarFieldEnum)[keyof typeof AirIssuedDocumentScalarFieldEnum]
 
 
 export const IdempotencyKeyScalarFieldEnum = {
@@ -4899,8 +5271,11 @@ export type GlobalOmitConfig = {
   airport?: Prisma.AirportOmit
   carrier?: Prisma.CarrierOmit
   flightService?: Prisma.FlightServiceOmit
+  flightServiceLeg?: Prisma.FlightServiceLegOmit
   flightInstance?: Prisma.FlightInstanceOmit
+  flightLegInstance?: Prisma.FlightLegInstanceOmit
   flightCabinInventory?: Prisma.FlightCabinInventoryOmit
+  airCabinAllocation?: Prisma.AirCabinAllocationOmit
   reservation?: Prisma.ReservationOmit
   reservationItem?: Prisma.ReservationItemOmit
   booking?: Prisma.BookingOmit
@@ -4912,6 +5287,7 @@ export type GlobalOmitConfig = {
   paymentWebhookEvent?: Prisma.PaymentWebhookEventOmit
   ticket?: Prisma.TicketOmit
   railIssuedDocument?: Prisma.RailIssuedDocumentOmit
+  airIssuedDocument?: Prisma.AirIssuedDocumentOmit
   idempotencyKey?: Prisma.IdempotencyKeyOmit
   outboxEvent?: Prisma.OutboxEventOmit
   auditLog?: Prisma.AuditLogOmit

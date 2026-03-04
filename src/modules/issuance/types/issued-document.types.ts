@@ -30,6 +30,11 @@ export type IssuedDocumentRecord = {
     seatLabel?: string | null;
     boardingStationCode?: string | null;
     dropStationCode?: string | null;
+    originAirportCode?: string | null;
+    destinationAirportCode?: string | null;
+    cabinCode?: string | null;
+    fareClassCode?: string | null;
+    bookingReference?: string | null;
   };
 };
 
@@ -65,5 +70,18 @@ export type RailIssuedDocumentRow = {
   userId: string;
   tripId: string;
   tripSeatId: string;
+  metadata: unknown;
+};
+
+export type AirIssuedDocumentRow = {
+  id: string;
+  status: 'ISSUED' | 'VOIDED' | 'REFUNDED';
+  code: string;
+  issuedAt: Date;
+  bookingId: string;
+  paymentId: string;
+  userId: string;
+  flightInstanceId: string;
+  flightCabinInventoryId: string;
   metadata: unknown;
 };

@@ -36,8 +36,8 @@ Suggested task result format:
 
 ## Current Status
 
-- Overall status: `in_progress`
-- Active phase: `Phase 8`
+- Overall status: `done`
+- Active phase: `Completed`
 - Active domain during migration: `event`
 - Default client profile during migration: `default`
 
@@ -784,8 +784,19 @@ Acceptance criteria:
 
 ### Task 8.3 Add airport, service, and leg modeling for multi-leg flights
 
-Status: `planned`
-Dev server check: `not_run`
+Status: `done`
+Dev server check: `pass`
+
+Notes:
+
+- Added explicit leg modeling in `prisma/schema.prisma` with `FlightServiceLeg` and `FlightLegInstance`, backed by `prisma/migrations/20260303061725_air_domain_relations/migration.sql`.
+- Updated `src/modules/air/air.repository.ts` so air search now resolves ordered `FlightLegInstance` ranges instead of assuming only direct origin/destination matching.
+- Updated `src/modules/air/air.service.ts` and `src/modules/air/dto/get-flight-availability.query.dto.ts` so flight availability can validate optional leg-range input through `originCode` and `destinationCode`.
+- Extended `src/modules/air/types/air-search.types.ts` and `src/modules/air/types/air-repository.types.ts` with leg summaries and requested-leg-range metadata for the API response surface.
+- Kept cabin inventory on the flight-instance level for now; true leg-aware inventory math remains planned for `Task 8.4`.
+- `npx tsc -p tsconfig.json --noEmit --incremental false` passed.
+- `npx prisma validate` passed.
+- Dev server boot was verified by the user with no startup errors.
 
 Files to modify:
 
@@ -810,8 +821,18 @@ Acceptance criteria:
 
 ### Task 8.4 Make air availability leg-aware and cabin-aware
 
-Status: `planned`
-Dev server check: `not_run`
+Status: `done`
+Dev server check: `pass`
+
+Notes:
+
+- Updated `src/modules/air/air.repository.ts` so air search now supports DB-level `cabinCode` and `fareClassCode` filtering while preserving ordered leg-range matching.
+- Updated `src/modules/air/air.service.ts` so flight availability always returns an effective requested leg range, defaulting to the full flight span when the caller does not specify a narrower leg range.
+- Extended `src/modules/air/dto/search-flights.query.dto.ts` and `src/modules/air/types/air-search.types.ts` so the API now exposes the active air inventory model explicitly as cabin/fare-scoped with optional seat assignment.
+- Kept air inventory at the cabin/fare level for this phase; per-seat assignment remains intentionally separate from the first-pass availability model.
+- `npx tsc -p tsconfig.json --noEmit --incremental false` passed.
+- `npx prisma validate` passed.
+- Dev server boot was verified by the user with no startup errors.
 
 Files to modify:
 
@@ -835,8 +856,22 @@ Acceptance criteria:
 
 ### Task 8.5 Add air hold lifecycle
 
-Status: `planned`
-Dev server check: `not_run`
+Status: `done`
+Dev server check: `pass`
+
+Notes:
+
+- Added `AirCabinAllocation` in `prisma/schema.prisma` and wired the required booking, booking-item, flight-instance, cabin-inventory, and leg-instance relations for air hold persistence.
+- Expanded `src/modules/bookings/*` with air hold contracts and repository/service flow so the booking kernel now creates, reads, and expires air cabin holds with overlap-aware leg-range checks.
+- Added `POST /flights/:flightInstanceId/holds` and `GET /flights/holds/:holdId` through `src/modules/air/*`.
+- Split the air data-access layer into a hybrid shape:
+  - `src/modules/air/repositories/air-read.repository.ts` for search, leg resolution, and availability reads
+  - `src/modules/bookings/bookings.repository.ts` for transaction-safe hold creation and expiry on source-of-truth tables
+- Kept air inventory seat-assignment-optional by holding cabin/fare inventory over a requested leg range instead of forcing seat assignment in the first hold flow.
+- Updated local Redis defaults in `.env`, `.env.example`, and `docker-compose.yml` from `6379` to `6380` so this project can boot beside another local Redis stack.
+- `npx tsc -p tsconfig.json --noEmit --incremental false` passed.
+- `npx prisma validate` passed.
+- Dev server boot was verified by the user with no startup errors.
 
 Files to modify:
 
@@ -861,8 +896,21 @@ Acceptance criteria:
 
 ### Task 8.6 Add air payment finalization and issuance path
 
-Status: `planned`
-Dev server check: `not_run`
+Status: `done`
+Dev server check: `pass`
+
+Notes:
+
+- Added `AirIssuedDocument` in `prisma/schema.prisma` and committed the schema change through `prisma/migrations/20260304080629_air_ticketing_update/migration.sql`.
+- Updated `src/modules/issuance/issuance.service.ts`, `src/modules/issuance/issuance.repository.ts`, and `src/modules/issuance/types/issued-document.types.ts` so air payment success now confirms the booking, confirms `AirCabinAllocation`, persists `AirIssuedDocument` rows, and exposes air issued-document reads through the issuance boundary.
+- Updated `src/modules/domains/air-domain.module.ts` so the air issuance provider and booking finalizer now use the real issuance path instead of skeleton responses.
+- Kept the hybrid split intact:
+  - `src/modules/air/repositories/air-read.repository.ts` for search and availability reads
+  - `src/modules/issuance/issuance.repository.ts` for transactional payment finalization and document issuance
+- Fixed the Nest runtime class-order issue in `src/modules/domains/air-domain.module.ts` by moving `AirRealtimeProvider` above `AirBookingFinalizerProvider`.
+- `npx tsc -p tsconfig.json --noEmit --incremental false` passed.
+- `npx prisma validate` passed.
+- Dev server boot was verified by the user with no startup errors.
 
 Files to modify:
 
@@ -890,8 +938,22 @@ Acceptance criteria:
 
 ### Task 9.1 Remove deprecated event-only reservation core
 
-Status: `planned`
-Dev server check: `not_run`
+Status: `done`
+Dev server check: `pass`
+
+Notes:
+
+- Moved the event reservation HTTP/service adapter into `src/modules/events/*` through:
+  - `src/modules/events/event-reservations.controller.ts`
+  - `src/modules/events/event-reservations.service.ts`
+  - `src/modules/events/dto/create-event-reservation.dto.ts`
+- Updated `src/modules/events/events.module.ts` so the event domain now owns its reservation adapter directly.
+- Updated `src/modules/domains/events/providers/event-inventory.provider.ts` and `src/modules/domains/events/events-domain.module.ts` so the event domain no longer depends on the deprecated `ReservationsModule`.
+- Deleted the event-only wrapper layer under `src/modules/reservations/*`.
+- Added `RedisModule` to `src/modules/events/events.module.ts` after the move so `RateLimitGuard` can resolve `RedisService` in the new module context.
+- `npx tsc -p tsconfig.json --noEmit --incremental false` passed.
+- `npx prisma validate` passed.
+- Dev server boot was verified by the user with no startup errors.
 
 Files to delete later:
 
@@ -899,8 +961,16 @@ Files to delete later:
 
 ### Task 9.2 Remove direct app wiring that bypasses runtime composition
 
-Status: `planned`
-Dev server check: `not_run`
+Status: `done`
+Dev server check: `pass`
+
+Notes:
+
+- Reviewed `src/app.module.ts` and confirmed the application root now loads core modules directly and selects domain modules only through `resolveDomainModules()`.
+- No remaining app-root imports were found that bypass runtime composition for `event`, `rail`, or `air`.
+- Kept always-on core modules such as `WorkersModule`, `HealthModule`, `PaymentsModule`, `BookingsModule`, and infra modules in place because they are part of the shared kernel rather than domain bypasses.
+- No code change was required for this task beyond the existing composition-root refactor.
+- Dev server boot was verified by the user with no startup errors.
 
 ## Working Notes
 

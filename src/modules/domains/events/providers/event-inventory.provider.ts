@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { EventsService } from '@/modules/events/events.service';
+import { EventReservationsService } from '@/modules/events/event-reservations.service';
+import { CreateEventReservationDto } from '@/modules/events/dto/create-event-reservation.dto';
 import { GetEventSeatsQueryDto } from '@/modules/events/dto/get-event-seats.query.dto';
-import { ReservationsService } from '@/modules/reservations/reservations.service';
-import { CreateReservationDto } from '@/modules/reservations/dto/create-reservation.dto';
 
 @Injectable()
 export class EventInventoryProvider {
   constructor(
     private readonly eventsService: EventsService,
-    private readonly reservationsService: ReservationsService,
+    private readonly eventReservationsService: EventReservationsService,
   ) {}
 
   getSeatMap(eventId: string, query: GetEventSeatsQueryDto) {
@@ -21,10 +21,10 @@ export class EventInventoryProvider {
 
   createHold(
     userId: string,
-    dto: CreateReservationDto,
+    dto: CreateEventReservationDto,
     correlationId?: string,
   ) {
-    return this.reservationsService.createReservation(
+    return this.eventReservationsService.createReservation(
       userId,
       dto,
       correlationId,
@@ -32,10 +32,10 @@ export class EventInventoryProvider {
   }
 
   getHold(reservationId: string) {
-    return this.reservationsService.getReservation(reservationId);
+    return this.eventReservationsService.getReservation(reservationId);
   }
 
   expireHolds(batchSize = 100) {
-    return this.reservationsService.processExpiredReservations(batchSize);
+    return this.eventReservationsService.processExpiredReservations(batchSize);
   }
 }

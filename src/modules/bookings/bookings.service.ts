@@ -11,6 +11,11 @@ import {
   type SeatHoldInput,
 } from './types/booking-hold.types';
 import {
+  type AirBookingHoldRecord,
+  type AirCabinHoldInput,
+  type CreateAirCabinHoldResult,
+} from './types/air-booking-hold.types';
+import {
   type CreateRailSeatHoldResult,
   type RailBookingHoldRecord,
   type RailSeatHoldInput,
@@ -154,6 +159,63 @@ export class BookingsService {
     }
   }
 
+  async createAirCabinHold(
+    userId: string,
+    input: AirCabinHoldInput,
+    correlationId?: string,
+  ): Promise<CreateAirCabinHoldResult> {
+    const existing =
+      await this.bookingsRepository.findAirHoldByUserAndIdempotencyKey(
+        userId,
+        input.idempotencyKey,
+      );
+
+    if (existing) {
+      return {
+        hold: existing,
+        correlationId: correlationId ?? randomUUID(),
+        resolution: 'existing',
+      };
+    }
+
+    const effectiveCorrelationId = correlationId ?? randomUUID();
+
+    try {
+      const hold = await this.bookingsRepository.createAirCabinHold({
+        ...input,
+        userId,
+        ttlMinutes: this.resolveHoldTtlMinutes(),
+        correlationId: effectiveCorrelationId,
+      });
+
+      if (!hold) {
+        throw new NotFoundException('Air booking hold could not be created.');
+      }
+
+      return {
+        hold,
+        correlationId: effectiveCorrelationId,
+        resolution: 'created',
+      };
+    } catch (error) {
+      const recovered =
+        await this.bookingsRepository.findAirHoldByUserAndIdempotencyKey(
+          userId,
+          input.idempotencyKey,
+        );
+
+      if (recovered) {
+        return {
+          hold: recovered,
+          correlationId: effectiveCorrelationId,
+          resolution: 'recovered',
+        };
+      }
+
+      throw error;
+    }
+  }
+
   async getHoldOrThrow(holdId: string): Promise<BookingHoldRecord> {
     const hold = await this.bookingsRepository.findHoldById(holdId);
     if (!hold) {
@@ -167,6 +229,15 @@ export class BookingsService {
     const hold = await this.bookingsRepository.findRailHoldById(holdId);
     if (!hold) {
       throw new NotFoundException('Rail hold not found.');
+    }
+
+    return hold;
+  }
+
+  async getAirHoldOrThrow(holdId: string): Promise<AirBookingHoldRecord> {
+    const hold = await this.bookingsRepository.findAirHoldById(holdId);
+    if (!hold) {
+      throw new NotFoundException('Air hold not found.');
     }
 
     return hold;

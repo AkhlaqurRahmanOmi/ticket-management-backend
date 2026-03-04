@@ -29,6 +29,8 @@ export type FlightSearchRow = {
   availableSeats: bigint | number | string;
   reservedSeats: bigint | number | string;
   soldSeats: bigint | number | string;
+  requestedOriginSequence: number;
+  requestedDestinationSequence: number;
 };
 
 export type FlightAvailabilityRow = {
@@ -68,4 +70,38 @@ export type FlightSummaryRow = {
   destinationName: string;
   destinationCity: string | null;
   destinationCountry: string | null;
+};
+
+export type FlightLegRow = {
+  id: string;
+  sequence: number;
+  departsAt: Date;
+  arrivesAt: Date;
+  originId: string;
+  originCode: string;
+  originName: string;
+  originCity: string | null;
+  originCountry: string | null;
+  destinationId: string;
+  destinationCode: string;
+  destinationName: string;
+  destinationCity: string | null;
+  destinationCountry: string | null;
+};
+
+export type FlightResolvedLegRangeRow = {
+  originSequence: number;
+  destinationSequence: number;
+};
+
+export type FlightHoldLegRangeRow = {
+  originLegInstanceId: string | null;
+  destinationLegInstanceId: string | null;
+  originSequence: number;
+  destinationSequence: number;
+};
+
+export type FlightCabinAllocationSummaryRow = {
+  flightCabinInventoryId: string;
+  reservedQuantity: number;
 };
