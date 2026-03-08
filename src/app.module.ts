@@ -1,4 +1,9 @@
-import { Module } from '@nestjs/common';
+﻿import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { CommonModule } from './common/common.module';
 import { AppController } from './app.controller';
@@ -21,6 +26,9 @@ import { IamModule } from './modules/iam/iam.module';
 import { IssuanceModule } from './modules/issuance/issuance.module';
 import { OrganizationsModule } from './modules/organizations/organizations.module';
 import { PaymentsModule } from './modules/payments/payments.module';
+import { TenantContextMiddleware } from './modules/tenant-runtime/middleware/tenant-context.middleware';
+import { TenantCustomersModule } from './modules/tenant-customers/tenant-customers.module';
+import { TenantRuntimeModule } from './modules/tenant-runtime/tenant-runtime.module';
 import { WorkersModule } from './workers/workers.module';
 
 const resolveDomainModules = () => {
@@ -52,6 +60,8 @@ const resolveDomainModules = () => {
     OutboxModule,
     DomainRuntimeModule,
     ClientRuntimeModule,
+    TenantRuntimeModule,
+    TenantCustomersModule,
     BookingsModule,
     IssuanceModule,
     OrganizationsModule,
@@ -64,4 +74,11 @@ const resolveDomainModules = () => {
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(TenantContextMiddleware).forRoutes({
+      path: '*',
+      method: RequestMethod.ALL,
+    });
+  }
+}

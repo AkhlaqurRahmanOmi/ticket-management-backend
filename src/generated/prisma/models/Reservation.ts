@@ -543,10 +543,6 @@ export type ReservationUncheckedUpdateManyWithoutEventNestedInput = {
   deleteMany?: Prisma.ReservationScalarWhereInput | Prisma.ReservationScalarWhereInput[]
 }
 
-export type EnumBookingDomainFieldUpdateOperationsInput = {
-  set?: $Enums.BookingDomain
-}
-
 export type EnumReservationStatusFieldUpdateOperationsInput = {
   set?: $Enums.ReservationStatus
 }

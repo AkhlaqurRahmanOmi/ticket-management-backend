@@ -44,6 +44,17 @@ enum BookingDomain {
   AIR
 }
 
+enum TenantDomainSubscriptionStatus {
+  ACTIVE
+  DISABLED
+}
+
+enum TenantCustomerStatus {
+  ACTIVE
+  INACTIVE
+  BLOCKED
+}
+
 enum SeatInventoryStatus {
   AVAILABLE
   RESERVED
@@ -246,7 +257,9 @@ model Organization {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  members OrganizationMember[]
+  members       OrganizationMember[]
+  subscriptions TenantDomainSubscription[]
+  tenantCustomers TenantCustomer[]
   venues  Venue[]
   events  Event[]
   railRoutes RailRoute[]
@@ -271,6 +284,46 @@ model OrganizationMember {
   @@unique([orgId, userId])
   @@index([userId])
   @@index([orgId, role])
+}
+
+model TenantDomainSubscription {
+  id     String        @id @default(uuid()) @db.Uuid
+  orgId  String        @db.Uuid
+  domain BookingDomain
+  status TenantDomainSubscriptionStatus @default(ACTIVE)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  activatedAt DateTime @default(now())
+  disabledAt  DateTime?
+
+  org Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@unique([orgId, domain])
+  @@index([orgId, status])
+  @@index([domain, status])
+}
+
+model TenantCustomer {
+  id    String @id @default(uuid()) @db.Uuid
+  orgId String @db.Uuid
+
+  org Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  email       String
+  displayName String?
+  phone       String?
+  status      TenantCustomerStatus @default(ACTIVE)
+  metadata    Json?
+
+  firstSeenAt DateTime @default(now())
+  lastSeenAt  DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([orgId, email])
+  @@index([orgId, status, createdAt])
+  @@index([email])
 }
 
 /**
@@ -1452,6 +1505,7 @@ model AuditLog {
   @@index([resourceType, resourceId])
   @@index([action, createdAt])
 }
+
 
 
 

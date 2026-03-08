@@ -183,6 +183,8 @@ export type OrganizationWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Organization"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Organization"> | Date | string
   members?: Prisma.OrganizationMemberListRelationFilter
+  subscriptions?: Prisma.TenantDomainSubscriptionListRelationFilter
+  tenantCustomers?: Prisma.TenantCustomerListRelationFilter
   venues?: Prisma.VenueListRelationFilter
   events?: Prisma.EventListRelationFilter
   railRoutes?: Prisma.RailRouteListRelationFilter
@@ -198,6 +200,8 @@ export type OrganizationOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   members?: Prisma.OrganizationMemberOrderByRelationAggregateInput
+  subscriptions?: Prisma.TenantDomainSubscriptionOrderByRelationAggregateInput
+  tenantCustomers?: Prisma.TenantCustomerOrderByRelationAggregateInput
   venues?: Prisma.VenueOrderByRelationAggregateInput
   events?: Prisma.EventOrderByRelationAggregateInput
   railRoutes?: Prisma.RailRouteOrderByRelationAggregateInput
@@ -216,6 +220,8 @@ export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Organization"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Organization"> | Date | string
   members?: Prisma.OrganizationMemberListRelationFilter
+  subscriptions?: Prisma.TenantDomainSubscriptionListRelationFilter
+  tenantCustomers?: Prisma.TenantCustomerListRelationFilter
   venues?: Prisma.VenueListRelationFilter
   events?: Prisma.EventListRelationFilter
   railRoutes?: Prisma.RailRouteListRelationFilter
@@ -253,6 +259,8 @@ export type OrganizationCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.OrganizationMemberCreateNestedManyWithoutOrgInput
+  subscriptions?: Prisma.TenantDomainSubscriptionCreateNestedManyWithoutOrgInput
+  tenantCustomers?: Prisma.TenantCustomerCreateNestedManyWithoutOrgInput
   venues?: Prisma.VenueCreateNestedManyWithoutOrgInput
   events?: Prisma.EventCreateNestedManyWithoutOrgInput
   railRoutes?: Prisma.RailRouteCreateNestedManyWithoutOrgInput
@@ -268,6 +276,8 @@ export type OrganizationUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.OrganizationMemberUncheckedCreateNestedManyWithoutOrgInput
+  subscriptions?: Prisma.TenantDomainSubscriptionUncheckedCreateNestedManyWithoutOrgInput
+  tenantCustomers?: Prisma.TenantCustomerUncheckedCreateNestedManyWithoutOrgInput
   venues?: Prisma.VenueUncheckedCreateNestedManyWithoutOrgInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrgInput
   railRoutes?: Prisma.RailRouteUncheckedCreateNestedManyWithoutOrgInput
@@ -283,6 +293,8 @@ export type OrganizationUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.OrganizationMemberUpdateManyWithoutOrgNestedInput
+  subscriptions?: Prisma.TenantDomainSubscriptionUpdateManyWithoutOrgNestedInput
+  tenantCustomers?: Prisma.TenantCustomerUpdateManyWithoutOrgNestedInput
   venues?: Prisma.VenueUpdateManyWithoutOrgNestedInput
   events?: Prisma.EventUpdateManyWithoutOrgNestedInput
   railRoutes?: Prisma.RailRouteUpdateManyWithoutOrgNestedInput
@@ -298,6 +310,8 @@ export type OrganizationUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.OrganizationMemberUncheckedUpdateManyWithoutOrgNestedInput
+  subscriptions?: Prisma.TenantDomainSubscriptionUncheckedUpdateManyWithoutOrgNestedInput
+  tenantCustomers?: Prisma.TenantCustomerUncheckedUpdateManyWithoutOrgNestedInput
   venues?: Prisma.VenueUncheckedUpdateManyWithoutOrgNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrgNestedInput
   railRoutes?: Prisma.RailRouteUncheckedUpdateManyWithoutOrgNestedInput
@@ -376,6 +390,34 @@ export type OrganizationUpdateOneRequiredWithoutMembersNestedInput = {
   upsert?: Prisma.OrganizationUpsertWithoutMembersInput
   connect?: Prisma.OrganizationWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutMembersInput, Prisma.OrganizationUpdateWithoutMembersInput>, Prisma.OrganizationUncheckedUpdateWithoutMembersInput>
+}
+
+export type OrganizationCreateNestedOneWithoutSubscriptionsInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutSubscriptionsInput, Prisma.OrganizationUncheckedCreateWithoutSubscriptionsInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutSubscriptionsInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+}
+
+export type OrganizationUpdateOneRequiredWithoutSubscriptionsNestedInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutSubscriptionsInput, Prisma.OrganizationUncheckedCreateWithoutSubscriptionsInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutSubscriptionsInput
+  upsert?: Prisma.OrganizationUpsertWithoutSubscriptionsInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutSubscriptionsInput, Prisma.OrganizationUpdateWithoutSubscriptionsInput>, Prisma.OrganizationUncheckedUpdateWithoutSubscriptionsInput>
+}
+
+export type OrganizationCreateNestedOneWithoutTenantCustomersInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutTenantCustomersInput, Prisma.OrganizationUncheckedCreateWithoutTenantCustomersInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutTenantCustomersInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+}
+
+export type OrganizationUpdateOneRequiredWithoutTenantCustomersNestedInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutTenantCustomersInput, Prisma.OrganizationUncheckedCreateWithoutTenantCustomersInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutTenantCustomersInput
+  upsert?: Prisma.OrganizationUpsertWithoutTenantCustomersInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutTenantCustomersInput, Prisma.OrganizationUpdateWithoutTenantCustomersInput>, Prisma.OrganizationUncheckedUpdateWithoutTenantCustomersInput>
 }
 
 export type OrganizationCreateNestedOneWithoutVenuesInput = {
@@ -470,6 +512,8 @@ export type OrganizationCreateWithoutMembersInput = {
   slug: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  subscriptions?: Prisma.TenantDomainSubscriptionCreateNestedManyWithoutOrgInput
+  tenantCustomers?: Prisma.TenantCustomerCreateNestedManyWithoutOrgInput
   venues?: Prisma.VenueCreateNestedManyWithoutOrgInput
   events?: Prisma.EventCreateNestedManyWithoutOrgInput
   railRoutes?: Prisma.RailRouteCreateNestedManyWithoutOrgInput
@@ -484,6 +528,8 @@ export type OrganizationUncheckedCreateWithoutMembersInput = {
   slug: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  subscriptions?: Prisma.TenantDomainSubscriptionUncheckedCreateNestedManyWithoutOrgInput
+  tenantCustomers?: Prisma.TenantCustomerUncheckedCreateNestedManyWithoutOrgInput
   venues?: Prisma.VenueUncheckedCreateNestedManyWithoutOrgInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrgInput
   railRoutes?: Prisma.RailRouteUncheckedCreateNestedManyWithoutOrgInput
@@ -514,6 +560,8 @@ export type OrganizationUpdateWithoutMembersInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  subscriptions?: Prisma.TenantDomainSubscriptionUpdateManyWithoutOrgNestedInput
+  tenantCustomers?: Prisma.TenantCustomerUpdateManyWithoutOrgNestedInput
   venues?: Prisma.VenueUpdateManyWithoutOrgNestedInput
   events?: Prisma.EventUpdateManyWithoutOrgNestedInput
   railRoutes?: Prisma.RailRouteUpdateManyWithoutOrgNestedInput
@@ -528,6 +576,168 @@ export type OrganizationUncheckedUpdateWithoutMembersInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  subscriptions?: Prisma.TenantDomainSubscriptionUncheckedUpdateManyWithoutOrgNestedInput
+  tenantCustomers?: Prisma.TenantCustomerUncheckedUpdateManyWithoutOrgNestedInput
+  venues?: Prisma.VenueUncheckedUpdateManyWithoutOrgNestedInput
+  events?: Prisma.EventUncheckedUpdateManyWithoutOrgNestedInput
+  railRoutes?: Prisma.RailRouteUncheckedUpdateManyWithoutOrgNestedInput
+  railTrips?: Prisma.RailTripUncheckedUpdateManyWithoutOrgNestedInput
+  bookings?: Prisma.BookingUncheckedUpdateManyWithoutOrgNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutOrgNestedInput
+}
+
+export type OrganizationCreateWithoutSubscriptionsInput = {
+  id?: string
+  name: string
+  slug: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  members?: Prisma.OrganizationMemberCreateNestedManyWithoutOrgInput
+  tenantCustomers?: Prisma.TenantCustomerCreateNestedManyWithoutOrgInput
+  venues?: Prisma.VenueCreateNestedManyWithoutOrgInput
+  events?: Prisma.EventCreateNestedManyWithoutOrgInput
+  railRoutes?: Prisma.RailRouteCreateNestedManyWithoutOrgInput
+  railTrips?: Prisma.RailTripCreateNestedManyWithoutOrgInput
+  bookings?: Prisma.BookingCreateNestedManyWithoutOrgInput
+  orders?: Prisma.OrderCreateNestedManyWithoutOrgInput
+}
+
+export type OrganizationUncheckedCreateWithoutSubscriptionsInput = {
+  id?: string
+  name: string
+  slug: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  members?: Prisma.OrganizationMemberUncheckedCreateNestedManyWithoutOrgInput
+  tenantCustomers?: Prisma.TenantCustomerUncheckedCreateNestedManyWithoutOrgInput
+  venues?: Prisma.VenueUncheckedCreateNestedManyWithoutOrgInput
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutOrgInput
+  railRoutes?: Prisma.RailRouteUncheckedCreateNestedManyWithoutOrgInput
+  railTrips?: Prisma.RailTripUncheckedCreateNestedManyWithoutOrgInput
+  bookings?: Prisma.BookingUncheckedCreateNestedManyWithoutOrgInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutOrgInput
+}
+
+export type OrganizationCreateOrConnectWithoutSubscriptionsInput = {
+  where: Prisma.OrganizationWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutSubscriptionsInput, Prisma.OrganizationUncheckedCreateWithoutSubscriptionsInput>
+}
+
+export type OrganizationUpsertWithoutSubscriptionsInput = {
+  update: Prisma.XOR<Prisma.OrganizationUpdateWithoutSubscriptionsInput, Prisma.OrganizationUncheckedUpdateWithoutSubscriptionsInput>
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutSubscriptionsInput, Prisma.OrganizationUncheckedCreateWithoutSubscriptionsInput>
+  where?: Prisma.OrganizationWhereInput
+}
+
+export type OrganizationUpdateToOneWithWhereWithoutSubscriptionsInput = {
+  where?: Prisma.OrganizationWhereInput
+  data: Prisma.XOR<Prisma.OrganizationUpdateWithoutSubscriptionsInput, Prisma.OrganizationUncheckedUpdateWithoutSubscriptionsInput>
+}
+
+export type OrganizationUpdateWithoutSubscriptionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.OrganizationMemberUpdateManyWithoutOrgNestedInput
+  tenantCustomers?: Prisma.TenantCustomerUpdateManyWithoutOrgNestedInput
+  venues?: Prisma.VenueUpdateManyWithoutOrgNestedInput
+  events?: Prisma.EventUpdateManyWithoutOrgNestedInput
+  railRoutes?: Prisma.RailRouteUpdateManyWithoutOrgNestedInput
+  railTrips?: Prisma.RailTripUpdateManyWithoutOrgNestedInput
+  bookings?: Prisma.BookingUpdateManyWithoutOrgNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutOrgNestedInput
+}
+
+export type OrganizationUncheckedUpdateWithoutSubscriptionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.OrganizationMemberUncheckedUpdateManyWithoutOrgNestedInput
+  tenantCustomers?: Prisma.TenantCustomerUncheckedUpdateManyWithoutOrgNestedInput
+  venues?: Prisma.VenueUncheckedUpdateManyWithoutOrgNestedInput
+  events?: Prisma.EventUncheckedUpdateManyWithoutOrgNestedInput
+  railRoutes?: Prisma.RailRouteUncheckedUpdateManyWithoutOrgNestedInput
+  railTrips?: Prisma.RailTripUncheckedUpdateManyWithoutOrgNestedInput
+  bookings?: Prisma.BookingUncheckedUpdateManyWithoutOrgNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutOrgNestedInput
+}
+
+export type OrganizationCreateWithoutTenantCustomersInput = {
+  id?: string
+  name: string
+  slug: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  members?: Prisma.OrganizationMemberCreateNestedManyWithoutOrgInput
+  subscriptions?: Prisma.TenantDomainSubscriptionCreateNestedManyWithoutOrgInput
+  venues?: Prisma.VenueCreateNestedManyWithoutOrgInput
+  events?: Prisma.EventCreateNestedManyWithoutOrgInput
+  railRoutes?: Prisma.RailRouteCreateNestedManyWithoutOrgInput
+  railTrips?: Prisma.RailTripCreateNestedManyWithoutOrgInput
+  bookings?: Prisma.BookingCreateNestedManyWithoutOrgInput
+  orders?: Prisma.OrderCreateNestedManyWithoutOrgInput
+}
+
+export type OrganizationUncheckedCreateWithoutTenantCustomersInput = {
+  id?: string
+  name: string
+  slug: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  members?: Prisma.OrganizationMemberUncheckedCreateNestedManyWithoutOrgInput
+  subscriptions?: Prisma.TenantDomainSubscriptionUncheckedCreateNestedManyWithoutOrgInput
+  venues?: Prisma.VenueUncheckedCreateNestedManyWithoutOrgInput
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutOrgInput
+  railRoutes?: Prisma.RailRouteUncheckedCreateNestedManyWithoutOrgInput
+  railTrips?: Prisma.RailTripUncheckedCreateNestedManyWithoutOrgInput
+  bookings?: Prisma.BookingUncheckedCreateNestedManyWithoutOrgInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutOrgInput
+}
+
+export type OrganizationCreateOrConnectWithoutTenantCustomersInput = {
+  where: Prisma.OrganizationWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutTenantCustomersInput, Prisma.OrganizationUncheckedCreateWithoutTenantCustomersInput>
+}
+
+export type OrganizationUpsertWithoutTenantCustomersInput = {
+  update: Prisma.XOR<Prisma.OrganizationUpdateWithoutTenantCustomersInput, Prisma.OrganizationUncheckedUpdateWithoutTenantCustomersInput>
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutTenantCustomersInput, Prisma.OrganizationUncheckedCreateWithoutTenantCustomersInput>
+  where?: Prisma.OrganizationWhereInput
+}
+
+export type OrganizationUpdateToOneWithWhereWithoutTenantCustomersInput = {
+  where?: Prisma.OrganizationWhereInput
+  data: Prisma.XOR<Prisma.OrganizationUpdateWithoutTenantCustomersInput, Prisma.OrganizationUncheckedUpdateWithoutTenantCustomersInput>
+}
+
+export type OrganizationUpdateWithoutTenantCustomersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.OrganizationMemberUpdateManyWithoutOrgNestedInput
+  subscriptions?: Prisma.TenantDomainSubscriptionUpdateManyWithoutOrgNestedInput
+  venues?: Prisma.VenueUpdateManyWithoutOrgNestedInput
+  events?: Prisma.EventUpdateManyWithoutOrgNestedInput
+  railRoutes?: Prisma.RailRouteUpdateManyWithoutOrgNestedInput
+  railTrips?: Prisma.RailTripUpdateManyWithoutOrgNestedInput
+  bookings?: Prisma.BookingUpdateManyWithoutOrgNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutOrgNestedInput
+}
+
+export type OrganizationUncheckedUpdateWithoutTenantCustomersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.OrganizationMemberUncheckedUpdateManyWithoutOrgNestedInput
+  subscriptions?: Prisma.TenantDomainSubscriptionUncheckedUpdateManyWithoutOrgNestedInput
   venues?: Prisma.VenueUncheckedUpdateManyWithoutOrgNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrgNestedInput
   railRoutes?: Prisma.RailRouteUncheckedUpdateManyWithoutOrgNestedInput
@@ -543,6 +753,8 @@ export type OrganizationCreateWithoutVenuesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.OrganizationMemberCreateNestedManyWithoutOrgInput
+  subscriptions?: Prisma.TenantDomainSubscriptionCreateNestedManyWithoutOrgInput
+  tenantCustomers?: Prisma.TenantCustomerCreateNestedManyWithoutOrgInput
   events?: Prisma.EventCreateNestedManyWithoutOrgInput
   railRoutes?: Prisma.RailRouteCreateNestedManyWithoutOrgInput
   railTrips?: Prisma.RailTripCreateNestedManyWithoutOrgInput
@@ -557,6 +769,8 @@ export type OrganizationUncheckedCreateWithoutVenuesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.OrganizationMemberUncheckedCreateNestedManyWithoutOrgInput
+  subscriptions?: Prisma.TenantDomainSubscriptionUncheckedCreateNestedManyWithoutOrgInput
+  tenantCustomers?: Prisma.TenantCustomerUncheckedCreateNestedManyWithoutOrgInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrgInput
   railRoutes?: Prisma.RailRouteUncheckedCreateNestedManyWithoutOrgInput
   railTrips?: Prisma.RailTripUncheckedCreateNestedManyWithoutOrgInput
@@ -587,6 +801,8 @@ export type OrganizationUpdateWithoutVenuesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.OrganizationMemberUpdateManyWithoutOrgNestedInput
+  subscriptions?: Prisma.TenantDomainSubscriptionUpdateManyWithoutOrgNestedInput
+  tenantCustomers?: Prisma.TenantCustomerUpdateManyWithoutOrgNestedInput
   events?: Prisma.EventUpdateManyWithoutOrgNestedInput
   railRoutes?: Prisma.RailRouteUpdateManyWithoutOrgNestedInput
   railTrips?: Prisma.RailTripUpdateManyWithoutOrgNestedInput
@@ -601,6 +817,8 @@ export type OrganizationUncheckedUpdateWithoutVenuesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.OrganizationMemberUncheckedUpdateManyWithoutOrgNestedInput
+  subscriptions?: Prisma.TenantDomainSubscriptionUncheckedUpdateManyWithoutOrgNestedInput
+  tenantCustomers?: Prisma.TenantCustomerUncheckedUpdateManyWithoutOrgNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrgNestedInput
   railRoutes?: Prisma.RailRouteUncheckedUpdateManyWithoutOrgNestedInput
   railTrips?: Prisma.RailTripUncheckedUpdateManyWithoutOrgNestedInput
@@ -615,6 +833,8 @@ export type OrganizationCreateWithoutEventsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.OrganizationMemberCreateNestedManyWithoutOrgInput
+  subscriptions?: Prisma.TenantDomainSubscriptionCreateNestedManyWithoutOrgInput
+  tenantCustomers?: Prisma.TenantCustomerCreateNestedManyWithoutOrgInput
   venues?: Prisma.VenueCreateNestedManyWithoutOrgInput
   railRoutes?: Prisma.RailRouteCreateNestedManyWithoutOrgInput
   railTrips?: Prisma.RailTripCreateNestedManyWithoutOrgInput
@@ -629,6 +849,8 @@ export type OrganizationUncheckedCreateWithoutEventsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.OrganizationMemberUncheckedCreateNestedManyWithoutOrgInput
+  subscriptions?: Prisma.TenantDomainSubscriptionUncheckedCreateNestedManyWithoutOrgInput
+  tenantCustomers?: Prisma.TenantCustomerUncheckedCreateNestedManyWithoutOrgInput
   venues?: Prisma.VenueUncheckedCreateNestedManyWithoutOrgInput
   railRoutes?: Prisma.RailRouteUncheckedCreateNestedManyWithoutOrgInput
   railTrips?: Prisma.RailTripUncheckedCreateNestedManyWithoutOrgInput
@@ -659,6 +881,8 @@ export type OrganizationUpdateWithoutEventsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.OrganizationMemberUpdateManyWithoutOrgNestedInput
+  subscriptions?: Prisma.TenantDomainSubscriptionUpdateManyWithoutOrgNestedInput
+  tenantCustomers?: Prisma.TenantCustomerUpdateManyWithoutOrgNestedInput
   venues?: Prisma.VenueUpdateManyWithoutOrgNestedInput
   railRoutes?: Prisma.RailRouteUpdateManyWithoutOrgNestedInput
   railTrips?: Prisma.RailTripUpdateManyWithoutOrgNestedInput
@@ -673,6 +897,8 @@ export type OrganizationUncheckedUpdateWithoutEventsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.OrganizationMemberUncheckedUpdateManyWithoutOrgNestedInput
+  subscriptions?: Prisma.TenantDomainSubscriptionUncheckedUpdateManyWithoutOrgNestedInput
+  tenantCustomers?: Prisma.TenantCustomerUncheckedUpdateManyWithoutOrgNestedInput
   venues?: Prisma.VenueUncheckedUpdateManyWithoutOrgNestedInput
   railRoutes?: Prisma.RailRouteUncheckedUpdateManyWithoutOrgNestedInput
   railTrips?: Prisma.RailTripUncheckedUpdateManyWithoutOrgNestedInput
@@ -687,6 +913,8 @@ export type OrganizationCreateWithoutRailRoutesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.OrganizationMemberCreateNestedManyWithoutOrgInput
+  subscriptions?: Prisma.TenantDomainSubscriptionCreateNestedManyWithoutOrgInput
+  tenantCustomers?: Prisma.TenantCustomerCreateNestedManyWithoutOrgInput
   venues?: Prisma.VenueCreateNestedManyWithoutOrgInput
   events?: Prisma.EventCreateNestedManyWithoutOrgInput
   railTrips?: Prisma.RailTripCreateNestedManyWithoutOrgInput
@@ -701,6 +929,8 @@ export type OrganizationUncheckedCreateWithoutRailRoutesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.OrganizationMemberUncheckedCreateNestedManyWithoutOrgInput
+  subscriptions?: Prisma.TenantDomainSubscriptionUncheckedCreateNestedManyWithoutOrgInput
+  tenantCustomers?: Prisma.TenantCustomerUncheckedCreateNestedManyWithoutOrgInput
   venues?: Prisma.VenueUncheckedCreateNestedManyWithoutOrgInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrgInput
   railTrips?: Prisma.RailTripUncheckedCreateNestedManyWithoutOrgInput
@@ -731,6 +961,8 @@ export type OrganizationUpdateWithoutRailRoutesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.OrganizationMemberUpdateManyWithoutOrgNestedInput
+  subscriptions?: Prisma.TenantDomainSubscriptionUpdateManyWithoutOrgNestedInput
+  tenantCustomers?: Prisma.TenantCustomerUpdateManyWithoutOrgNestedInput
   venues?: Prisma.VenueUpdateManyWithoutOrgNestedInput
   events?: Prisma.EventUpdateManyWithoutOrgNestedInput
   railTrips?: Prisma.RailTripUpdateManyWithoutOrgNestedInput
@@ -745,6 +977,8 @@ export type OrganizationUncheckedUpdateWithoutRailRoutesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.OrganizationMemberUncheckedUpdateManyWithoutOrgNestedInput
+  subscriptions?: Prisma.TenantDomainSubscriptionUncheckedUpdateManyWithoutOrgNestedInput
+  tenantCustomers?: Prisma.TenantCustomerUncheckedUpdateManyWithoutOrgNestedInput
   venues?: Prisma.VenueUncheckedUpdateManyWithoutOrgNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrgNestedInput
   railTrips?: Prisma.RailTripUncheckedUpdateManyWithoutOrgNestedInput
@@ -759,6 +993,8 @@ export type OrganizationCreateWithoutRailTripsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.OrganizationMemberCreateNestedManyWithoutOrgInput
+  subscriptions?: Prisma.TenantDomainSubscriptionCreateNestedManyWithoutOrgInput
+  tenantCustomers?: Prisma.TenantCustomerCreateNestedManyWithoutOrgInput
   venues?: Prisma.VenueCreateNestedManyWithoutOrgInput
   events?: Prisma.EventCreateNestedManyWithoutOrgInput
   railRoutes?: Prisma.RailRouteCreateNestedManyWithoutOrgInput
@@ -773,6 +1009,8 @@ export type OrganizationUncheckedCreateWithoutRailTripsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.OrganizationMemberUncheckedCreateNestedManyWithoutOrgInput
+  subscriptions?: Prisma.TenantDomainSubscriptionUncheckedCreateNestedManyWithoutOrgInput
+  tenantCustomers?: Prisma.TenantCustomerUncheckedCreateNestedManyWithoutOrgInput
   venues?: Prisma.VenueUncheckedCreateNestedManyWithoutOrgInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrgInput
   railRoutes?: Prisma.RailRouteUncheckedCreateNestedManyWithoutOrgInput
@@ -803,6 +1041,8 @@ export type OrganizationUpdateWithoutRailTripsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.OrganizationMemberUpdateManyWithoutOrgNestedInput
+  subscriptions?: Prisma.TenantDomainSubscriptionUpdateManyWithoutOrgNestedInput
+  tenantCustomers?: Prisma.TenantCustomerUpdateManyWithoutOrgNestedInput
   venues?: Prisma.VenueUpdateManyWithoutOrgNestedInput
   events?: Prisma.EventUpdateManyWithoutOrgNestedInput
   railRoutes?: Prisma.RailRouteUpdateManyWithoutOrgNestedInput
@@ -817,6 +1057,8 @@ export type OrganizationUncheckedUpdateWithoutRailTripsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.OrganizationMemberUncheckedUpdateManyWithoutOrgNestedInput
+  subscriptions?: Prisma.TenantDomainSubscriptionUncheckedUpdateManyWithoutOrgNestedInput
+  tenantCustomers?: Prisma.TenantCustomerUncheckedUpdateManyWithoutOrgNestedInput
   venues?: Prisma.VenueUncheckedUpdateManyWithoutOrgNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrgNestedInput
   railRoutes?: Prisma.RailRouteUncheckedUpdateManyWithoutOrgNestedInput
@@ -831,6 +1073,8 @@ export type OrganizationCreateWithoutBookingsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.OrganizationMemberCreateNestedManyWithoutOrgInput
+  subscriptions?: Prisma.TenantDomainSubscriptionCreateNestedManyWithoutOrgInput
+  tenantCustomers?: Prisma.TenantCustomerCreateNestedManyWithoutOrgInput
   venues?: Prisma.VenueCreateNestedManyWithoutOrgInput
   events?: Prisma.EventCreateNestedManyWithoutOrgInput
   railRoutes?: Prisma.RailRouteCreateNestedManyWithoutOrgInput
@@ -845,6 +1089,8 @@ export type OrganizationUncheckedCreateWithoutBookingsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.OrganizationMemberUncheckedCreateNestedManyWithoutOrgInput
+  subscriptions?: Prisma.TenantDomainSubscriptionUncheckedCreateNestedManyWithoutOrgInput
+  tenantCustomers?: Prisma.TenantCustomerUncheckedCreateNestedManyWithoutOrgInput
   venues?: Prisma.VenueUncheckedCreateNestedManyWithoutOrgInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrgInput
   railRoutes?: Prisma.RailRouteUncheckedCreateNestedManyWithoutOrgInput
@@ -875,6 +1121,8 @@ export type OrganizationUpdateWithoutBookingsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.OrganizationMemberUpdateManyWithoutOrgNestedInput
+  subscriptions?: Prisma.TenantDomainSubscriptionUpdateManyWithoutOrgNestedInput
+  tenantCustomers?: Prisma.TenantCustomerUpdateManyWithoutOrgNestedInput
   venues?: Prisma.VenueUpdateManyWithoutOrgNestedInput
   events?: Prisma.EventUpdateManyWithoutOrgNestedInput
   railRoutes?: Prisma.RailRouteUpdateManyWithoutOrgNestedInput
@@ -889,6 +1137,8 @@ export type OrganizationUncheckedUpdateWithoutBookingsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.OrganizationMemberUncheckedUpdateManyWithoutOrgNestedInput
+  subscriptions?: Prisma.TenantDomainSubscriptionUncheckedUpdateManyWithoutOrgNestedInput
+  tenantCustomers?: Prisma.TenantCustomerUncheckedUpdateManyWithoutOrgNestedInput
   venues?: Prisma.VenueUncheckedUpdateManyWithoutOrgNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrgNestedInput
   railRoutes?: Prisma.RailRouteUncheckedUpdateManyWithoutOrgNestedInput
@@ -903,6 +1153,8 @@ export type OrganizationCreateWithoutOrdersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.OrganizationMemberCreateNestedManyWithoutOrgInput
+  subscriptions?: Prisma.TenantDomainSubscriptionCreateNestedManyWithoutOrgInput
+  tenantCustomers?: Prisma.TenantCustomerCreateNestedManyWithoutOrgInput
   venues?: Prisma.VenueCreateNestedManyWithoutOrgInput
   events?: Prisma.EventCreateNestedManyWithoutOrgInput
   railRoutes?: Prisma.RailRouteCreateNestedManyWithoutOrgInput
@@ -917,6 +1169,8 @@ export type OrganizationUncheckedCreateWithoutOrdersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.OrganizationMemberUncheckedCreateNestedManyWithoutOrgInput
+  subscriptions?: Prisma.TenantDomainSubscriptionUncheckedCreateNestedManyWithoutOrgInput
+  tenantCustomers?: Prisma.TenantCustomerUncheckedCreateNestedManyWithoutOrgInput
   venues?: Prisma.VenueUncheckedCreateNestedManyWithoutOrgInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrgInput
   railRoutes?: Prisma.RailRouteUncheckedCreateNestedManyWithoutOrgInput
@@ -947,6 +1201,8 @@ export type OrganizationUpdateWithoutOrdersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.OrganizationMemberUpdateManyWithoutOrgNestedInput
+  subscriptions?: Prisma.TenantDomainSubscriptionUpdateManyWithoutOrgNestedInput
+  tenantCustomers?: Prisma.TenantCustomerUpdateManyWithoutOrgNestedInput
   venues?: Prisma.VenueUpdateManyWithoutOrgNestedInput
   events?: Prisma.EventUpdateManyWithoutOrgNestedInput
   railRoutes?: Prisma.RailRouteUpdateManyWithoutOrgNestedInput
@@ -961,6 +1217,8 @@ export type OrganizationUncheckedUpdateWithoutOrdersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.OrganizationMemberUncheckedUpdateManyWithoutOrgNestedInput
+  subscriptions?: Prisma.TenantDomainSubscriptionUncheckedUpdateManyWithoutOrgNestedInput
+  tenantCustomers?: Prisma.TenantCustomerUncheckedUpdateManyWithoutOrgNestedInput
   venues?: Prisma.VenueUncheckedUpdateManyWithoutOrgNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrgNestedInput
   railRoutes?: Prisma.RailRouteUncheckedUpdateManyWithoutOrgNestedInput
@@ -975,6 +1233,8 @@ export type OrganizationUncheckedUpdateWithoutOrdersInput = {
 
 export type OrganizationCountOutputType = {
   members: number
+  subscriptions: number
+  tenantCustomers: number
   venues: number
   events: number
   railRoutes: number
@@ -985,6 +1245,8 @@ export type OrganizationCountOutputType = {
 
 export type OrganizationCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   members?: boolean | OrganizationCountOutputTypeCountMembersArgs
+  subscriptions?: boolean | OrganizationCountOutputTypeCountSubscriptionsArgs
+  tenantCustomers?: boolean | OrganizationCountOutputTypeCountTenantCustomersArgs
   venues?: boolean | OrganizationCountOutputTypeCountVenuesArgs
   events?: boolean | OrganizationCountOutputTypeCountEventsArgs
   railRoutes?: boolean | OrganizationCountOutputTypeCountRailRoutesArgs
@@ -1008,6 +1270,20 @@ export type OrganizationCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types
  */
 export type OrganizationCountOutputTypeCountMembersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.OrganizationMemberWhereInput
+}
+
+/**
+ * OrganizationCountOutputType without action
+ */
+export type OrganizationCountOutputTypeCountSubscriptionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TenantDomainSubscriptionWhereInput
+}
+
+/**
+ * OrganizationCountOutputType without action
+ */
+export type OrganizationCountOutputTypeCountTenantCustomersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TenantCustomerWhereInput
 }
 
 /**
@@ -1060,6 +1336,8 @@ export type OrganizationSelect<ExtArgs extends runtime.Types.Extensions.Internal
   createdAt?: boolean
   updatedAt?: boolean
   members?: boolean | Prisma.Organization$membersArgs<ExtArgs>
+  subscriptions?: boolean | Prisma.Organization$subscriptionsArgs<ExtArgs>
+  tenantCustomers?: boolean | Prisma.Organization$tenantCustomersArgs<ExtArgs>
   venues?: boolean | Prisma.Organization$venuesArgs<ExtArgs>
   events?: boolean | Prisma.Organization$eventsArgs<ExtArgs>
   railRoutes?: boolean | Prisma.Organization$railRoutesArgs<ExtArgs>
@@ -1096,6 +1374,8 @@ export type OrganizationSelectScalar = {
 export type OrganizationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "createdAt" | "updatedAt", ExtArgs["result"]["organization"]>
 export type OrganizationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   members?: boolean | Prisma.Organization$membersArgs<ExtArgs>
+  subscriptions?: boolean | Prisma.Organization$subscriptionsArgs<ExtArgs>
+  tenantCustomers?: boolean | Prisma.Organization$tenantCustomersArgs<ExtArgs>
   venues?: boolean | Prisma.Organization$venuesArgs<ExtArgs>
   events?: boolean | Prisma.Organization$eventsArgs<ExtArgs>
   railRoutes?: boolean | Prisma.Organization$railRoutesArgs<ExtArgs>
@@ -1111,6 +1391,8 @@ export type $OrganizationPayload<ExtArgs extends runtime.Types.Extensions.Intern
   name: "Organization"
   objects: {
     members: Prisma.$OrganizationMemberPayload<ExtArgs>[]
+    subscriptions: Prisma.$TenantDomainSubscriptionPayload<ExtArgs>[]
+    tenantCustomers: Prisma.$TenantCustomerPayload<ExtArgs>[]
     venues: Prisma.$VenuePayload<ExtArgs>[]
     events: Prisma.$EventPayload<ExtArgs>[]
     railRoutes: Prisma.$RailRoutePayload<ExtArgs>[]
@@ -1519,6 +1801,8 @@ readonly fields: OrganizationFieldRefs;
 export interface Prisma__OrganizationClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   members<T extends Prisma.Organization$membersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$membersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrganizationMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  subscriptions<T extends Prisma.Organization$subscriptionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$subscriptionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TenantDomainSubscriptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  tenantCustomers<T extends Prisma.Organization$tenantCustomersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$tenantCustomersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TenantCustomerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   venues<T extends Prisma.Organization$venuesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$venuesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$VenuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   events<T extends Prisma.Organization$eventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$eventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   railRoutes<T extends Prisma.Organization$railRoutesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$railRoutesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RailRoutePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -1968,6 +2252,54 @@ export type Organization$membersArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   distinct?: Prisma.OrganizationMemberScalarFieldEnum | Prisma.OrganizationMemberScalarFieldEnum[]
+}
+
+/**
+ * Organization.subscriptions
+ */
+export type Organization$subscriptionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TenantDomainSubscription
+   */
+  select?: Prisma.TenantDomainSubscriptionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TenantDomainSubscription
+   */
+  omit?: Prisma.TenantDomainSubscriptionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TenantDomainSubscriptionInclude<ExtArgs> | null
+  where?: Prisma.TenantDomainSubscriptionWhereInput
+  orderBy?: Prisma.TenantDomainSubscriptionOrderByWithRelationInput | Prisma.TenantDomainSubscriptionOrderByWithRelationInput[]
+  cursor?: Prisma.TenantDomainSubscriptionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TenantDomainSubscriptionScalarFieldEnum | Prisma.TenantDomainSubscriptionScalarFieldEnum[]
+}
+
+/**
+ * Organization.tenantCustomers
+ */
+export type Organization$tenantCustomersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TenantCustomer
+   */
+  select?: Prisma.TenantCustomerSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TenantCustomer
+   */
+  omit?: Prisma.TenantCustomerOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TenantCustomerInclude<ExtArgs> | null
+  where?: Prisma.TenantCustomerWhereInput
+  orderBy?: Prisma.TenantCustomerOrderByWithRelationInput | Prisma.TenantCustomerOrderByWithRelationInput[]
+  cursor?: Prisma.TenantCustomerWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TenantCustomerScalarFieldEnum | Prisma.TenantCustomerScalarFieldEnum[]
 }
 
 /**

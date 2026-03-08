@@ -45,6 +45,23 @@ export const BookingDomain = {
 export type BookingDomain = (typeof BookingDomain)[keyof typeof BookingDomain]
 
 
+export const TenantDomainSubscriptionStatus = {
+  ACTIVE: 'ACTIVE',
+  DISABLED: 'DISABLED'
+} as const
+
+export type TenantDomainSubscriptionStatus = (typeof TenantDomainSubscriptionStatus)[keyof typeof TenantDomainSubscriptionStatus]
+
+
+export const TenantCustomerStatus = {
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE',
+  BLOCKED: 'BLOCKED'
+} as const
+
+export type TenantCustomerStatus = (typeof TenantCustomerStatus)[keyof typeof TenantCustomerStatus]
+
+
 export const SeatInventoryStatus = {
   AVAILABLE: 'AVAILABLE',
   RESERVED: 'RESERVED',
