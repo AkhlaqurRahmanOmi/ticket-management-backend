@@ -266,6 +266,8 @@ model Organization {
   railTrips RailTrip[]
   flightServices FlightService[]
   flightInstances FlightInstance[]
+  payments Payment[]
+  railIssuedDocuments RailIssuedDocument[]
   airIssuedDocuments AirIssuedDocument[]
   bookings Booking[]
   orders  Order[]
@@ -1257,11 +1259,13 @@ model Payment {
   orderId       String?        @db.Uuid
   bookingId     String?        @db.Uuid
   reservationId String?        @db.Uuid
+  orgId         String?        @db.Uuid
   domainType    BookingDomain  @default(EVENT)
 
   order       Order?       @relation(fields: [orderId], references: [id], onDelete: SetNull)
   booking     Booking?     @relation(fields: [bookingId], references: [id], onDelete: SetNull)
   reservation Reservation? @relation(fields: [reservationId], references: [id], onDelete: SetNull)
+  org         Organization? @relation(fields: [orgId], references: [id], onDelete: SetNull)
 
   provider    String // "stripe", "sslcommerz", etc.
   providerRef String // payment intent id / transaction id
@@ -1284,6 +1288,8 @@ model Payment {
   @@index([orderId])
   @@index([bookingId])
   @@index([reservationId])
+  @@index([orgId])
+  @@index([orgId, status, createdAt])
   @@index([status, createdAt])
   @@index([domainType, status, createdAt])
 }
@@ -1355,6 +1361,7 @@ model Ticket {
 
 model RailIssuedDocument {
   id            String @id @default(uuid()) @db.Uuid
+  orgId         String? @db.Uuid
   bookingId     String @db.Uuid
   bookingItemId String @db.Uuid
   paymentId     String @db.Uuid
@@ -1362,6 +1369,7 @@ model RailIssuedDocument {
   tripId        String @db.Uuid
   tripSeatId    String @db.Uuid
 
+  org         Organization? @relation(fields: [orgId], references: [id], onDelete: SetNull)
   booking     Booking      @relation(fields: [bookingId], references: [id], onDelete: Cascade)
   bookingItem BookingItem  @relation(fields: [bookingItemId], references: [id], onDelete: Cascade)
   payment     Payment      @relation(fields: [paymentId], references: [id], onDelete: Cascade)
@@ -1380,12 +1388,14 @@ model RailIssuedDocument {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@index([orgId])
   @@index([bookingId])
   @@index([bookingItemId])
   @@index([paymentId])
   @@index([userId])
   @@index([tripId])
   @@index([tripSeatId])
+  @@index([orgId, issuedAt])
   @@index([issuedAt])
 }
 

@@ -62,6 +62,7 @@ export type TicketIssuedDocumentRow = {
 
 export type RailIssuedDocumentRow = {
   id: string;
+  orgId: string | null;
   status: 'ISSUED' | 'VOIDED' | 'REFUNDED';
   code: string;
   issuedAt: Date;

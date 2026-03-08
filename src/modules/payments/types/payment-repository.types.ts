@@ -3,6 +3,7 @@ import type { BookingDomain } from '@/modules/domain-runtime/domain.types';
 export type CreatePendingPaymentInput = {
   bookingId: string;
   domainType: BookingDomain;
+  orgId?: string | null;
   reservationId?: string | null;
   provider: string;
   providerRef: string;

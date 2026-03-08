@@ -771,6 +771,7 @@ export const PaymentScalarFieldEnum = {
   orderId: 'orderId',
   bookingId: 'bookingId',
   reservationId: 'reservationId',
+  orgId: 'orgId',
   domainType: 'domainType',
   provider: 'provider',
   providerRef: 'providerRef',
@@ -826,6 +827,7 @@ export type TicketScalarFieldEnum = (typeof TicketScalarFieldEnum)[keyof typeof 
 
 export const RailIssuedDocumentScalarFieldEnum = {
   id: 'id',
+  orgId: 'orgId',
   bookingId: 'bookingId',
   bookingItemId: 'bookingItemId',
   paymentId: 'paymentId',

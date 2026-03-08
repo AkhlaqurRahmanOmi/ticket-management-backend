@@ -9,7 +9,9 @@ import { KafkaJS } from '@confluentinc/kafka-javascript';
 import { KafkaService } from '@/infra/kafka/kafka/kafka.service';
 import { buildLogContext } from '@/common/utils/log-context';
 import { MetricsProvider } from '@/common/providers/metrics.provider';
+import { DomainRuntimeService } from '@/modules/domain-runtime/domain-runtime.service';
 import { BOOKING_FINALIZER } from '@/modules/domain-runtime/domain.tokens';
+import { isBookingDomain } from '@/modules/domain-runtime/domain.types';
 import type {
   BookingFinalizer,
   PaymentSucceededEventEnvelope,
@@ -31,6 +33,7 @@ export class PaymentSucceededConsumerWorker
     private readonly kafkaService: KafkaService,
     private readonly moduleRef: ModuleRef,
     private readonly metricsProvider: MetricsProvider,
+    private readonly domainRuntimeService: DomainRuntimeService,
   ) {}
 
   async onModuleInit(): Promise<void> {
@@ -209,6 +212,53 @@ export class PaymentSucceededConsumerWorker
       return;
     }
 
+    if (!isBookingDomain(parsed.data?.domainType)) {
+      this.logger.warn(
+        'Skipping payment.succeeded message without a valid domainType',
+        buildLogContext({
+          module: 'workers.paymentSucceededConsumer',
+          action: 'message.validate',
+          correlationId,
+          paymentId,
+          partition: payload.partition,
+          offset: payload.message.offset,
+        }),
+      );
+      this.metricsProvider.incrementCounter(
+        'kafka_payment_succeeded_skipped_total',
+        'Count of skipped payment.succeeded messages',
+        1,
+        { reason: 'missing_domain_type' },
+      );
+      return;
+    }
+
+    const activeDomain = this.domainRuntimeService.getActiveDomain();
+    if (parsed.data.domainType !== activeDomain) {
+      this.logger.log(
+        'Skipping payment.succeeded message for a different active domain',
+        buildLogContext({
+          module: 'workers.paymentSucceededConsumer',
+          action: 'message.skip_domain',
+          correlationId,
+          paymentId,
+          partition: payload.partition,
+          offset: payload.message.offset,
+          meta: {
+            eventDomain: parsed.data.domainType,
+            activeDomain,
+          },
+        }),
+      );
+      this.metricsProvider.incrementCounter(
+        'kafka_payment_succeeded_skipped_total',
+        'Count of skipped payment.succeeded messages',
+        1,
+        { reason: 'domain_mismatch' },
+      );
+      return;
+    }
+
     const processResult = await this.processWithRetry(parsed);
     if (processResult.success) {
       this.logger.log(
@@ -322,6 +372,8 @@ export class PaymentSucceededConsumerWorker
           paymentId: message.data?.paymentId ?? '',
           bookingId: message.data?.bookingId,
           reservationId: message.data?.reservationId,
+          domainType: message.data?.domainType,
+          orgId: message.data?.orgId,
           provider: message.data?.provider,
           providerRef: message.data?.providerRef,
           status: message.data?.status,

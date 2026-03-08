@@ -37,7 +37,7 @@ Suggested task result format:
 ## Current Status
 
 - Overall status: `in_progress`
-- Active phase: `Phase 12`
+- Active phase: `Phase 14`
 - Active domain during migration: `event`
 - Default client profile during migration: `default`
 
@@ -1330,14 +1330,28 @@ Acceptance criteria:
 
 ### Task 13.3 Add missing tenant ownership to air domain
 
-Status: `planned`
-Dev server check: `not_run`
+Status: `done`
+Dev server check: `pass`
 
 Work:
 
 - add the missing tenant ownership model to air
 - ensure flights, inventory, holds, and issued documents can be owned by a tenant
 - remove the current air-domain tenancy gap
+
+Notes:
+
+- Added staged air tenant ownership fields in `prisma/schema.prisma` for `FlightService`, `FlightInstance`, and `AirIssuedDocument`.
+- Made public air discovery tenant-bound through `X-Tenant-Slug` on search and availability routes.
+- Updated `src/modules/air/*` and `src/modules/domains/air-domain.module.ts` so air service and provider flows pass resolved tenant context explicitly.
+- Tenant-scoped the air read repository for flight lookup, leg resolution, search, and availability paths.
+- Updated `src/modules/bookings/bookings.repository.ts` so air holds persist `Booking.orgId` from the tenant-owned flight instance instead of `null`.
+- Added `AIR_HOLD_READ_POLICY` and moved air hold detail to the layered tenant/policy authorization path.
+- Updated `src/modules/payments/payments.service.ts` so air bookings now enforce tenant alignment during payment creation.
+- Updated `src/modules/issuance/issuance.repository.ts` and `src/modules/issuance/types/issued-document.types.ts` so air issued documents carry tenant ownership.
+- `cmd /c npx tsc -p tsconfig.json --noEmit --incremental false` passed.
+- `npx prisma validate` passed.
+- Dev server boot was verified by the user with no startup errors.
 
 Acceptance criteria:
 
@@ -1347,14 +1361,24 @@ Acceptance criteria:
 
 ### Task 13.4 Make booking, payment, and issuance tenant-consistent
 
-Status: `planned`
-Dev server check: `not_run`
+Status: `done`
+Dev server check: `pass`
 
 Work:
 
 - make the shared booking kernel preserve tenant ownership consistently
 - align payment and issuance flows with tenant ownership boundaries
 - ensure background finalization paths do not cross tenant boundaries
+
+Notes:
+
+- Added additive tenant ownership fields in `prisma/schema.prisma` for `Payment.orgId` and `RailIssuedDocument.orgId`, alongside existing air issued-document ownership.
+- Updated `src/modules/payments/*` so pending payments persist `orgId`, webhook outbox payloads carry `domainType` and `orgId`, and payment outbox rows stamp `OutboxEvent.domainType` consistently.
+- Updated `src/workers/payment-succeeded.consumer.worker.ts` so the worker now skips `payment.succeeded` messages whose `domainType` does not match the active runtime domain instead of attempting cross-domain finalization.
+- Updated `src/modules/issuance/issuance.repository.ts` and `src/modules/issuance/types/issued-document.types.ts` so event, rail, and air issuance validate payment/booking tenant consistency, rail issued documents persist `orgId`, and issuance outbox payloads include tenant/domain metadata.
+- `cmd /c npx tsc -p tsconfig.json --noEmit --incremental false` passed.
+- `cmd /c npx prisma validate` passed.
+- Dev server boot was verified by the user with no startup errors.
 
 Acceptance criteria:
 

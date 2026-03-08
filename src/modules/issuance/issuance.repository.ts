@@ -158,6 +158,7 @@ export class IssuanceRepository extends BaseRepository {
     const rows = await this.prisma.$queryRaw<AirIssuedDocumentRow[]>`
       SELECT
         "id",
+        "orgId",
         "status",
         "code",
         "issuedAt",
@@ -181,6 +182,7 @@ export class IssuanceRepository extends BaseRepository {
     const rows = await this.prisma.$queryRaw<AirIssuedDocumentRow[]>`
       SELECT
         "id",
+        "orgId",
         "status",
         "code",
         "issuedAt",
@@ -216,11 +218,20 @@ export class IssuanceRepository extends BaseRepository {
         select: {
           id: true,
           bookingId: true,
+          orgId: true,
+          domainType: true,
           status: true,
           amountCents: true,
           currency: true,
           orderId: true,
           reservationId: true,
+          booking: {
+            select: {
+              id: true,
+              orgId: true,
+              domainType: true,
+            },
+          },
           reservation: {
             select: {
               id: true,
@@ -251,6 +262,24 @@ export class IssuanceRepository extends BaseRepository {
 
       if (!payment) {
         throw new NotFoundException('Payment not found.');
+      }
+
+      if (payment.domainType !== 'EVENT') {
+        throw new ConflictException(
+          'Payment is not linked to an event booking. Manual remediation required.',
+        );
+      }
+
+      if (payment.bookingId && !payment.booking) {
+        throw new ConflictException(
+          'Payment is linked to a missing booking. Manual remediation required.',
+        );
+      }
+
+      if (payment.booking && payment.booking.domainType !== 'EVENT') {
+        throw new ConflictException(
+          'Payment and booking domains do not match. Manual remediation required.',
+        );
       }
 
       if (payment.status !== 'SUCCEEDED') {
@@ -292,6 +321,18 @@ export class IssuanceRepository extends BaseRepository {
       if (!reservation) {
         throw new ConflictException(
           'Payment is not linked to a reservation. Manual remediation required.',
+        );
+      }
+
+      if (payment.orgId && payment.orgId !== reservation.event.orgId) {
+        throw new ConflictException(
+          'Payment tenant does not match reservation tenant. Manual remediation required.',
+        );
+      }
+
+      if (payment.booking?.orgId && payment.booking.orgId !== reservation.event.orgId) {
+        throw new ConflictException(
+          'Booking tenant does not match reservation tenant. Manual remediation required.',
         );
       }
 
@@ -478,6 +519,8 @@ export class IssuanceRepository extends BaseRepository {
               paymentId: payment.id,
               bookingId: payment.bookingId,
               reservationId: reservation.id,
+              domainType: 'event',
+              orgId: reservation.event.orgId,
               orderId: order.id,
               issuedDocumentIds,
             },
@@ -485,6 +528,7 @@ export class IssuanceRepository extends BaseRepository {
           status: 'PENDING' as const,
           correlationId: input.correlationId ?? null,
           actorUserId: reservation.userId,
+          domainType: BookingDomain.EVENT,
         },
       ];
 
@@ -502,6 +546,8 @@ export class IssuanceRepository extends BaseRepository {
               paymentId: payment.id,
               bookingId: payment.bookingId,
               reservationId: reservation.id,
+              domainType: 'event',
+              orgId: reservation.event.orgId,
               orderId: order.id,
               eventId: reservation.eventId,
               seatIds: affectedInventoryRefIds,
@@ -510,6 +556,7 @@ export class IssuanceRepository extends BaseRepository {
           status: 'PENDING' as const,
           correlationId: input.correlationId ?? null,
           actorUserId: reservation.userId,
+          domainType: BookingDomain.EVENT,
         });
       }
 
@@ -549,6 +596,7 @@ export class IssuanceRepository extends BaseRepository {
         select: {
           id: true,
           bookingId: true,
+          orgId: true,
           domainType: true,
           status: true,
           amountCents: true,
@@ -617,6 +665,12 @@ export class IssuanceRepository extends BaseRepository {
         throw new NotFoundException('Payment not found.');
       }
 
+      if (payment.domainType !== 'RAIL') {
+        throw new ConflictException(
+          'Payment is not linked to a rail booking. Manual remediation required.',
+        );
+      }
+
       const existingDocuments = await tx.$queryRaw<RailIssuedDocumentRow[]>`
         SELECT
           "id",
@@ -675,6 +729,18 @@ export class IssuanceRepository extends BaseRepository {
       if (!booking || booking.domainType !== 'RAIL') {
         throw new ConflictException(
           'Payment is not linked to a rail booking. Manual remediation required.',
+        );
+      }
+
+      if (!booking.orgId) {
+        throw new ConflictException(
+          'Rail booking is missing tenant ownership. Manual remediation required.',
+        );
+      }
+
+      if (payment.orgId && booking.orgId && payment.orgId !== booking.orgId) {
+        throw new ConflictException(
+          'Payment tenant does not match rail booking tenant. Manual remediation required.',
         );
       }
 
@@ -742,6 +808,7 @@ export class IssuanceRepository extends BaseRepository {
         await tx.$queryRaw`
           INSERT INTO "RailIssuedDocument" (
             "id",
+            "orgId",
             "bookingId",
             "bookingItemId",
             "paymentId",
@@ -757,6 +824,7 @@ export class IssuanceRepository extends BaseRepository {
           )
           VALUES (
             ${documentId}::uuid,
+            ${booking.orgId}::uuid,
             ${booking.id}::uuid,
             ${item.id}::uuid,
             ${payment.id}::uuid,
@@ -825,6 +893,8 @@ export class IssuanceRepository extends BaseRepository {
             data: {
               paymentId: payment.id,
               bookingId: booking.id,
+              domainType: 'rail',
+              orgId: booking.orgId,
               tripId:
                 this.getMetadataString(booking.metadata, 'tripId') ??
                 this.getMetadataString(booking.metadata, 'inventoryScopeId'),
@@ -835,6 +905,7 @@ export class IssuanceRepository extends BaseRepository {
           status: 'PENDING',
           correlationId: input.correlationId ?? null,
           actorUserId: booking.userId,
+          domainType: BookingDomain.RAIL,
         },
       });
 
@@ -872,6 +943,7 @@ export class IssuanceRepository extends BaseRepository {
         select: {
           id: true,
           bookingId: true,
+          orgId: true,
           domainType: true,
           status: true,
           amountCents: true,
@@ -924,9 +996,16 @@ export class IssuanceRepository extends BaseRepository {
         throw new NotFoundException('Payment not found.');
       }
 
+      if (payment.domainType !== 'AIR') {
+        throw new ConflictException(
+          'Payment is not linked to an air booking. Manual remediation required.',
+        );
+      }
+
       const existingDocuments = await tx.$queryRaw<AirIssuedDocumentRow[]>`
         SELECT
           "id",
+          "orgId",
           "status",
           "code",
           "issuedAt",
@@ -991,6 +1070,12 @@ export class IssuanceRepository extends BaseRepository {
       if (!booking.orgId) {
         throw new ConflictException(
           'Air booking is missing tenant ownership. Manual remediation required.',
+        );
+      }
+
+      if (payment.orgId && payment.orgId !== booking.orgId) {
+        throw new ConflictException(
+          'Payment tenant does not match air booking tenant. Manual remediation required.',
         );
       }
 
@@ -1155,6 +1240,8 @@ export class IssuanceRepository extends BaseRepository {
             data: {
               paymentId: payment.id,
               bookingId: booking.id,
+              domainType: 'air',
+              orgId: booking.orgId,
               flightInstanceId:
                 this.getMetadataString(booking.metadata, 'flightInstanceId') ??
                 this.getMetadataString(booking.metadata, 'inventoryScopeId'),
@@ -1168,6 +1255,7 @@ export class IssuanceRepository extends BaseRepository {
           status: 'PENDING',
           correlationId: input.correlationId ?? null,
           actorUserId: booking.userId,
+          domainType: BookingDomain.AIR,
         },
       });
 

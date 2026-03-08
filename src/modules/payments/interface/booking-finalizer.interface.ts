@@ -1,7 +1,11 @@
+import type { BookingDomain } from '@/modules/domain-runtime/domain.types';
+
 export type PaymentSucceededEventData = {
   paymentId: string;
   bookingId?: string;
   reservationId?: string;
+  domainType?: BookingDomain;
+  orgId?: string | null;
   provider?: string;
   providerRef?: string;
   status?: string;
@@ -20,6 +24,8 @@ export type FinalizePaymentSucceededInput = {
   paymentId: string;
   bookingId?: string;
   reservationId?: string;
+  domainType?: BookingDomain;
+  orgId?: string | null;
   provider?: string;
   providerRef?: string;
   status?: string;
