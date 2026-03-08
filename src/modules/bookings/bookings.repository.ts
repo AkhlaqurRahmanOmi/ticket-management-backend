@@ -631,6 +631,7 @@ export class BookingsRepository extends BaseRepository {
       const cabinRows = await tx.$queryRaw<Array<{
         id: string;
         flightInstanceId: string;
+        orgId: string | null;
         cabinCode: string;
         fareClassCode: string;
         quantityTotal: number;
@@ -645,6 +646,7 @@ export class BookingsRepository extends BaseRepository {
         SELECT
           ci."id",
           ci."flightInstanceId",
+          fi."orgId",
           ci."cabinCode",
           ci."fareClassCode",
           ci."quantityTotal",
@@ -667,6 +669,12 @@ export class BookingsRepository extends BaseRepository {
       if (!cabin) {
         throw new NotFoundException(
           'Flight cabin inventory not found for the provided flight instance.',
+        );
+      }
+
+      if (!cabin.orgId) {
+        throw new ConflictException(
+          'Air cabin inventory is not assigned to a tenant-owned flight instance.',
         );
       }
 
@@ -725,7 +733,7 @@ export class BookingsRepository extends BaseRepository {
       const booking = await tx.booking.create({
         data: {
           userId: input.userId,
-          orgId: null,
+          orgId: cabin.orgId,
           domainType: 'AIR',
           status: 'HOLD',
           currency: cabin.currency,

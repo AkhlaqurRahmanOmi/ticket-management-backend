@@ -206,7 +206,7 @@ export type RailRouteWhereInput = {
   code?: Prisma.StringNullableFilter<"RailRoute"> | string | null
   createdAt?: Prisma.DateTimeFilter<"RailRoute"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"RailRoute"> | Date | string
-  org?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
+  org?: Prisma.XOR<Prisma.OrganizationNullableScalarRelationFilter, Prisma.OrganizationWhereInput> | null
   originStation?: Prisma.XOR<Prisma.RailStationScalarRelationFilter, Prisma.RailStationWhereInput>
   destinationStation?: Prisma.XOR<Prisma.RailStationScalarRelationFilter, Prisma.RailStationWhereInput>
   stops?: Prisma.RailRouteStopListRelationFilter
@@ -242,7 +242,7 @@ export type RailRouteWhereUniqueInput = Prisma.AtLeast<{
   code?: Prisma.StringNullableFilter<"RailRoute"> | string | null
   createdAt?: Prisma.DateTimeFilter<"RailRoute"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"RailRoute"> | Date | string
-  org?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
+  org?: Prisma.XOR<Prisma.OrganizationNullableScalarRelationFilter, Prisma.OrganizationWhereInput> | null
   originStation?: Prisma.XOR<Prisma.RailStationScalarRelationFilter, Prisma.RailStationWhereInput>
   destinationStation?: Prisma.XOR<Prisma.RailStationScalarRelationFilter, Prisma.RailStationWhereInput>
   stops?: Prisma.RailRouteStopListRelationFilter
@@ -283,7 +283,7 @@ export type RailRouteCreateInput = {
   code?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  org: Prisma.OrganizationCreateNestedOneWithoutRailRoutesInput
+  org?: Prisma.OrganizationCreateNestedOneWithoutRailRoutesInput
   originStation: Prisma.RailStationCreateNestedOneWithoutOriginRoutesInput
   destinationStation: Prisma.RailStationCreateNestedOneWithoutDestinationRoutesInput
   stops?: Prisma.RailRouteStopCreateNestedManyWithoutRouteInput
@@ -309,7 +309,7 @@ export type RailRouteUpdateInput = {
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  org?: Prisma.OrganizationUpdateOneRequiredWithoutRailRoutesNestedInput
+  org?: Prisma.OrganizationUpdateOneWithoutRailRoutesNestedInput
   originStation?: Prisma.RailStationUpdateOneRequiredWithoutOriginRoutesNestedInput
   destinationStation?: Prisma.RailStationUpdateOneRequiredWithoutDestinationRoutesNestedInput
   stops?: Prisma.RailRouteStopUpdateManyWithoutRouteNestedInput
@@ -643,7 +643,7 @@ export type RailRouteCreateWithoutOriginStationInput = {
   code?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  org: Prisma.OrganizationCreateNestedOneWithoutRailRoutesInput
+  org?: Prisma.OrganizationCreateNestedOneWithoutRailRoutesInput
   destinationStation: Prisma.RailStationCreateNestedOneWithoutDestinationRoutesInput
   stops?: Prisma.RailRouteStopCreateNestedManyWithoutRouteInput
   trips?: Prisma.RailTripCreateNestedManyWithoutRouteInput
@@ -677,7 +677,7 @@ export type RailRouteCreateWithoutDestinationStationInput = {
   code?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  org: Prisma.OrganizationCreateNestedOneWithoutRailRoutesInput
+  org?: Prisma.OrganizationCreateNestedOneWithoutRailRoutesInput
   originStation: Prisma.RailStationCreateNestedOneWithoutOriginRoutesInput
   stops?: Prisma.RailRouteStopCreateNestedManyWithoutRouteInput
   trips?: Prisma.RailTripCreateNestedManyWithoutRouteInput
@@ -743,7 +743,7 @@ export type RailRouteCreateWithoutStopsInput = {
   code?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  org: Prisma.OrganizationCreateNestedOneWithoutRailRoutesInput
+  org?: Prisma.OrganizationCreateNestedOneWithoutRailRoutesInput
   originStation: Prisma.RailStationCreateNestedOneWithoutOriginRoutesInput
   destinationStation: Prisma.RailStationCreateNestedOneWithoutDestinationRoutesInput
   trips?: Prisma.RailTripCreateNestedManyWithoutRouteInput
@@ -783,7 +783,7 @@ export type RailRouteUpdateWithoutStopsInput = {
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  org?: Prisma.OrganizationUpdateOneRequiredWithoutRailRoutesNestedInput
+  org?: Prisma.OrganizationUpdateOneWithoutRailRoutesNestedInput
   originStation?: Prisma.RailStationUpdateOneRequiredWithoutOriginRoutesNestedInput
   destinationStation?: Prisma.RailStationUpdateOneRequiredWithoutDestinationRoutesNestedInput
   trips?: Prisma.RailTripUpdateManyWithoutRouteNestedInput
@@ -807,7 +807,7 @@ export type RailRouteCreateWithoutTripsInput = {
   code?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  org: Prisma.OrganizationCreateNestedOneWithoutRailRoutesInput
+  org?: Prisma.OrganizationCreateNestedOneWithoutRailRoutesInput
   originStation: Prisma.RailStationCreateNestedOneWithoutOriginRoutesInput
   destinationStation: Prisma.RailStationCreateNestedOneWithoutDestinationRoutesInput
   stops?: Prisma.RailRouteStopCreateNestedManyWithoutRouteInput
@@ -847,7 +847,7 @@ export type RailRouteUpdateWithoutTripsInput = {
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  org?: Prisma.OrganizationUpdateOneRequiredWithoutRailRoutesNestedInput
+  org?: Prisma.OrganizationUpdateOneWithoutRailRoutesNestedInput
   originStation?: Prisma.RailStationUpdateOneRequiredWithoutOriginRoutesNestedInput
   destinationStation?: Prisma.RailStationUpdateOneRequiredWithoutDestinationRoutesNestedInput
   stops?: Prisma.RailRouteStopUpdateManyWithoutRouteNestedInput
@@ -935,7 +935,7 @@ export type RailRouteUpdateWithoutOriginStationInput = {
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  org?: Prisma.OrganizationUpdateOneRequiredWithoutRailRoutesNestedInput
+  org?: Prisma.OrganizationUpdateOneWithoutRailRoutesNestedInput
   destinationStation?: Prisma.RailStationUpdateOneRequiredWithoutDestinationRoutesNestedInput
   stops?: Prisma.RailRouteStopUpdateManyWithoutRouteNestedInput
   trips?: Prisma.RailTripUpdateManyWithoutRouteNestedInput
@@ -969,7 +969,7 @@ export type RailRouteUpdateWithoutDestinationStationInput = {
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  org?: Prisma.OrganizationUpdateOneRequiredWithoutRailRoutesNestedInput
+  org?: Prisma.OrganizationUpdateOneWithoutRailRoutesNestedInput
   originStation?: Prisma.RailStationUpdateOneRequiredWithoutOriginRoutesNestedInput
   stops?: Prisma.RailRouteStopUpdateManyWithoutRouteNestedInput
   trips?: Prisma.RailTripUpdateManyWithoutRouteNestedInput
@@ -1046,7 +1046,7 @@ export type RailRouteSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   code?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  org?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  org?: boolean | Prisma.RailRoute$orgArgs<ExtArgs>
   originStation?: boolean | Prisma.RailStationDefaultArgs<ExtArgs>
   destinationStation?: boolean | Prisma.RailStationDefaultArgs<ExtArgs>
   stops?: boolean | Prisma.RailRoute$stopsArgs<ExtArgs>
@@ -1063,7 +1063,7 @@ export type RailRouteSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   code?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  org?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  org?: boolean | Prisma.RailRoute$orgArgs<ExtArgs>
   originStation?: boolean | Prisma.RailStationDefaultArgs<ExtArgs>
   destinationStation?: boolean | Prisma.RailStationDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["railRoute"]>
@@ -1077,7 +1077,7 @@ export type RailRouteSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   code?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  org?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  org?: boolean | Prisma.RailRoute$orgArgs<ExtArgs>
   originStation?: boolean | Prisma.RailStationDefaultArgs<ExtArgs>
   destinationStation?: boolean | Prisma.RailStationDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["railRoute"]>
@@ -1095,7 +1095,7 @@ export type RailRouteSelectScalar = {
 
 export type RailRouteOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orgId" | "originStationId" | "destinationStationId" | "name" | "code" | "createdAt" | "updatedAt", ExtArgs["result"]["railRoute"]>
 export type RailRouteInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  org?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  org?: boolean | Prisma.RailRoute$orgArgs<ExtArgs>
   originStation?: boolean | Prisma.RailStationDefaultArgs<ExtArgs>
   destinationStation?: boolean | Prisma.RailStationDefaultArgs<ExtArgs>
   stops?: boolean | Prisma.RailRoute$stopsArgs<ExtArgs>
@@ -1103,12 +1103,12 @@ export type RailRouteInclude<ExtArgs extends runtime.Types.Extensions.InternalAr
   _count?: boolean | Prisma.RailRouteCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type RailRouteIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  org?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  org?: boolean | Prisma.RailRoute$orgArgs<ExtArgs>
   originStation?: boolean | Prisma.RailStationDefaultArgs<ExtArgs>
   destinationStation?: boolean | Prisma.RailStationDefaultArgs<ExtArgs>
 }
 export type RailRouteIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  org?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  org?: boolean | Prisma.RailRoute$orgArgs<ExtArgs>
   originStation?: boolean | Prisma.RailStationDefaultArgs<ExtArgs>
   destinationStation?: boolean | Prisma.RailStationDefaultArgs<ExtArgs>
 }
@@ -1116,7 +1116,7 @@ export type RailRouteIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
 export type $RailRoutePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "RailRoute"
   objects: {
-    org: Prisma.$OrganizationPayload<ExtArgs>
+    org: Prisma.$OrganizationPayload<ExtArgs> | null
     originStation: Prisma.$RailStationPayload<ExtArgs>
     destinationStation: Prisma.$RailStationPayload<ExtArgs>
     stops: Prisma.$RailRouteStopPayload<ExtArgs>[]
@@ -1525,7 +1525,7 @@ readonly fields: RailRouteFieldRefs;
  */
 export interface Prisma__RailRouteClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  org<T extends Prisma.OrganizationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrganizationDefaultArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  org<T extends Prisma.RailRoute$orgArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RailRoute$orgArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   originStation<T extends Prisma.RailStationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RailStationDefaultArgs<ExtArgs>>): Prisma.Prisma__RailStationClient<runtime.Types.Result.GetResult<Prisma.$RailStationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   destinationStation<T extends Prisma.RailStationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RailStationDefaultArgs<ExtArgs>>): Prisma.Prisma__RailStationClient<runtime.Types.Result.GetResult<Prisma.$RailStationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   stops<T extends Prisma.RailRoute$stopsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RailRoute$stopsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RailRouteStopPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -1960,6 +1960,25 @@ export type RailRouteDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Limit how many RailRoutes to delete.
    */
   limit?: number
+}
+
+/**
+ * RailRoute.org
+ */
+export type RailRoute$orgArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Organization
+   */
+  select?: Prisma.OrganizationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Organization
+   */
+  omit?: Prisma.OrganizationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrganizationInclude<ExtArgs> | null
+  where?: Prisma.OrganizationWhereInput
 }
 
 /**

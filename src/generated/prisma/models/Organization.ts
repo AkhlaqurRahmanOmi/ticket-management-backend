@@ -189,6 +189,9 @@ export type OrganizationWhereInput = {
   events?: Prisma.EventListRelationFilter
   railRoutes?: Prisma.RailRouteListRelationFilter
   railTrips?: Prisma.RailTripListRelationFilter
+  flightServices?: Prisma.FlightServiceListRelationFilter
+  flightInstances?: Prisma.FlightInstanceListRelationFilter
+  airIssuedDocuments?: Prisma.AirIssuedDocumentListRelationFilter
   bookings?: Prisma.BookingListRelationFilter
   orders?: Prisma.OrderListRelationFilter
 }
@@ -206,6 +209,9 @@ export type OrganizationOrderByWithRelationInput = {
   events?: Prisma.EventOrderByRelationAggregateInput
   railRoutes?: Prisma.RailRouteOrderByRelationAggregateInput
   railTrips?: Prisma.RailTripOrderByRelationAggregateInput
+  flightServices?: Prisma.FlightServiceOrderByRelationAggregateInput
+  flightInstances?: Prisma.FlightInstanceOrderByRelationAggregateInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentOrderByRelationAggregateInput
   bookings?: Prisma.BookingOrderByRelationAggregateInput
   orders?: Prisma.OrderOrderByRelationAggregateInput
 }
@@ -226,6 +232,9 @@ export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
   events?: Prisma.EventListRelationFilter
   railRoutes?: Prisma.RailRouteListRelationFilter
   railTrips?: Prisma.RailTripListRelationFilter
+  flightServices?: Prisma.FlightServiceListRelationFilter
+  flightInstances?: Prisma.FlightInstanceListRelationFilter
+  airIssuedDocuments?: Prisma.AirIssuedDocumentListRelationFilter
   bookings?: Prisma.BookingListRelationFilter
   orders?: Prisma.OrderListRelationFilter
 }, "id" | "slug">
@@ -265,6 +274,9 @@ export type OrganizationCreateInput = {
   events?: Prisma.EventCreateNestedManyWithoutOrgInput
   railRoutes?: Prisma.RailRouteCreateNestedManyWithoutOrgInput
   railTrips?: Prisma.RailTripCreateNestedManyWithoutOrgInput
+  flightServices?: Prisma.FlightServiceCreateNestedManyWithoutOrgInput
+  flightInstances?: Prisma.FlightInstanceCreateNestedManyWithoutOrgInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentCreateNestedManyWithoutOrgInput
   bookings?: Prisma.BookingCreateNestedManyWithoutOrgInput
   orders?: Prisma.OrderCreateNestedManyWithoutOrgInput
 }
@@ -282,6 +294,9 @@ export type OrganizationUncheckedCreateInput = {
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrgInput
   railRoutes?: Prisma.RailRouteUncheckedCreateNestedManyWithoutOrgInput
   railTrips?: Prisma.RailTripUncheckedCreateNestedManyWithoutOrgInput
+  flightServices?: Prisma.FlightServiceUncheckedCreateNestedManyWithoutOrgInput
+  flightInstances?: Prisma.FlightInstanceUncheckedCreateNestedManyWithoutOrgInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUncheckedCreateNestedManyWithoutOrgInput
   bookings?: Prisma.BookingUncheckedCreateNestedManyWithoutOrgInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutOrgInput
 }
@@ -299,6 +314,9 @@ export type OrganizationUpdateInput = {
   events?: Prisma.EventUpdateManyWithoutOrgNestedInput
   railRoutes?: Prisma.RailRouteUpdateManyWithoutOrgNestedInput
   railTrips?: Prisma.RailTripUpdateManyWithoutOrgNestedInput
+  flightServices?: Prisma.FlightServiceUpdateManyWithoutOrgNestedInput
+  flightInstances?: Prisma.FlightInstanceUpdateManyWithoutOrgNestedInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUpdateManyWithoutOrgNestedInput
   bookings?: Prisma.BookingUpdateManyWithoutOrgNestedInput
   orders?: Prisma.OrderUpdateManyWithoutOrgNestedInput
 }
@@ -316,6 +334,9 @@ export type OrganizationUncheckedUpdateInput = {
   events?: Prisma.EventUncheckedUpdateManyWithoutOrgNestedInput
   railRoutes?: Prisma.RailRouteUncheckedUpdateManyWithoutOrgNestedInput
   railTrips?: Prisma.RailTripUncheckedUpdateManyWithoutOrgNestedInput
+  flightServices?: Prisma.FlightServiceUncheckedUpdateManyWithoutOrgNestedInput
+  flightInstances?: Prisma.FlightInstanceUncheckedUpdateManyWithoutOrgNestedInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUncheckedUpdateManyWithoutOrgNestedInput
   bookings?: Prisma.BookingUncheckedUpdateManyWithoutOrgNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutOrgNestedInput
 }
@@ -454,10 +475,12 @@ export type OrganizationCreateNestedOneWithoutRailRoutesInput = {
   connect?: Prisma.OrganizationWhereUniqueInput
 }
 
-export type OrganizationUpdateOneRequiredWithoutRailRoutesNestedInput = {
+export type OrganizationUpdateOneWithoutRailRoutesNestedInput = {
   create?: Prisma.XOR<Prisma.OrganizationCreateWithoutRailRoutesInput, Prisma.OrganizationUncheckedCreateWithoutRailRoutesInput>
   connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutRailRoutesInput
   upsert?: Prisma.OrganizationUpsertWithoutRailRoutesInput
+  disconnect?: Prisma.OrganizationWhereInput | boolean
+  delete?: Prisma.OrganizationWhereInput | boolean
   connect?: Prisma.OrganizationWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutRailRoutesInput, Prisma.OrganizationUpdateWithoutRailRoutesInput>, Prisma.OrganizationUncheckedUpdateWithoutRailRoutesInput>
 }
@@ -468,12 +491,46 @@ export type OrganizationCreateNestedOneWithoutRailTripsInput = {
   connect?: Prisma.OrganizationWhereUniqueInput
 }
 
-export type OrganizationUpdateOneRequiredWithoutRailTripsNestedInput = {
+export type OrganizationUpdateOneWithoutRailTripsNestedInput = {
   create?: Prisma.XOR<Prisma.OrganizationCreateWithoutRailTripsInput, Prisma.OrganizationUncheckedCreateWithoutRailTripsInput>
   connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutRailTripsInput
   upsert?: Prisma.OrganizationUpsertWithoutRailTripsInput
+  disconnect?: Prisma.OrganizationWhereInput | boolean
+  delete?: Prisma.OrganizationWhereInput | boolean
   connect?: Prisma.OrganizationWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutRailTripsInput, Prisma.OrganizationUpdateWithoutRailTripsInput>, Prisma.OrganizationUncheckedUpdateWithoutRailTripsInput>
+}
+
+export type OrganizationCreateNestedOneWithoutFlightServicesInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutFlightServicesInput, Prisma.OrganizationUncheckedCreateWithoutFlightServicesInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutFlightServicesInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+}
+
+export type OrganizationUpdateOneWithoutFlightServicesNestedInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutFlightServicesInput, Prisma.OrganizationUncheckedCreateWithoutFlightServicesInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutFlightServicesInput
+  upsert?: Prisma.OrganizationUpsertWithoutFlightServicesInput
+  disconnect?: Prisma.OrganizationWhereInput | boolean
+  delete?: Prisma.OrganizationWhereInput | boolean
+  connect?: Prisma.OrganizationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutFlightServicesInput, Prisma.OrganizationUpdateWithoutFlightServicesInput>, Prisma.OrganizationUncheckedUpdateWithoutFlightServicesInput>
+}
+
+export type OrganizationCreateNestedOneWithoutFlightInstancesInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutFlightInstancesInput, Prisma.OrganizationUncheckedCreateWithoutFlightInstancesInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutFlightInstancesInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+}
+
+export type OrganizationUpdateOneWithoutFlightInstancesNestedInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutFlightInstancesInput, Prisma.OrganizationUncheckedCreateWithoutFlightInstancesInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutFlightInstancesInput
+  upsert?: Prisma.OrganizationUpsertWithoutFlightInstancesInput
+  disconnect?: Prisma.OrganizationWhereInput | boolean
+  delete?: Prisma.OrganizationWhereInput | boolean
+  connect?: Prisma.OrganizationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutFlightInstancesInput, Prisma.OrganizationUpdateWithoutFlightInstancesInput>, Prisma.OrganizationUncheckedUpdateWithoutFlightInstancesInput>
 }
 
 export type OrganizationCreateNestedOneWithoutBookingsInput = {
@@ -506,6 +563,22 @@ export type OrganizationUpdateOneRequiredWithoutOrdersNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutOrdersInput, Prisma.OrganizationUpdateWithoutOrdersInput>, Prisma.OrganizationUncheckedUpdateWithoutOrdersInput>
 }
 
+export type OrganizationCreateNestedOneWithoutAirIssuedDocumentsInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutAirIssuedDocumentsInput, Prisma.OrganizationUncheckedCreateWithoutAirIssuedDocumentsInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutAirIssuedDocumentsInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+}
+
+export type OrganizationUpdateOneWithoutAirIssuedDocumentsNestedInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutAirIssuedDocumentsInput, Prisma.OrganizationUncheckedCreateWithoutAirIssuedDocumentsInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutAirIssuedDocumentsInput
+  upsert?: Prisma.OrganizationUpsertWithoutAirIssuedDocumentsInput
+  disconnect?: Prisma.OrganizationWhereInput | boolean
+  delete?: Prisma.OrganizationWhereInput | boolean
+  connect?: Prisma.OrganizationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutAirIssuedDocumentsInput, Prisma.OrganizationUpdateWithoutAirIssuedDocumentsInput>, Prisma.OrganizationUncheckedUpdateWithoutAirIssuedDocumentsInput>
+}
+
 export type OrganizationCreateWithoutMembersInput = {
   id?: string
   name: string
@@ -518,6 +591,9 @@ export type OrganizationCreateWithoutMembersInput = {
   events?: Prisma.EventCreateNestedManyWithoutOrgInput
   railRoutes?: Prisma.RailRouteCreateNestedManyWithoutOrgInput
   railTrips?: Prisma.RailTripCreateNestedManyWithoutOrgInput
+  flightServices?: Prisma.FlightServiceCreateNestedManyWithoutOrgInput
+  flightInstances?: Prisma.FlightInstanceCreateNestedManyWithoutOrgInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentCreateNestedManyWithoutOrgInput
   bookings?: Prisma.BookingCreateNestedManyWithoutOrgInput
   orders?: Prisma.OrderCreateNestedManyWithoutOrgInput
 }
@@ -534,6 +610,9 @@ export type OrganizationUncheckedCreateWithoutMembersInput = {
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrgInput
   railRoutes?: Prisma.RailRouteUncheckedCreateNestedManyWithoutOrgInput
   railTrips?: Prisma.RailTripUncheckedCreateNestedManyWithoutOrgInput
+  flightServices?: Prisma.FlightServiceUncheckedCreateNestedManyWithoutOrgInput
+  flightInstances?: Prisma.FlightInstanceUncheckedCreateNestedManyWithoutOrgInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUncheckedCreateNestedManyWithoutOrgInput
   bookings?: Prisma.BookingUncheckedCreateNestedManyWithoutOrgInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutOrgInput
 }
@@ -566,6 +645,9 @@ export type OrganizationUpdateWithoutMembersInput = {
   events?: Prisma.EventUpdateManyWithoutOrgNestedInput
   railRoutes?: Prisma.RailRouteUpdateManyWithoutOrgNestedInput
   railTrips?: Prisma.RailTripUpdateManyWithoutOrgNestedInput
+  flightServices?: Prisma.FlightServiceUpdateManyWithoutOrgNestedInput
+  flightInstances?: Prisma.FlightInstanceUpdateManyWithoutOrgNestedInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUpdateManyWithoutOrgNestedInput
   bookings?: Prisma.BookingUpdateManyWithoutOrgNestedInput
   orders?: Prisma.OrderUpdateManyWithoutOrgNestedInput
 }
@@ -582,6 +664,9 @@ export type OrganizationUncheckedUpdateWithoutMembersInput = {
   events?: Prisma.EventUncheckedUpdateManyWithoutOrgNestedInput
   railRoutes?: Prisma.RailRouteUncheckedUpdateManyWithoutOrgNestedInput
   railTrips?: Prisma.RailTripUncheckedUpdateManyWithoutOrgNestedInput
+  flightServices?: Prisma.FlightServiceUncheckedUpdateManyWithoutOrgNestedInput
+  flightInstances?: Prisma.FlightInstanceUncheckedUpdateManyWithoutOrgNestedInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUncheckedUpdateManyWithoutOrgNestedInput
   bookings?: Prisma.BookingUncheckedUpdateManyWithoutOrgNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutOrgNestedInput
 }
@@ -598,6 +683,9 @@ export type OrganizationCreateWithoutSubscriptionsInput = {
   events?: Prisma.EventCreateNestedManyWithoutOrgInput
   railRoutes?: Prisma.RailRouteCreateNestedManyWithoutOrgInput
   railTrips?: Prisma.RailTripCreateNestedManyWithoutOrgInput
+  flightServices?: Prisma.FlightServiceCreateNestedManyWithoutOrgInput
+  flightInstances?: Prisma.FlightInstanceCreateNestedManyWithoutOrgInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentCreateNestedManyWithoutOrgInput
   bookings?: Prisma.BookingCreateNestedManyWithoutOrgInput
   orders?: Prisma.OrderCreateNestedManyWithoutOrgInput
 }
@@ -614,6 +702,9 @@ export type OrganizationUncheckedCreateWithoutSubscriptionsInput = {
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrgInput
   railRoutes?: Prisma.RailRouteUncheckedCreateNestedManyWithoutOrgInput
   railTrips?: Prisma.RailTripUncheckedCreateNestedManyWithoutOrgInput
+  flightServices?: Prisma.FlightServiceUncheckedCreateNestedManyWithoutOrgInput
+  flightInstances?: Prisma.FlightInstanceUncheckedCreateNestedManyWithoutOrgInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUncheckedCreateNestedManyWithoutOrgInput
   bookings?: Prisma.BookingUncheckedCreateNestedManyWithoutOrgInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutOrgInput
 }
@@ -646,6 +737,9 @@ export type OrganizationUpdateWithoutSubscriptionsInput = {
   events?: Prisma.EventUpdateManyWithoutOrgNestedInput
   railRoutes?: Prisma.RailRouteUpdateManyWithoutOrgNestedInput
   railTrips?: Prisma.RailTripUpdateManyWithoutOrgNestedInput
+  flightServices?: Prisma.FlightServiceUpdateManyWithoutOrgNestedInput
+  flightInstances?: Prisma.FlightInstanceUpdateManyWithoutOrgNestedInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUpdateManyWithoutOrgNestedInput
   bookings?: Prisma.BookingUpdateManyWithoutOrgNestedInput
   orders?: Prisma.OrderUpdateManyWithoutOrgNestedInput
 }
@@ -662,6 +756,9 @@ export type OrganizationUncheckedUpdateWithoutSubscriptionsInput = {
   events?: Prisma.EventUncheckedUpdateManyWithoutOrgNestedInput
   railRoutes?: Prisma.RailRouteUncheckedUpdateManyWithoutOrgNestedInput
   railTrips?: Prisma.RailTripUncheckedUpdateManyWithoutOrgNestedInput
+  flightServices?: Prisma.FlightServiceUncheckedUpdateManyWithoutOrgNestedInput
+  flightInstances?: Prisma.FlightInstanceUncheckedUpdateManyWithoutOrgNestedInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUncheckedUpdateManyWithoutOrgNestedInput
   bookings?: Prisma.BookingUncheckedUpdateManyWithoutOrgNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutOrgNestedInput
 }
@@ -678,6 +775,9 @@ export type OrganizationCreateWithoutTenantCustomersInput = {
   events?: Prisma.EventCreateNestedManyWithoutOrgInput
   railRoutes?: Prisma.RailRouteCreateNestedManyWithoutOrgInput
   railTrips?: Prisma.RailTripCreateNestedManyWithoutOrgInput
+  flightServices?: Prisma.FlightServiceCreateNestedManyWithoutOrgInput
+  flightInstances?: Prisma.FlightInstanceCreateNestedManyWithoutOrgInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentCreateNestedManyWithoutOrgInput
   bookings?: Prisma.BookingCreateNestedManyWithoutOrgInput
   orders?: Prisma.OrderCreateNestedManyWithoutOrgInput
 }
@@ -694,6 +794,9 @@ export type OrganizationUncheckedCreateWithoutTenantCustomersInput = {
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrgInput
   railRoutes?: Prisma.RailRouteUncheckedCreateNestedManyWithoutOrgInput
   railTrips?: Prisma.RailTripUncheckedCreateNestedManyWithoutOrgInput
+  flightServices?: Prisma.FlightServiceUncheckedCreateNestedManyWithoutOrgInput
+  flightInstances?: Prisma.FlightInstanceUncheckedCreateNestedManyWithoutOrgInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUncheckedCreateNestedManyWithoutOrgInput
   bookings?: Prisma.BookingUncheckedCreateNestedManyWithoutOrgInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutOrgInput
 }
@@ -726,6 +829,9 @@ export type OrganizationUpdateWithoutTenantCustomersInput = {
   events?: Prisma.EventUpdateManyWithoutOrgNestedInput
   railRoutes?: Prisma.RailRouteUpdateManyWithoutOrgNestedInput
   railTrips?: Prisma.RailTripUpdateManyWithoutOrgNestedInput
+  flightServices?: Prisma.FlightServiceUpdateManyWithoutOrgNestedInput
+  flightInstances?: Prisma.FlightInstanceUpdateManyWithoutOrgNestedInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUpdateManyWithoutOrgNestedInput
   bookings?: Prisma.BookingUpdateManyWithoutOrgNestedInput
   orders?: Prisma.OrderUpdateManyWithoutOrgNestedInput
 }
@@ -742,6 +848,9 @@ export type OrganizationUncheckedUpdateWithoutTenantCustomersInput = {
   events?: Prisma.EventUncheckedUpdateManyWithoutOrgNestedInput
   railRoutes?: Prisma.RailRouteUncheckedUpdateManyWithoutOrgNestedInput
   railTrips?: Prisma.RailTripUncheckedUpdateManyWithoutOrgNestedInput
+  flightServices?: Prisma.FlightServiceUncheckedUpdateManyWithoutOrgNestedInput
+  flightInstances?: Prisma.FlightInstanceUncheckedUpdateManyWithoutOrgNestedInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUncheckedUpdateManyWithoutOrgNestedInput
   bookings?: Prisma.BookingUncheckedUpdateManyWithoutOrgNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutOrgNestedInput
 }
@@ -758,6 +867,9 @@ export type OrganizationCreateWithoutVenuesInput = {
   events?: Prisma.EventCreateNestedManyWithoutOrgInput
   railRoutes?: Prisma.RailRouteCreateNestedManyWithoutOrgInput
   railTrips?: Prisma.RailTripCreateNestedManyWithoutOrgInput
+  flightServices?: Prisma.FlightServiceCreateNestedManyWithoutOrgInput
+  flightInstances?: Prisma.FlightInstanceCreateNestedManyWithoutOrgInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentCreateNestedManyWithoutOrgInput
   bookings?: Prisma.BookingCreateNestedManyWithoutOrgInput
   orders?: Prisma.OrderCreateNestedManyWithoutOrgInput
 }
@@ -774,6 +886,9 @@ export type OrganizationUncheckedCreateWithoutVenuesInput = {
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrgInput
   railRoutes?: Prisma.RailRouteUncheckedCreateNestedManyWithoutOrgInput
   railTrips?: Prisma.RailTripUncheckedCreateNestedManyWithoutOrgInput
+  flightServices?: Prisma.FlightServiceUncheckedCreateNestedManyWithoutOrgInput
+  flightInstances?: Prisma.FlightInstanceUncheckedCreateNestedManyWithoutOrgInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUncheckedCreateNestedManyWithoutOrgInput
   bookings?: Prisma.BookingUncheckedCreateNestedManyWithoutOrgInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutOrgInput
 }
@@ -806,6 +921,9 @@ export type OrganizationUpdateWithoutVenuesInput = {
   events?: Prisma.EventUpdateManyWithoutOrgNestedInput
   railRoutes?: Prisma.RailRouteUpdateManyWithoutOrgNestedInput
   railTrips?: Prisma.RailTripUpdateManyWithoutOrgNestedInput
+  flightServices?: Prisma.FlightServiceUpdateManyWithoutOrgNestedInput
+  flightInstances?: Prisma.FlightInstanceUpdateManyWithoutOrgNestedInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUpdateManyWithoutOrgNestedInput
   bookings?: Prisma.BookingUpdateManyWithoutOrgNestedInput
   orders?: Prisma.OrderUpdateManyWithoutOrgNestedInput
 }
@@ -822,6 +940,9 @@ export type OrganizationUncheckedUpdateWithoutVenuesInput = {
   events?: Prisma.EventUncheckedUpdateManyWithoutOrgNestedInput
   railRoutes?: Prisma.RailRouteUncheckedUpdateManyWithoutOrgNestedInput
   railTrips?: Prisma.RailTripUncheckedUpdateManyWithoutOrgNestedInput
+  flightServices?: Prisma.FlightServiceUncheckedUpdateManyWithoutOrgNestedInput
+  flightInstances?: Prisma.FlightInstanceUncheckedUpdateManyWithoutOrgNestedInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUncheckedUpdateManyWithoutOrgNestedInput
   bookings?: Prisma.BookingUncheckedUpdateManyWithoutOrgNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutOrgNestedInput
 }
@@ -838,6 +959,9 @@ export type OrganizationCreateWithoutEventsInput = {
   venues?: Prisma.VenueCreateNestedManyWithoutOrgInput
   railRoutes?: Prisma.RailRouteCreateNestedManyWithoutOrgInput
   railTrips?: Prisma.RailTripCreateNestedManyWithoutOrgInput
+  flightServices?: Prisma.FlightServiceCreateNestedManyWithoutOrgInput
+  flightInstances?: Prisma.FlightInstanceCreateNestedManyWithoutOrgInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentCreateNestedManyWithoutOrgInput
   bookings?: Prisma.BookingCreateNestedManyWithoutOrgInput
   orders?: Prisma.OrderCreateNestedManyWithoutOrgInput
 }
@@ -854,6 +978,9 @@ export type OrganizationUncheckedCreateWithoutEventsInput = {
   venues?: Prisma.VenueUncheckedCreateNestedManyWithoutOrgInput
   railRoutes?: Prisma.RailRouteUncheckedCreateNestedManyWithoutOrgInput
   railTrips?: Prisma.RailTripUncheckedCreateNestedManyWithoutOrgInput
+  flightServices?: Prisma.FlightServiceUncheckedCreateNestedManyWithoutOrgInput
+  flightInstances?: Prisma.FlightInstanceUncheckedCreateNestedManyWithoutOrgInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUncheckedCreateNestedManyWithoutOrgInput
   bookings?: Prisma.BookingUncheckedCreateNestedManyWithoutOrgInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutOrgInput
 }
@@ -886,6 +1013,9 @@ export type OrganizationUpdateWithoutEventsInput = {
   venues?: Prisma.VenueUpdateManyWithoutOrgNestedInput
   railRoutes?: Prisma.RailRouteUpdateManyWithoutOrgNestedInput
   railTrips?: Prisma.RailTripUpdateManyWithoutOrgNestedInput
+  flightServices?: Prisma.FlightServiceUpdateManyWithoutOrgNestedInput
+  flightInstances?: Prisma.FlightInstanceUpdateManyWithoutOrgNestedInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUpdateManyWithoutOrgNestedInput
   bookings?: Prisma.BookingUpdateManyWithoutOrgNestedInput
   orders?: Prisma.OrderUpdateManyWithoutOrgNestedInput
 }
@@ -902,6 +1032,9 @@ export type OrganizationUncheckedUpdateWithoutEventsInput = {
   venues?: Prisma.VenueUncheckedUpdateManyWithoutOrgNestedInput
   railRoutes?: Prisma.RailRouteUncheckedUpdateManyWithoutOrgNestedInput
   railTrips?: Prisma.RailTripUncheckedUpdateManyWithoutOrgNestedInput
+  flightServices?: Prisma.FlightServiceUncheckedUpdateManyWithoutOrgNestedInput
+  flightInstances?: Prisma.FlightInstanceUncheckedUpdateManyWithoutOrgNestedInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUncheckedUpdateManyWithoutOrgNestedInput
   bookings?: Prisma.BookingUncheckedUpdateManyWithoutOrgNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutOrgNestedInput
 }
@@ -918,6 +1051,9 @@ export type OrganizationCreateWithoutRailRoutesInput = {
   venues?: Prisma.VenueCreateNestedManyWithoutOrgInput
   events?: Prisma.EventCreateNestedManyWithoutOrgInput
   railTrips?: Prisma.RailTripCreateNestedManyWithoutOrgInput
+  flightServices?: Prisma.FlightServiceCreateNestedManyWithoutOrgInput
+  flightInstances?: Prisma.FlightInstanceCreateNestedManyWithoutOrgInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentCreateNestedManyWithoutOrgInput
   bookings?: Prisma.BookingCreateNestedManyWithoutOrgInput
   orders?: Prisma.OrderCreateNestedManyWithoutOrgInput
 }
@@ -934,6 +1070,9 @@ export type OrganizationUncheckedCreateWithoutRailRoutesInput = {
   venues?: Prisma.VenueUncheckedCreateNestedManyWithoutOrgInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrgInput
   railTrips?: Prisma.RailTripUncheckedCreateNestedManyWithoutOrgInput
+  flightServices?: Prisma.FlightServiceUncheckedCreateNestedManyWithoutOrgInput
+  flightInstances?: Prisma.FlightInstanceUncheckedCreateNestedManyWithoutOrgInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUncheckedCreateNestedManyWithoutOrgInput
   bookings?: Prisma.BookingUncheckedCreateNestedManyWithoutOrgInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutOrgInput
 }
@@ -966,6 +1105,9 @@ export type OrganizationUpdateWithoutRailRoutesInput = {
   venues?: Prisma.VenueUpdateManyWithoutOrgNestedInput
   events?: Prisma.EventUpdateManyWithoutOrgNestedInput
   railTrips?: Prisma.RailTripUpdateManyWithoutOrgNestedInput
+  flightServices?: Prisma.FlightServiceUpdateManyWithoutOrgNestedInput
+  flightInstances?: Prisma.FlightInstanceUpdateManyWithoutOrgNestedInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUpdateManyWithoutOrgNestedInput
   bookings?: Prisma.BookingUpdateManyWithoutOrgNestedInput
   orders?: Prisma.OrderUpdateManyWithoutOrgNestedInput
 }
@@ -982,6 +1124,9 @@ export type OrganizationUncheckedUpdateWithoutRailRoutesInput = {
   venues?: Prisma.VenueUncheckedUpdateManyWithoutOrgNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrgNestedInput
   railTrips?: Prisma.RailTripUncheckedUpdateManyWithoutOrgNestedInput
+  flightServices?: Prisma.FlightServiceUncheckedUpdateManyWithoutOrgNestedInput
+  flightInstances?: Prisma.FlightInstanceUncheckedUpdateManyWithoutOrgNestedInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUncheckedUpdateManyWithoutOrgNestedInput
   bookings?: Prisma.BookingUncheckedUpdateManyWithoutOrgNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutOrgNestedInput
 }
@@ -998,6 +1143,9 @@ export type OrganizationCreateWithoutRailTripsInput = {
   venues?: Prisma.VenueCreateNestedManyWithoutOrgInput
   events?: Prisma.EventCreateNestedManyWithoutOrgInput
   railRoutes?: Prisma.RailRouteCreateNestedManyWithoutOrgInput
+  flightServices?: Prisma.FlightServiceCreateNestedManyWithoutOrgInput
+  flightInstances?: Prisma.FlightInstanceCreateNestedManyWithoutOrgInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentCreateNestedManyWithoutOrgInput
   bookings?: Prisma.BookingCreateNestedManyWithoutOrgInput
   orders?: Prisma.OrderCreateNestedManyWithoutOrgInput
 }
@@ -1014,6 +1162,9 @@ export type OrganizationUncheckedCreateWithoutRailTripsInput = {
   venues?: Prisma.VenueUncheckedCreateNestedManyWithoutOrgInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrgInput
   railRoutes?: Prisma.RailRouteUncheckedCreateNestedManyWithoutOrgInput
+  flightServices?: Prisma.FlightServiceUncheckedCreateNestedManyWithoutOrgInput
+  flightInstances?: Prisma.FlightInstanceUncheckedCreateNestedManyWithoutOrgInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUncheckedCreateNestedManyWithoutOrgInput
   bookings?: Prisma.BookingUncheckedCreateNestedManyWithoutOrgInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutOrgInput
 }
@@ -1046,6 +1197,9 @@ export type OrganizationUpdateWithoutRailTripsInput = {
   venues?: Prisma.VenueUpdateManyWithoutOrgNestedInput
   events?: Prisma.EventUpdateManyWithoutOrgNestedInput
   railRoutes?: Prisma.RailRouteUpdateManyWithoutOrgNestedInput
+  flightServices?: Prisma.FlightServiceUpdateManyWithoutOrgNestedInput
+  flightInstances?: Prisma.FlightInstanceUpdateManyWithoutOrgNestedInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUpdateManyWithoutOrgNestedInput
   bookings?: Prisma.BookingUpdateManyWithoutOrgNestedInput
   orders?: Prisma.OrderUpdateManyWithoutOrgNestedInput
 }
@@ -1062,6 +1216,193 @@ export type OrganizationUncheckedUpdateWithoutRailTripsInput = {
   venues?: Prisma.VenueUncheckedUpdateManyWithoutOrgNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrgNestedInput
   railRoutes?: Prisma.RailRouteUncheckedUpdateManyWithoutOrgNestedInput
+  flightServices?: Prisma.FlightServiceUncheckedUpdateManyWithoutOrgNestedInput
+  flightInstances?: Prisma.FlightInstanceUncheckedUpdateManyWithoutOrgNestedInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUncheckedUpdateManyWithoutOrgNestedInput
+  bookings?: Prisma.BookingUncheckedUpdateManyWithoutOrgNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutOrgNestedInput
+}
+
+export type OrganizationCreateWithoutFlightServicesInput = {
+  id?: string
+  name: string
+  slug: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  members?: Prisma.OrganizationMemberCreateNestedManyWithoutOrgInput
+  subscriptions?: Prisma.TenantDomainSubscriptionCreateNestedManyWithoutOrgInput
+  tenantCustomers?: Prisma.TenantCustomerCreateNestedManyWithoutOrgInput
+  venues?: Prisma.VenueCreateNestedManyWithoutOrgInput
+  events?: Prisma.EventCreateNestedManyWithoutOrgInput
+  railRoutes?: Prisma.RailRouteCreateNestedManyWithoutOrgInput
+  railTrips?: Prisma.RailTripCreateNestedManyWithoutOrgInput
+  flightInstances?: Prisma.FlightInstanceCreateNestedManyWithoutOrgInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentCreateNestedManyWithoutOrgInput
+  bookings?: Prisma.BookingCreateNestedManyWithoutOrgInput
+  orders?: Prisma.OrderCreateNestedManyWithoutOrgInput
+}
+
+export type OrganizationUncheckedCreateWithoutFlightServicesInput = {
+  id?: string
+  name: string
+  slug: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  members?: Prisma.OrganizationMemberUncheckedCreateNestedManyWithoutOrgInput
+  subscriptions?: Prisma.TenantDomainSubscriptionUncheckedCreateNestedManyWithoutOrgInput
+  tenantCustomers?: Prisma.TenantCustomerUncheckedCreateNestedManyWithoutOrgInput
+  venues?: Prisma.VenueUncheckedCreateNestedManyWithoutOrgInput
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutOrgInput
+  railRoutes?: Prisma.RailRouteUncheckedCreateNestedManyWithoutOrgInput
+  railTrips?: Prisma.RailTripUncheckedCreateNestedManyWithoutOrgInput
+  flightInstances?: Prisma.FlightInstanceUncheckedCreateNestedManyWithoutOrgInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUncheckedCreateNestedManyWithoutOrgInput
+  bookings?: Prisma.BookingUncheckedCreateNestedManyWithoutOrgInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutOrgInput
+}
+
+export type OrganizationCreateOrConnectWithoutFlightServicesInput = {
+  where: Prisma.OrganizationWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutFlightServicesInput, Prisma.OrganizationUncheckedCreateWithoutFlightServicesInput>
+}
+
+export type OrganizationUpsertWithoutFlightServicesInput = {
+  update: Prisma.XOR<Prisma.OrganizationUpdateWithoutFlightServicesInput, Prisma.OrganizationUncheckedUpdateWithoutFlightServicesInput>
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutFlightServicesInput, Prisma.OrganizationUncheckedCreateWithoutFlightServicesInput>
+  where?: Prisma.OrganizationWhereInput
+}
+
+export type OrganizationUpdateToOneWithWhereWithoutFlightServicesInput = {
+  where?: Prisma.OrganizationWhereInput
+  data: Prisma.XOR<Prisma.OrganizationUpdateWithoutFlightServicesInput, Prisma.OrganizationUncheckedUpdateWithoutFlightServicesInput>
+}
+
+export type OrganizationUpdateWithoutFlightServicesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.OrganizationMemberUpdateManyWithoutOrgNestedInput
+  subscriptions?: Prisma.TenantDomainSubscriptionUpdateManyWithoutOrgNestedInput
+  tenantCustomers?: Prisma.TenantCustomerUpdateManyWithoutOrgNestedInput
+  venues?: Prisma.VenueUpdateManyWithoutOrgNestedInput
+  events?: Prisma.EventUpdateManyWithoutOrgNestedInput
+  railRoutes?: Prisma.RailRouteUpdateManyWithoutOrgNestedInput
+  railTrips?: Prisma.RailTripUpdateManyWithoutOrgNestedInput
+  flightInstances?: Prisma.FlightInstanceUpdateManyWithoutOrgNestedInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUpdateManyWithoutOrgNestedInput
+  bookings?: Prisma.BookingUpdateManyWithoutOrgNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutOrgNestedInput
+}
+
+export type OrganizationUncheckedUpdateWithoutFlightServicesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.OrganizationMemberUncheckedUpdateManyWithoutOrgNestedInput
+  subscriptions?: Prisma.TenantDomainSubscriptionUncheckedUpdateManyWithoutOrgNestedInput
+  tenantCustomers?: Prisma.TenantCustomerUncheckedUpdateManyWithoutOrgNestedInput
+  venues?: Prisma.VenueUncheckedUpdateManyWithoutOrgNestedInput
+  events?: Prisma.EventUncheckedUpdateManyWithoutOrgNestedInput
+  railRoutes?: Prisma.RailRouteUncheckedUpdateManyWithoutOrgNestedInput
+  railTrips?: Prisma.RailTripUncheckedUpdateManyWithoutOrgNestedInput
+  flightInstances?: Prisma.FlightInstanceUncheckedUpdateManyWithoutOrgNestedInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUncheckedUpdateManyWithoutOrgNestedInput
+  bookings?: Prisma.BookingUncheckedUpdateManyWithoutOrgNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutOrgNestedInput
+}
+
+export type OrganizationCreateWithoutFlightInstancesInput = {
+  id?: string
+  name: string
+  slug: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  members?: Prisma.OrganizationMemberCreateNestedManyWithoutOrgInput
+  subscriptions?: Prisma.TenantDomainSubscriptionCreateNestedManyWithoutOrgInput
+  tenantCustomers?: Prisma.TenantCustomerCreateNestedManyWithoutOrgInput
+  venues?: Prisma.VenueCreateNestedManyWithoutOrgInput
+  events?: Prisma.EventCreateNestedManyWithoutOrgInput
+  railRoutes?: Prisma.RailRouteCreateNestedManyWithoutOrgInput
+  railTrips?: Prisma.RailTripCreateNestedManyWithoutOrgInput
+  flightServices?: Prisma.FlightServiceCreateNestedManyWithoutOrgInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentCreateNestedManyWithoutOrgInput
+  bookings?: Prisma.BookingCreateNestedManyWithoutOrgInput
+  orders?: Prisma.OrderCreateNestedManyWithoutOrgInput
+}
+
+export type OrganizationUncheckedCreateWithoutFlightInstancesInput = {
+  id?: string
+  name: string
+  slug: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  members?: Prisma.OrganizationMemberUncheckedCreateNestedManyWithoutOrgInput
+  subscriptions?: Prisma.TenantDomainSubscriptionUncheckedCreateNestedManyWithoutOrgInput
+  tenantCustomers?: Prisma.TenantCustomerUncheckedCreateNestedManyWithoutOrgInput
+  venues?: Prisma.VenueUncheckedCreateNestedManyWithoutOrgInput
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutOrgInput
+  railRoutes?: Prisma.RailRouteUncheckedCreateNestedManyWithoutOrgInput
+  railTrips?: Prisma.RailTripUncheckedCreateNestedManyWithoutOrgInput
+  flightServices?: Prisma.FlightServiceUncheckedCreateNestedManyWithoutOrgInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUncheckedCreateNestedManyWithoutOrgInput
+  bookings?: Prisma.BookingUncheckedCreateNestedManyWithoutOrgInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutOrgInput
+}
+
+export type OrganizationCreateOrConnectWithoutFlightInstancesInput = {
+  where: Prisma.OrganizationWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutFlightInstancesInput, Prisma.OrganizationUncheckedCreateWithoutFlightInstancesInput>
+}
+
+export type OrganizationUpsertWithoutFlightInstancesInput = {
+  update: Prisma.XOR<Prisma.OrganizationUpdateWithoutFlightInstancesInput, Prisma.OrganizationUncheckedUpdateWithoutFlightInstancesInput>
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutFlightInstancesInput, Prisma.OrganizationUncheckedCreateWithoutFlightInstancesInput>
+  where?: Prisma.OrganizationWhereInput
+}
+
+export type OrganizationUpdateToOneWithWhereWithoutFlightInstancesInput = {
+  where?: Prisma.OrganizationWhereInput
+  data: Prisma.XOR<Prisma.OrganizationUpdateWithoutFlightInstancesInput, Prisma.OrganizationUncheckedUpdateWithoutFlightInstancesInput>
+}
+
+export type OrganizationUpdateWithoutFlightInstancesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.OrganizationMemberUpdateManyWithoutOrgNestedInput
+  subscriptions?: Prisma.TenantDomainSubscriptionUpdateManyWithoutOrgNestedInput
+  tenantCustomers?: Prisma.TenantCustomerUpdateManyWithoutOrgNestedInput
+  venues?: Prisma.VenueUpdateManyWithoutOrgNestedInput
+  events?: Prisma.EventUpdateManyWithoutOrgNestedInput
+  railRoutes?: Prisma.RailRouteUpdateManyWithoutOrgNestedInput
+  railTrips?: Prisma.RailTripUpdateManyWithoutOrgNestedInput
+  flightServices?: Prisma.FlightServiceUpdateManyWithoutOrgNestedInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUpdateManyWithoutOrgNestedInput
+  bookings?: Prisma.BookingUpdateManyWithoutOrgNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutOrgNestedInput
+}
+
+export type OrganizationUncheckedUpdateWithoutFlightInstancesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.OrganizationMemberUncheckedUpdateManyWithoutOrgNestedInput
+  subscriptions?: Prisma.TenantDomainSubscriptionUncheckedUpdateManyWithoutOrgNestedInput
+  tenantCustomers?: Prisma.TenantCustomerUncheckedUpdateManyWithoutOrgNestedInput
+  venues?: Prisma.VenueUncheckedUpdateManyWithoutOrgNestedInput
+  events?: Prisma.EventUncheckedUpdateManyWithoutOrgNestedInput
+  railRoutes?: Prisma.RailRouteUncheckedUpdateManyWithoutOrgNestedInput
+  railTrips?: Prisma.RailTripUncheckedUpdateManyWithoutOrgNestedInput
+  flightServices?: Prisma.FlightServiceUncheckedUpdateManyWithoutOrgNestedInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUncheckedUpdateManyWithoutOrgNestedInput
   bookings?: Prisma.BookingUncheckedUpdateManyWithoutOrgNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutOrgNestedInput
 }
@@ -1079,6 +1420,9 @@ export type OrganizationCreateWithoutBookingsInput = {
   events?: Prisma.EventCreateNestedManyWithoutOrgInput
   railRoutes?: Prisma.RailRouteCreateNestedManyWithoutOrgInput
   railTrips?: Prisma.RailTripCreateNestedManyWithoutOrgInput
+  flightServices?: Prisma.FlightServiceCreateNestedManyWithoutOrgInput
+  flightInstances?: Prisma.FlightInstanceCreateNestedManyWithoutOrgInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentCreateNestedManyWithoutOrgInput
   orders?: Prisma.OrderCreateNestedManyWithoutOrgInput
 }
 
@@ -1095,6 +1439,9 @@ export type OrganizationUncheckedCreateWithoutBookingsInput = {
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrgInput
   railRoutes?: Prisma.RailRouteUncheckedCreateNestedManyWithoutOrgInput
   railTrips?: Prisma.RailTripUncheckedCreateNestedManyWithoutOrgInput
+  flightServices?: Prisma.FlightServiceUncheckedCreateNestedManyWithoutOrgInput
+  flightInstances?: Prisma.FlightInstanceUncheckedCreateNestedManyWithoutOrgInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUncheckedCreateNestedManyWithoutOrgInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutOrgInput
 }
 
@@ -1127,6 +1474,9 @@ export type OrganizationUpdateWithoutBookingsInput = {
   events?: Prisma.EventUpdateManyWithoutOrgNestedInput
   railRoutes?: Prisma.RailRouteUpdateManyWithoutOrgNestedInput
   railTrips?: Prisma.RailTripUpdateManyWithoutOrgNestedInput
+  flightServices?: Prisma.FlightServiceUpdateManyWithoutOrgNestedInput
+  flightInstances?: Prisma.FlightInstanceUpdateManyWithoutOrgNestedInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUpdateManyWithoutOrgNestedInput
   orders?: Prisma.OrderUpdateManyWithoutOrgNestedInput
 }
 
@@ -1143,6 +1493,9 @@ export type OrganizationUncheckedUpdateWithoutBookingsInput = {
   events?: Prisma.EventUncheckedUpdateManyWithoutOrgNestedInput
   railRoutes?: Prisma.RailRouteUncheckedUpdateManyWithoutOrgNestedInput
   railTrips?: Prisma.RailTripUncheckedUpdateManyWithoutOrgNestedInput
+  flightServices?: Prisma.FlightServiceUncheckedUpdateManyWithoutOrgNestedInput
+  flightInstances?: Prisma.FlightInstanceUncheckedUpdateManyWithoutOrgNestedInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUncheckedUpdateManyWithoutOrgNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutOrgNestedInput
 }
 
@@ -1159,6 +1512,9 @@ export type OrganizationCreateWithoutOrdersInput = {
   events?: Prisma.EventCreateNestedManyWithoutOrgInput
   railRoutes?: Prisma.RailRouteCreateNestedManyWithoutOrgInput
   railTrips?: Prisma.RailTripCreateNestedManyWithoutOrgInput
+  flightServices?: Prisma.FlightServiceCreateNestedManyWithoutOrgInput
+  flightInstances?: Prisma.FlightInstanceCreateNestedManyWithoutOrgInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentCreateNestedManyWithoutOrgInput
   bookings?: Prisma.BookingCreateNestedManyWithoutOrgInput
 }
 
@@ -1175,6 +1531,9 @@ export type OrganizationUncheckedCreateWithoutOrdersInput = {
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrgInput
   railRoutes?: Prisma.RailRouteUncheckedCreateNestedManyWithoutOrgInput
   railTrips?: Prisma.RailTripUncheckedCreateNestedManyWithoutOrgInput
+  flightServices?: Prisma.FlightServiceUncheckedCreateNestedManyWithoutOrgInput
+  flightInstances?: Prisma.FlightInstanceUncheckedCreateNestedManyWithoutOrgInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUncheckedCreateNestedManyWithoutOrgInput
   bookings?: Prisma.BookingUncheckedCreateNestedManyWithoutOrgInput
 }
 
@@ -1207,6 +1566,9 @@ export type OrganizationUpdateWithoutOrdersInput = {
   events?: Prisma.EventUpdateManyWithoutOrgNestedInput
   railRoutes?: Prisma.RailRouteUpdateManyWithoutOrgNestedInput
   railTrips?: Prisma.RailTripUpdateManyWithoutOrgNestedInput
+  flightServices?: Prisma.FlightServiceUpdateManyWithoutOrgNestedInput
+  flightInstances?: Prisma.FlightInstanceUpdateManyWithoutOrgNestedInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUpdateManyWithoutOrgNestedInput
   bookings?: Prisma.BookingUpdateManyWithoutOrgNestedInput
 }
 
@@ -1223,7 +1585,102 @@ export type OrganizationUncheckedUpdateWithoutOrdersInput = {
   events?: Prisma.EventUncheckedUpdateManyWithoutOrgNestedInput
   railRoutes?: Prisma.RailRouteUncheckedUpdateManyWithoutOrgNestedInput
   railTrips?: Prisma.RailTripUncheckedUpdateManyWithoutOrgNestedInput
+  flightServices?: Prisma.FlightServiceUncheckedUpdateManyWithoutOrgNestedInput
+  flightInstances?: Prisma.FlightInstanceUncheckedUpdateManyWithoutOrgNestedInput
+  airIssuedDocuments?: Prisma.AirIssuedDocumentUncheckedUpdateManyWithoutOrgNestedInput
   bookings?: Prisma.BookingUncheckedUpdateManyWithoutOrgNestedInput
+}
+
+export type OrganizationCreateWithoutAirIssuedDocumentsInput = {
+  id?: string
+  name: string
+  slug: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  members?: Prisma.OrganizationMemberCreateNestedManyWithoutOrgInput
+  subscriptions?: Prisma.TenantDomainSubscriptionCreateNestedManyWithoutOrgInput
+  tenantCustomers?: Prisma.TenantCustomerCreateNestedManyWithoutOrgInput
+  venues?: Prisma.VenueCreateNestedManyWithoutOrgInput
+  events?: Prisma.EventCreateNestedManyWithoutOrgInput
+  railRoutes?: Prisma.RailRouteCreateNestedManyWithoutOrgInput
+  railTrips?: Prisma.RailTripCreateNestedManyWithoutOrgInput
+  flightServices?: Prisma.FlightServiceCreateNestedManyWithoutOrgInput
+  flightInstances?: Prisma.FlightInstanceCreateNestedManyWithoutOrgInput
+  bookings?: Prisma.BookingCreateNestedManyWithoutOrgInput
+  orders?: Prisma.OrderCreateNestedManyWithoutOrgInput
+}
+
+export type OrganizationUncheckedCreateWithoutAirIssuedDocumentsInput = {
+  id?: string
+  name: string
+  slug: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  members?: Prisma.OrganizationMemberUncheckedCreateNestedManyWithoutOrgInput
+  subscriptions?: Prisma.TenantDomainSubscriptionUncheckedCreateNestedManyWithoutOrgInput
+  tenantCustomers?: Prisma.TenantCustomerUncheckedCreateNestedManyWithoutOrgInput
+  venues?: Prisma.VenueUncheckedCreateNestedManyWithoutOrgInput
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutOrgInput
+  railRoutes?: Prisma.RailRouteUncheckedCreateNestedManyWithoutOrgInput
+  railTrips?: Prisma.RailTripUncheckedCreateNestedManyWithoutOrgInput
+  flightServices?: Prisma.FlightServiceUncheckedCreateNestedManyWithoutOrgInput
+  flightInstances?: Prisma.FlightInstanceUncheckedCreateNestedManyWithoutOrgInput
+  bookings?: Prisma.BookingUncheckedCreateNestedManyWithoutOrgInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutOrgInput
+}
+
+export type OrganizationCreateOrConnectWithoutAirIssuedDocumentsInput = {
+  where: Prisma.OrganizationWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutAirIssuedDocumentsInput, Prisma.OrganizationUncheckedCreateWithoutAirIssuedDocumentsInput>
+}
+
+export type OrganizationUpsertWithoutAirIssuedDocumentsInput = {
+  update: Prisma.XOR<Prisma.OrganizationUpdateWithoutAirIssuedDocumentsInput, Prisma.OrganizationUncheckedUpdateWithoutAirIssuedDocumentsInput>
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutAirIssuedDocumentsInput, Prisma.OrganizationUncheckedCreateWithoutAirIssuedDocumentsInput>
+  where?: Prisma.OrganizationWhereInput
+}
+
+export type OrganizationUpdateToOneWithWhereWithoutAirIssuedDocumentsInput = {
+  where?: Prisma.OrganizationWhereInput
+  data: Prisma.XOR<Prisma.OrganizationUpdateWithoutAirIssuedDocumentsInput, Prisma.OrganizationUncheckedUpdateWithoutAirIssuedDocumentsInput>
+}
+
+export type OrganizationUpdateWithoutAirIssuedDocumentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.OrganizationMemberUpdateManyWithoutOrgNestedInput
+  subscriptions?: Prisma.TenantDomainSubscriptionUpdateManyWithoutOrgNestedInput
+  tenantCustomers?: Prisma.TenantCustomerUpdateManyWithoutOrgNestedInput
+  venues?: Prisma.VenueUpdateManyWithoutOrgNestedInput
+  events?: Prisma.EventUpdateManyWithoutOrgNestedInput
+  railRoutes?: Prisma.RailRouteUpdateManyWithoutOrgNestedInput
+  railTrips?: Prisma.RailTripUpdateManyWithoutOrgNestedInput
+  flightServices?: Prisma.FlightServiceUpdateManyWithoutOrgNestedInput
+  flightInstances?: Prisma.FlightInstanceUpdateManyWithoutOrgNestedInput
+  bookings?: Prisma.BookingUpdateManyWithoutOrgNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutOrgNestedInput
+}
+
+export type OrganizationUncheckedUpdateWithoutAirIssuedDocumentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.OrganizationMemberUncheckedUpdateManyWithoutOrgNestedInput
+  subscriptions?: Prisma.TenantDomainSubscriptionUncheckedUpdateManyWithoutOrgNestedInput
+  tenantCustomers?: Prisma.TenantCustomerUncheckedUpdateManyWithoutOrgNestedInput
+  venues?: Prisma.VenueUncheckedUpdateManyWithoutOrgNestedInput
+  events?: Prisma.EventUncheckedUpdateManyWithoutOrgNestedInput
+  railRoutes?: Prisma.RailRouteUncheckedUpdateManyWithoutOrgNestedInput
+  railTrips?: Prisma.RailTripUncheckedUpdateManyWithoutOrgNestedInput
+  flightServices?: Prisma.FlightServiceUncheckedUpdateManyWithoutOrgNestedInput
+  flightInstances?: Prisma.FlightInstanceUncheckedUpdateManyWithoutOrgNestedInput
+  bookings?: Prisma.BookingUncheckedUpdateManyWithoutOrgNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutOrgNestedInput
 }
 
 
@@ -1239,6 +1696,9 @@ export type OrganizationCountOutputType = {
   events: number
   railRoutes: number
   railTrips: number
+  flightServices: number
+  flightInstances: number
+  airIssuedDocuments: number
   bookings: number
   orders: number
 }
@@ -1251,6 +1711,9 @@ export type OrganizationCountOutputTypeSelect<ExtArgs extends runtime.Types.Exte
   events?: boolean | OrganizationCountOutputTypeCountEventsArgs
   railRoutes?: boolean | OrganizationCountOutputTypeCountRailRoutesArgs
   railTrips?: boolean | OrganizationCountOutputTypeCountRailTripsArgs
+  flightServices?: boolean | OrganizationCountOutputTypeCountFlightServicesArgs
+  flightInstances?: boolean | OrganizationCountOutputTypeCountFlightInstancesArgs
+  airIssuedDocuments?: boolean | OrganizationCountOutputTypeCountAirIssuedDocumentsArgs
   bookings?: boolean | OrganizationCountOutputTypeCountBookingsArgs
   orders?: boolean | OrganizationCountOutputTypeCountOrdersArgs
 }
@@ -1317,6 +1780,27 @@ export type OrganizationCountOutputTypeCountRailTripsArgs<ExtArgs extends runtim
 /**
  * OrganizationCountOutputType without action
  */
+export type OrganizationCountOutputTypeCountFlightServicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FlightServiceWhereInput
+}
+
+/**
+ * OrganizationCountOutputType without action
+ */
+export type OrganizationCountOutputTypeCountFlightInstancesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FlightInstanceWhereInput
+}
+
+/**
+ * OrganizationCountOutputType without action
+ */
+export type OrganizationCountOutputTypeCountAirIssuedDocumentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AirIssuedDocumentWhereInput
+}
+
+/**
+ * OrganizationCountOutputType without action
+ */
 export type OrganizationCountOutputTypeCountBookingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.BookingWhereInput
 }
@@ -1342,6 +1826,9 @@ export type OrganizationSelect<ExtArgs extends runtime.Types.Extensions.Internal
   events?: boolean | Prisma.Organization$eventsArgs<ExtArgs>
   railRoutes?: boolean | Prisma.Organization$railRoutesArgs<ExtArgs>
   railTrips?: boolean | Prisma.Organization$railTripsArgs<ExtArgs>
+  flightServices?: boolean | Prisma.Organization$flightServicesArgs<ExtArgs>
+  flightInstances?: boolean | Prisma.Organization$flightInstancesArgs<ExtArgs>
+  airIssuedDocuments?: boolean | Prisma.Organization$airIssuedDocumentsArgs<ExtArgs>
   bookings?: boolean | Prisma.Organization$bookingsArgs<ExtArgs>
   orders?: boolean | Prisma.Organization$ordersArgs<ExtArgs>
   _count?: boolean | Prisma.OrganizationCountOutputTypeDefaultArgs<ExtArgs>
@@ -1380,6 +1867,9 @@ export type OrganizationInclude<ExtArgs extends runtime.Types.Extensions.Interna
   events?: boolean | Prisma.Organization$eventsArgs<ExtArgs>
   railRoutes?: boolean | Prisma.Organization$railRoutesArgs<ExtArgs>
   railTrips?: boolean | Prisma.Organization$railTripsArgs<ExtArgs>
+  flightServices?: boolean | Prisma.Organization$flightServicesArgs<ExtArgs>
+  flightInstances?: boolean | Prisma.Organization$flightInstancesArgs<ExtArgs>
+  airIssuedDocuments?: boolean | Prisma.Organization$airIssuedDocumentsArgs<ExtArgs>
   bookings?: boolean | Prisma.Organization$bookingsArgs<ExtArgs>
   orders?: boolean | Prisma.Organization$ordersArgs<ExtArgs>
   _count?: boolean | Prisma.OrganizationCountOutputTypeDefaultArgs<ExtArgs>
@@ -1397,6 +1887,9 @@ export type $OrganizationPayload<ExtArgs extends runtime.Types.Extensions.Intern
     events: Prisma.$EventPayload<ExtArgs>[]
     railRoutes: Prisma.$RailRoutePayload<ExtArgs>[]
     railTrips: Prisma.$RailTripPayload<ExtArgs>[]
+    flightServices: Prisma.$FlightServicePayload<ExtArgs>[]
+    flightInstances: Prisma.$FlightInstancePayload<ExtArgs>[]
+    airIssuedDocuments: Prisma.$AirIssuedDocumentPayload<ExtArgs>[]
     bookings: Prisma.$BookingPayload<ExtArgs>[]
     orders: Prisma.$OrderPayload<ExtArgs>[]
   }
@@ -1807,6 +2300,9 @@ export interface Prisma__OrganizationClient<T, Null = never, ExtArgs extends run
   events<T extends Prisma.Organization$eventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$eventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   railRoutes<T extends Prisma.Organization$railRoutesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$railRoutesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RailRoutePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   railTrips<T extends Prisma.Organization$railTripsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$railTripsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RailTripPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  flightServices<T extends Prisma.Organization$flightServicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$flightServicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FlightServicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  flightInstances<T extends Prisma.Organization$flightInstancesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$flightInstancesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FlightInstancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  airIssuedDocuments<T extends Prisma.Organization$airIssuedDocumentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$airIssuedDocumentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AirIssuedDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   bookings<T extends Prisma.Organization$bookingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$bookingsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BookingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   orders<T extends Prisma.Organization$ordersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -2396,6 +2892,78 @@ export type Organization$railTripsArgs<ExtArgs extends runtime.Types.Extensions.
   take?: number
   skip?: number
   distinct?: Prisma.RailTripScalarFieldEnum | Prisma.RailTripScalarFieldEnum[]
+}
+
+/**
+ * Organization.flightServices
+ */
+export type Organization$flightServicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FlightService
+   */
+  select?: Prisma.FlightServiceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the FlightService
+   */
+  omit?: Prisma.FlightServiceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FlightServiceInclude<ExtArgs> | null
+  where?: Prisma.FlightServiceWhereInput
+  orderBy?: Prisma.FlightServiceOrderByWithRelationInput | Prisma.FlightServiceOrderByWithRelationInput[]
+  cursor?: Prisma.FlightServiceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FlightServiceScalarFieldEnum | Prisma.FlightServiceScalarFieldEnum[]
+}
+
+/**
+ * Organization.flightInstances
+ */
+export type Organization$flightInstancesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FlightInstance
+   */
+  select?: Prisma.FlightInstanceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the FlightInstance
+   */
+  omit?: Prisma.FlightInstanceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FlightInstanceInclude<ExtArgs> | null
+  where?: Prisma.FlightInstanceWhereInput
+  orderBy?: Prisma.FlightInstanceOrderByWithRelationInput | Prisma.FlightInstanceOrderByWithRelationInput[]
+  cursor?: Prisma.FlightInstanceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FlightInstanceScalarFieldEnum | Prisma.FlightInstanceScalarFieldEnum[]
+}
+
+/**
+ * Organization.airIssuedDocuments
+ */
+export type Organization$airIssuedDocumentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AirIssuedDocument
+   */
+  select?: Prisma.AirIssuedDocumentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AirIssuedDocument
+   */
+  omit?: Prisma.AirIssuedDocumentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AirIssuedDocumentInclude<ExtArgs> | null
+  where?: Prisma.AirIssuedDocumentWhereInput
+  orderBy?: Prisma.AirIssuedDocumentOrderByWithRelationInput | Prisma.AirIssuedDocumentOrderByWithRelationInput[]
+  cursor?: Prisma.AirIssuedDocumentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AirIssuedDocumentScalarFieldEnum | Prisma.AirIssuedDocumentScalarFieldEnum[]
 }
 
 /**

@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -22,21 +21,27 @@ export class AirService {
     private readonly bookingsService: BookingsService,
   ) {}
 
-  searchFlights(query: SearchFlightsQueryDto) {
+  searchFlights(tenantOrgId: string, query: SearchFlightsQueryDto) {
     this.assertValidDepartureDate(query.departureDate);
     this.assertDistinctAirports(query.originCode, query.destinationCode);
 
-    return this.airReadRepository.searchFlights(query).then((result) => ({
-      ...result,
-      inventoryModel: this.buildInventoryModel(),
-    }));
+    return this.airReadRepository
+      .searchFlights(tenantOrgId, query)
+      .then((result) => ({
+        ...result,
+        inventoryModel: this.buildInventoryModel(),
+      }));
   }
 
   async getFlightAvailability(
+    tenantOrgId: string,
     flightInstanceId: string,
     query: GetFlightAvailabilityQueryDto,
   ) {
-    const flight = await this.airReadRepository.findFlightById(flightInstanceId);
+    const flight = await this.airReadRepository.findFlightById(
+      tenantOrgId,
+      flightInstanceId,
+    );
     if (!flight) {
       throw new NotFoundException('Flight instance not found.');
     }
@@ -44,6 +49,7 @@ export class AirService {
     const requestedLegRangeInput = this.resolveRequestedLegRangeInput(query);
     const requestedLegRange = requestedLegRangeInput
       ? await this.airReadRepository.resolveFlightLegRangeByAirportCodes(
+          tenantOrgId,
           flightInstanceId,
           requestedLegRangeInput.originCode,
           requestedLegRangeInput.destinationCode,
@@ -56,11 +62,14 @@ export class AirService {
       );
     }
 
-    const flightLegs =
-      await this.airReadRepository.findFlightLegs(flightInstanceId);
+    const flightLegs = await this.airReadRepository.findFlightLegs(
+      tenantOrgId,
+      flightInstanceId,
+    );
     const effectiveRequestedLegRange =
       requestedLegRange ?? this.buildDefaultLegRange(flight, flightLegs);
     const availability = await this.airReadRepository.getFlightAvailability(
+      tenantOrgId,
       flightInstanceId,
       query,
       effectiveRequestedLegRange,
@@ -80,18 +89,22 @@ export class AirService {
 
   async createHold(
     userId: string,
+    tenantOrgId: string,
     flightInstanceId: string,
     dto: CreateAirHoldDto,
     correlationId?: string,
   ) {
-    const flight =
-      await this.airReadRepository.findFlightById(flightInstanceId);
+    const flight = await this.airReadRepository.findFlightById(
+      tenantOrgId,
+      flightInstanceId,
+    );
     if (!flight) {
       throw new NotFoundException('Flight instance not found.');
     }
 
     const resolvedLegRange =
       await this.airReadRepository.resolveFlightHoldLegRangeByAirportCodes(
+        tenantOrgId,
         flightInstanceId,
         dto.originCode,
         dto.destinationCode,
@@ -112,13 +125,8 @@ export class AirService {
     return result.hold;
   }
 
-  async getHold(userId: string, holdId: string) {
-    const hold = await this.getHoldById(holdId);
-    if (hold.userId !== userId) {
-      throw new ForbiddenException('You can only access your own air hold.');
-    }
-
-    return hold;
+  async getHold(holdId: string) {
+    return this.getHoldById(holdId);
   }
 
   getHoldById(holdId: string) {

@@ -110,6 +110,7 @@ export class IssuanceRepository extends BaseRepository {
     const rows = await this.prisma.$queryRaw<RailIssuedDocumentRow[]>`
       SELECT
         "id",
+        "orgId",
         "status",
         "code",
         "issuedAt",
@@ -133,6 +134,7 @@ export class IssuanceRepository extends BaseRepository {
     const rows = await this.prisma.$queryRaw<RailIssuedDocumentRow[]>`
       SELECT
         "id",
+        "orgId",
         "status",
         "code",
         "issuedAt",
@@ -555,6 +557,7 @@ export class IssuanceRepository extends BaseRepository {
           booking: {
             select: {
               id: true,
+              orgId: true,
               userId: true,
               domainType: true,
               status: true,
@@ -617,6 +620,7 @@ export class IssuanceRepository extends BaseRepository {
       const existingDocuments = await tx.$queryRaw<RailIssuedDocumentRow[]>`
         SELECT
           "id",
+          "orgId",
           "status",
           "code",
           "issuedAt",
@@ -876,6 +880,7 @@ export class IssuanceRepository extends BaseRepository {
           booking: {
             select: {
               id: true,
+              orgId: true,
               userId: true,
               domainType: true,
               status: true,
@@ -983,6 +988,12 @@ export class IssuanceRepository extends BaseRepository {
         );
       }
 
+      if (!booking.orgId) {
+        throw new ConflictException(
+          'Air booking is missing tenant ownership. Manual remediation required.',
+        );
+      }
+
       if (
         booking.status === 'EXPIRED' ||
         booking.status === 'CANCELLED' ||
@@ -1060,6 +1071,7 @@ export class IssuanceRepository extends BaseRepository {
           await tx.$executeRaw`
             INSERT INTO "AirIssuedDocument" (
               "id",
+              "orgId",
               "bookingId",
               "bookingItemId",
               "paymentId",
@@ -1075,6 +1087,7 @@ export class IssuanceRepository extends BaseRepository {
             )
             VALUES (
               ${documentId}::uuid,
+              ${booking.orgId}::uuid,
               ${booking.id}::uuid,
               ${item.id}::uuid,
               ${payment.id}::uuid,

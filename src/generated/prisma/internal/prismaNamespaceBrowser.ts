@@ -532,6 +532,7 @@ export type CarrierScalarFieldEnum = (typeof CarrierScalarFieldEnum)[keyof typeo
 
 export const FlightServiceScalarFieldEnum = {
   id: 'id',
+  orgId: 'orgId',
   carrierId: 'carrierId',
   originAirportId: 'originAirportId',
   destinationAirportId: 'destinationAirportId',
@@ -560,6 +561,7 @@ export type FlightServiceLegScalarFieldEnum = (typeof FlightServiceLegScalarFiel
 
 export const FlightInstanceScalarFieldEnum = {
   id: 'id',
+  orgId: 'orgId',
   flightServiceId: 'flightServiceId',
   originAirportId: 'originAirportId',
   destinationAirportId: 'destinationAirportId',
@@ -845,6 +847,7 @@ export type RailIssuedDocumentScalarFieldEnum = (typeof RailIssuedDocumentScalar
 
 export const AirIssuedDocumentScalarFieldEnum = {
   id: 'id',
+  orgId: 'orgId',
   bookingId: 'bookingId',
   bookingItemId: 'bookingItemId',
   paymentId: 'paymentId',

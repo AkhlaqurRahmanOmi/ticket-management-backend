@@ -264,6 +264,9 @@ model Organization {
   events  Event[]
   railRoutes RailRoute[]
   railTrips RailTrip[]
+  flightServices FlightService[]
+  flightInstances FlightInstance[]
+  airIssuedDocuments AirIssuedDocument[]
   bookings Booking[]
   orders  Order[]
 
@@ -561,7 +564,7 @@ model RailRoute {
   originStationId      String @db.Uuid
   destinationStationId String @db.Uuid
 
-  org                Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  org                Organization? @relation(fields: [orgId], references: [id], onDelete: Cascade)
   originStation      RailStation  @relation("RailRouteOriginStation", fields: [originStationId], references: [id], onDelete: Restrict)
   destinationStation RailStation  @relation("RailRouteDestinationStation", fields: [destinationStationId], references: [id], onDelete: Restrict)
 
@@ -610,7 +613,7 @@ model RailTrip {
   originStationId      String @db.Uuid
   destinationStationId String @db.Uuid
 
-  org                Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  org                Organization? @relation(fields: [orgId], references: [id], onDelete: Cascade)
   route              RailRoute?    @relation(fields: [routeId], references: [id], onDelete: SetNull)
   originStation      RailStation   @relation("RailTripOriginStation", fields: [originStationId], references: [id], onDelete: Restrict)
   destinationStation RailStation   @relation("RailTripDestinationStation", fields: [destinationStationId], references: [id], onDelete: Restrict)
@@ -814,10 +817,12 @@ model Carrier {
 
 model FlightService {
   id                   String @id @default(uuid()) @db.Uuid
+  orgId                String? @db.Uuid
   carrierId            String @db.Uuid
   originAirportId      String @db.Uuid
   destinationAirportId String @db.Uuid
 
+  org                Organization? @relation(fields: [orgId], references: [id], onDelete: Cascade)
   carrier            Carrier @relation(fields: [carrierId], references: [id], onDelete: Cascade)
   originAirport      Airport @relation("FlightServiceOriginAirport", fields: [originAirportId], references: [id], onDelete: Restrict)
   destinationAirport Airport @relation("FlightServiceDestinationAirport", fields: [destinationAirportId], references: [id], onDelete: Restrict)
@@ -832,6 +837,8 @@ model FlightService {
   legs      FlightServiceLeg[]
 
   @@unique([carrierId, flightNumber])
+  @@index([orgId])
+  @@index([orgId, flightNumber])
   @@index([originAirportId, destinationAirportId])
 }
 
@@ -861,10 +868,12 @@ model FlightServiceLeg {
 
 model FlightInstance {
   id                   String @id @default(uuid()) @db.Uuid
+  orgId                String? @db.Uuid
   flightServiceId      String @db.Uuid
   originAirportId      String @db.Uuid
   destinationAirportId String @db.Uuid
 
+  org                Organization?  @relation(fields: [orgId], references: [id], onDelete: Cascade)
   flightService      FlightService @relation(fields: [flightServiceId], references: [id], onDelete: Cascade)
   originAirport      Airport       @relation("FlightInstanceOriginAirport", fields: [originAirportId], references: [id], onDelete: Restrict)
   destinationAirport Airport       @relation("FlightInstanceDestinationAirport", fields: [destinationAirportId], references: [id], onDelete: Restrict)
@@ -885,8 +894,11 @@ model FlightInstance {
   airCabinAllocations AirCabinAllocation[]
   airIssuedDocuments  AirIssuedDocument[]
 
+  @@index([orgId])
   @@index([flightServiceId])
+  @@index([orgId, status, departsAt])
   @@index([status, departsAt])
+  @@index([orgId, originAirportId, destinationAirportId, departsAt])
   @@index([originAirportId, destinationAirportId, departsAt])
 }
 
@@ -1379,6 +1391,7 @@ model RailIssuedDocument {
 
 model AirIssuedDocument {
   id                     String @id @default(uuid()) @db.Uuid
+  orgId                  String? @db.Uuid
   bookingId              String @db.Uuid
   bookingItemId          String @db.Uuid
   paymentId              String @db.Uuid
@@ -1386,6 +1399,7 @@ model AirIssuedDocument {
   flightInstanceId       String @db.Uuid
   flightCabinInventoryId String @db.Uuid
 
+  org                  Organization?        @relation(fields: [orgId], references: [id], onDelete: Cascade)
   booking              Booking              @relation(fields: [bookingId], references: [id], onDelete: Cascade)
   bookingItem          BookingItem          @relation(fields: [bookingItemId], references: [id], onDelete: Cascade)
   payment              Payment              @relation(fields: [paymentId], references: [id], onDelete: Cascade)
@@ -1404,12 +1418,14 @@ model AirIssuedDocument {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@index([orgId])
   @@index([bookingId])
   @@index([bookingItemId])
   @@index([paymentId])
   @@index([userId])
   @@index([flightInstanceId])
   @@index([flightCabinInventoryId])
+  @@index([orgId, issuedAt])
   @@index([issuedAt])
 }
 

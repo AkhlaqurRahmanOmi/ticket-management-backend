@@ -55,7 +55,11 @@ export class PaymentsService {
       }
 
       if (
-        (booking.domainType === 'event' || booking.domainType === 'rail') &&
+        (
+          booking.domainType === 'event' ||
+          booking.domainType === 'rail' ||
+          booking.domainType === 'air'
+        ) &&
         booking.orgId !== tenantOrgId
       ) {
         throw new ForbiddenException(
