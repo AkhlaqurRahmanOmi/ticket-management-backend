@@ -1,22 +1,33 @@
 import { Body, Controller, Headers, Post, Req, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import type { Request } from 'express';
 import { CurrentUser } from '@/common/decorators/current-user.decorator';
 import { RateLimit } from '@/common/decorators/rate-limit.decorator';
 import { Roles } from '@/common/decorators/roles.decorator';
+import { TenantAccess } from '@/common/decorators/tenant-access.decorator';
+import { TenantHeaderDoc } from '@/common/decorators/tenant-header-doc.decorator';
 import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
 import { RateLimitGuard } from '@/common/guards/rate-limit.guard';
 import { RolesGuard } from '@/common/guards/roles.guard';
+import { TenantAccessGuard } from '@/common/guards/tenant-access.guard';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { PaymentWebhookDto } from './dto/payment-webhook.dto';
 import { PaymentsService } from './payments.service';
 
+@ApiTags('Payments')
+@ApiBearerAuth('access-token')
 @Controller('payments')
 export class PaymentsController {
   constructor(private readonly paymentsService: PaymentsService) {}
 
   @Post()
-  @UseGuards(JwtAuthGuard, RolesGuard, RateLimitGuard)
+  @UseGuards(JwtAuthGuard, TenantAccessGuard, RolesGuard, RateLimitGuard)
   @Roles('USER')
+  @TenantAccess({
+    requireResolvedTenant: true,
+    requireActiveDomainSubscription: true,
+  })
+  @TenantHeaderDoc()
   @RateLimit({ limit: 10, windowSeconds: 60, keyPrefix: 'payments:create' })
   createPayment(
     @CurrentUser('id') userId: string,

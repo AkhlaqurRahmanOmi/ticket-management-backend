@@ -1,39 +1,59 @@
 import { Inject, Injectable } from '@nestjs/common';
+import type { Request } from 'express';
 import { PrismaService } from '@/infra/prisma/prisma/prisma.service';
 import type { PolicyContext, PolicyHandler } from '@/common/decorators/check-policies.decorator';
-import { ACL_PROVIDER, AUTHORIZATION_PROVIDER } from '../token/tokens';
-import type { AclProvider } from './acl-provider.contract';
+import { AUTHORIZATION_PROVIDER } from '../token/tokens';
 import type { AuthorizationProvider } from './authorization-provider.contract';
+
+const TENANT_STAFF_ROLES = new Set(['ORG_ADMIN', 'ORG_STAFF']);
+
+function getRouteParam(value: string | string[] | undefined): string | undefined {
+  if (Array.isArray(value)) return value[0];
+  return value;
+}
+
+function getResolvedTenantOrgId(request: Request): string | null {
+  return request.tenantContext?.status === 'resolved'
+    ? request.tenantContext.orgId
+    : null;
+}
+
+function tenantMatchesResolvedContext(request: Request, orgId: string): boolean {
+  const tenantOrgId = getResolvedTenantOrgId(request);
+  return !tenantOrgId || tenantOrgId === orgId;
+}
+
+function hasTenantStaffAccess(
+  authz: Awaited<ReturnType<AuthorizationProvider['getUserAuthorizationContext']>>,
+  orgId: string,
+): boolean {
+  return authz.memberships.some(
+    (membership) =>
+      membership.orgId === orgId && TENANT_STAFF_ROLES.has(membership.role),
+  );
+}
 
 @Injectable()
 export class OrgMemberManagePolicyProvider implements PolicyHandler {
   constructor(
-    @Inject(ACL_PROVIDER) private readonly aclProvider: AclProvider,
     @Inject(AUTHORIZATION_PROVIDER)
     private readonly authorizationProvider: AuthorizationProvider,
   ) {}
 
   async handle({ user, request }: PolicyContext): Promise<boolean> {
-    const orgId = this.getRouteParam(request.params?.orgId);
+    const orgId = getRouteParam(request.params?.orgId);
     if (!orgId) return false;
+    if (!tenantMatchesResolvedContext(request, orgId)) return false;
 
     const authz = await this.authorizationProvider.getUserAuthorizationContext(
       user.id,
     );
     if (authz.roles.includes('SUPER_ADMIN')) return true;
 
-    const isMember = await this.aclProvider.isOrganizationMember(user.id, orgId);
-    if (!isMember) return false;
-
     return authz.memberships.some(
       (membership) =>
         membership.orgId === orgId && membership.role === 'ORG_ADMIN',
     );
-  }
-
-  private getRouteParam(value: string | string[] | undefined): string | undefined {
-    if (Array.isArray(value)) return value[0];
-    return value;
   }
 }
 
@@ -47,17 +67,14 @@ export class EventCreatePolicyProvider implements PolicyHandler {
   async handle({ user, request }: PolicyContext): Promise<boolean> {
     const orgId = this.getBodyOrgId(request.body);
     if (!orgId) return false;
+    if (!tenantMatchesResolvedContext(request, orgId)) return false;
 
     const authz = await this.authorizationProvider.getUserAuthorizationContext(
       user.id,
     );
     if (authz.roles.includes('SUPER_ADMIN')) return true;
 
-    return authz.memberships.some(
-      (membership) =>
-        membership.orgId === orgId &&
-        ['ORG_ADMIN', 'ORG_STAFF'].includes(membership.role),
-    );
+    return hasTenantStaffAccess(authz, orgId);
   }
 
   private getBodyOrgId(body: unknown): string | undefined {
@@ -76,7 +93,7 @@ export class EventManagePolicyProvider implements PolicyHandler {
   ) {}
 
   async handle({ user, request }: PolicyContext): Promise<boolean> {
-    const eventId = this.getRouteParam(request.params?.eventId);
+    const eventId = getRouteParam(request.params?.eventId);
     if (!eventId) return false;
 
     const event = await this.prisma.event.findUnique({
@@ -84,22 +101,14 @@ export class EventManagePolicyProvider implements PolicyHandler {
       select: { orgId: true },
     });
     if (!event) return false;
+    if (!tenantMatchesResolvedContext(request, event.orgId)) return false;
 
     const authz = await this.authorizationProvider.getUserAuthorizationContext(
       user.id,
     );
     if (authz.roles.includes('SUPER_ADMIN')) return true;
 
-    return authz.memberships.some(
-      (membership) =>
-        membership.orgId === event.orgId &&
-        ['ORG_ADMIN', 'ORG_STAFF'].includes(membership.role),
-    );
-  }
-
-  private getRouteParam(value: string | string[] | undefined): string | undefined {
-    if (Array.isArray(value)) return value[0];
-    return value;
+    return hasTenantStaffAccess(authz, event.orgId);
   }
 }
 
@@ -112,37 +121,30 @@ export class ReservationReadPolicyProvider implements PolicyHandler {
   ) {}
 
   async handle({ user, request }: PolicyContext): Promise<boolean> {
-    const reservationId = this.getRouteParam(request.params?.reservationId);
+    const reservationId = getRouteParam(request.params?.reservationId);
     if (!reservationId) return false;
 
     const reservation = await this.prisma.reservation.findUnique({
       where: { id: reservationId },
-      select: { userId: true, eventId: true },
+      select: {
+        userId: true,
+        event: {
+          select: {
+            orgId: true,
+          },
+        },
+      },
     });
-    if (!reservation) return false;
+    if (!reservation?.event) return false;
+    if (!tenantMatchesResolvedContext(request, reservation.event.orgId)) return false;
     if (reservation.userId === user.id) return true;
-
-    const event = await this.prisma.event.findUnique({
-      where: { id: reservation.eventId },
-      select: { orgId: true },
-    });
-    if (!event) return false;
 
     const authz = await this.authorizationProvider.getUserAuthorizationContext(
       user.id,
     );
     if (authz.roles.includes('SUPER_ADMIN')) return true;
 
-    return authz.memberships.some(
-      (membership) =>
-        membership.orgId === event.orgId &&
-        ['ORG_ADMIN', 'ORG_STAFF'].includes(membership.role),
-    );
-  }
-
-  private getRouteParam(value: string | string[] | undefined): string | undefined {
-    if (Array.isArray(value)) return value[0];
-    return value;
+    return hasTenantStaffAccess(authz, reservation.event.orgId);
   }
 }
 
@@ -155,36 +157,65 @@ export class TicketReadPolicyProvider implements PolicyHandler {
   ) {}
 
   async handle({ user, request }: PolicyContext): Promise<boolean> {
-    const ticketId = this.getRouteParam(request.params?.ticketId);
+    const ticketId = getRouteParam(request.params?.ticketId);
     if (!ticketId) return false;
 
     const ticket = await this.prisma.ticket.findUnique({
       where: { id: ticketId },
-      select: { userId: true, eventId: true },
+      select: {
+        userId: true,
+        event: {
+          select: {
+            orgId: true,
+          },
+        },
+      },
     });
-    if (!ticket) return false;
+    if (!ticket?.event) return false;
+    if (!tenantMatchesResolvedContext(request, ticket.event.orgId)) return false;
     if (ticket.userId === user.id) return true;
-
-    const event = await this.prisma.event.findUnique({
-      where: { id: ticket.eventId },
-      select: { orgId: true },
-    });
-    if (!event) return false;
 
     const authz = await this.authorizationProvider.getUserAuthorizationContext(
       user.id,
     );
     if (authz.roles.includes('SUPER_ADMIN')) return true;
 
-    return authz.memberships.some(
-      (membership) =>
-        membership.orgId === event.orgId &&
-        ['ORG_ADMIN', 'ORG_STAFF'].includes(membership.role),
-    );
+    return hasTenantStaffAccess(authz, ticket.event.orgId);
   }
+}
 
-  private getRouteParam(value: string | string[] | undefined): string | undefined {
-    if (Array.isArray(value)) return value[0];
-    return value;
+@Injectable()
+export class RailHoldReadPolicyProvider implements PolicyHandler {
+  constructor(
+    private readonly prisma: PrismaService,
+    @Inject(AUTHORIZATION_PROVIDER)
+    private readonly authorizationProvider: AuthorizationProvider,
+  ) {}
+
+  async handle({ user, request }: PolicyContext): Promise<boolean> {
+    const holdId = getRouteParam(request.params?.holdId);
+    if (!holdId) return false;
+
+    const hold = await this.prisma.booking.findFirst({
+      where: {
+        id: holdId,
+        domainType: 'RAIL',
+      },
+      select: {
+        userId: true,
+        orgId: true,
+      },
+    });
+
+    if (!hold?.orgId) return false;
+    if (!tenantMatchesResolvedContext(request, hold.orgId)) return false;
+    if (hold.userId === user.id) return true;
+
+    const authz = await this.authorizationProvider.getUserAuthorizationContext(
+      user.id,
+    );
+    if (authz.roles.includes('SUPER_ADMIN')) return true;
+
+    return hasTenantStaffAccess(authz, hold.orgId);
   }
 }

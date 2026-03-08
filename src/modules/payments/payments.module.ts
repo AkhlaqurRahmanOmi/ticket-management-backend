@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { TenantAccessGuard } from '@/common/guards/tenant-access.guard';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
 import { RateLimitGuard } from '@/common/guards/rate-limit.guard';
@@ -7,6 +8,8 @@ import { PrismaModule } from '@/infra/prisma/prisma.module';
 import { RedisModule } from '@/infra/redis/redis.module';
 import { BookingsModule } from '@/modules/bookings/bookings.module';
 import { IamModule } from '@/modules/iam/iam.module';
+import { TenantSubscriptionsModule } from '@/modules/tenant-subscriptions/tenant-subscriptions.module';
+import { TenantRuntimeModule } from '@/modules/tenant-runtime/tenant-runtime.module';
 import { ManualPaymentProvider } from './provider/manual-payment.provider';
 import { PaymentsController } from './payments.controller';
 import { PaymentsRepository } from './payments.repository';
@@ -14,13 +17,22 @@ import { PaymentsService } from './payments.service';
 import { PAYMENT_PROVIDER_REGISTRY } from './token/payments.tokens';
 
 @Module({
-  imports: [PrismaModule, JwtModule, IamModule, RedisModule, BookingsModule],
+  imports: [
+    PrismaModule,
+    JwtModule,
+    IamModule,
+    RedisModule,
+    BookingsModule,
+    TenantRuntimeModule,
+    TenantSubscriptionsModule,
+  ],
   controllers: [PaymentsController],
   providers: [
     PaymentsService,
     PaymentsRepository,
     ManualPaymentProvider,
     JwtAuthGuard,
+    TenantAccessGuard,
     RolesGuard,
     RateLimitGuard,
     {
