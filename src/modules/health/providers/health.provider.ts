@@ -231,6 +231,11 @@ export class HealthProvider {
         defaultClientProfile: activeClient.isDefault,
         customOverridePackActive: activeClient.overridePackActive,
         clientPolicyOverrides: activeClient.policyOverrides,
+        tenantRuntimeEnabled: true,
+        tenantContextSignals: ['x-tenant-slug', 'route:orgId', 'body:orgId'],
+        tenantGuardAvailable: true,
+        tenantSubscriptionChecksAvailable: true,
+        tenantEnforcementMode: 'opt_in_guards',
       },
     };
   }
@@ -379,3 +384,4 @@ export class HealthProvider {
     return value;
   }
 }
+

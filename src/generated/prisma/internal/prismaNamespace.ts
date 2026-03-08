@@ -393,6 +393,8 @@ export const ModelName = {
   ApiKey: 'ApiKey',
   Organization: 'Organization',
   OrganizationMember: 'OrganizationMember',
+  TenantDomainSubscription: 'TenantDomainSubscription',
+  TenantCustomer: 'TenantCustomer',
   Venue: 'Venue',
   VenueSection: 'VenueSection',
   VenueRow: 'VenueRow',
@@ -447,7 +449,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "role" | "permission" | "userRole" | "rolePermission" | "authSession" | "apiKey" | "organization" | "organizationMember" | "venue" | "venueSection" | "venueRow" | "venueSeat" | "event" | "eventTicketType" | "eventSeat" | "railStation" | "railRoute" | "railRouteStop" | "railTrip" | "railTripStop" | "railCoach" | "railSeat" | "railTripSeat" | "railSeatAllocation" | "airport" | "carrier" | "flightService" | "flightServiceLeg" | "flightInstance" | "flightLegInstance" | "flightCabinInventory" | "airCabinAllocation" | "reservation" | "reservationItem" | "booking" | "passenger" | "bookingItem" | "order" | "orderItem" | "payment" | "paymentWebhookEvent" | "ticket" | "railIssuedDocument" | "airIssuedDocument" | "idempotencyKey" | "outboxEvent" | "auditLog"
+    modelProps: "user" | "role" | "permission" | "userRole" | "rolePermission" | "authSession" | "apiKey" | "organization" | "organizationMember" | "tenantDomainSubscription" | "tenantCustomer" | "venue" | "venueSection" | "venueRow" | "venueSeat" | "event" | "eventTicketType" | "eventSeat" | "railStation" | "railRoute" | "railRouteStop" | "railTrip" | "railTripStop" | "railCoach" | "railSeat" | "railTripSeat" | "railSeatAllocation" | "airport" | "carrier" | "flightService" | "flightServiceLeg" | "flightInstance" | "flightLegInstance" | "flightCabinInventory" | "airCabinAllocation" | "reservation" | "reservationItem" | "booking" | "passenger" | "bookingItem" | "order" | "orderItem" | "payment" | "paymentWebhookEvent" | "ticket" | "railIssuedDocument" | "airIssuedDocument" | "idempotencyKey" | "outboxEvent" | "auditLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1114,6 +1116,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.OrganizationMemberCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.OrganizationMemberCountAggregateOutputType> | number
+        }
+      }
+    }
+    TenantDomainSubscription: {
+      payload: Prisma.$TenantDomainSubscriptionPayload<ExtArgs>
+      fields: Prisma.TenantDomainSubscriptionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TenantDomainSubscriptionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenantDomainSubscriptionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TenantDomainSubscriptionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenantDomainSubscriptionPayload>
+        }
+        findFirst: {
+          args: Prisma.TenantDomainSubscriptionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenantDomainSubscriptionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TenantDomainSubscriptionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenantDomainSubscriptionPayload>
+        }
+        findMany: {
+          args: Prisma.TenantDomainSubscriptionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenantDomainSubscriptionPayload>[]
+        }
+        create: {
+          args: Prisma.TenantDomainSubscriptionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenantDomainSubscriptionPayload>
+        }
+        createMany: {
+          args: Prisma.TenantDomainSubscriptionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TenantDomainSubscriptionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenantDomainSubscriptionPayload>[]
+        }
+        delete: {
+          args: Prisma.TenantDomainSubscriptionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenantDomainSubscriptionPayload>
+        }
+        update: {
+          args: Prisma.TenantDomainSubscriptionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenantDomainSubscriptionPayload>
+        }
+        deleteMany: {
+          args: Prisma.TenantDomainSubscriptionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TenantDomainSubscriptionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TenantDomainSubscriptionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenantDomainSubscriptionPayload>[]
+        }
+        upsert: {
+          args: Prisma.TenantDomainSubscriptionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenantDomainSubscriptionPayload>
+        }
+        aggregate: {
+          args: Prisma.TenantDomainSubscriptionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTenantDomainSubscription>
+        }
+        groupBy: {
+          args: Prisma.TenantDomainSubscriptionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TenantDomainSubscriptionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TenantDomainSubscriptionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TenantDomainSubscriptionCountAggregateOutputType> | number
+        }
+      }
+    }
+    TenantCustomer: {
+      payload: Prisma.$TenantCustomerPayload<ExtArgs>
+      fields: Prisma.TenantCustomerFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TenantCustomerFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenantCustomerPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TenantCustomerFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenantCustomerPayload>
+        }
+        findFirst: {
+          args: Prisma.TenantCustomerFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenantCustomerPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TenantCustomerFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenantCustomerPayload>
+        }
+        findMany: {
+          args: Prisma.TenantCustomerFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenantCustomerPayload>[]
+        }
+        create: {
+          args: Prisma.TenantCustomerCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenantCustomerPayload>
+        }
+        createMany: {
+          args: Prisma.TenantCustomerCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TenantCustomerCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenantCustomerPayload>[]
+        }
+        delete: {
+          args: Prisma.TenantCustomerDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenantCustomerPayload>
+        }
+        update: {
+          args: Prisma.TenantCustomerUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenantCustomerPayload>
+        }
+        deleteMany: {
+          args: Prisma.TenantCustomerDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TenantCustomerUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TenantCustomerUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenantCustomerPayload>[]
+        }
+        upsert: {
+          args: Prisma.TenantCustomerUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenantCustomerPayload>
+        }
+        aggregate: {
+          args: Prisma.TenantCustomerAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTenantCustomer>
+        }
+        groupBy: {
+          args: Prisma.TenantCustomerGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TenantCustomerGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TenantCustomerCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TenantCustomerCountAggregateOutputType> | number
         }
       }
     }
@@ -4147,6 +4297,37 @@ export const OrganizationMemberScalarFieldEnum = {
 export type OrganizationMemberScalarFieldEnum = (typeof OrganizationMemberScalarFieldEnum)[keyof typeof OrganizationMemberScalarFieldEnum]
 
 
+export const TenantDomainSubscriptionScalarFieldEnum = {
+  id: 'id',
+  orgId: 'orgId',
+  domain: 'domain',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  activatedAt: 'activatedAt',
+  disabledAt: 'disabledAt'
+} as const
+
+export type TenantDomainSubscriptionScalarFieldEnum = (typeof TenantDomainSubscriptionScalarFieldEnum)[keyof typeof TenantDomainSubscriptionScalarFieldEnum]
+
+
+export const TenantCustomerScalarFieldEnum = {
+  id: 'id',
+  orgId: 'orgId',
+  email: 'email',
+  displayName: 'displayName',
+  phone: 'phone',
+  status: 'status',
+  metadata: 'metadata',
+  firstSeenAt: 'firstSeenAt',
+  lastSeenAt: 'lastSeenAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TenantCustomerScalarFieldEnum = (typeof TenantCustomerScalarFieldEnum)[keyof typeof TenantCustomerScalarFieldEnum]
+
+
 export const VenueScalarFieldEnum = {
   id: 'id',
   orgId: 'orgId',
@@ -4898,6 +5079,62 @@ export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
 
 
 /**
+ * Reference to a field of type 'BookingDomain'
+ */
+export type EnumBookingDomainFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BookingDomain'>
+    
+
+
+/**
+ * Reference to a field of type 'BookingDomain[]'
+ */
+export type ListEnumBookingDomainFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BookingDomain[]'>
+    
+
+
+/**
+ * Reference to a field of type 'TenantDomainSubscriptionStatus'
+ */
+export type EnumTenantDomainSubscriptionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TenantDomainSubscriptionStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'TenantDomainSubscriptionStatus[]'
+ */
+export type ListEnumTenantDomainSubscriptionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TenantDomainSubscriptionStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'TenantCustomerStatus'
+ */
+export type EnumTenantCustomerStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TenantCustomerStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'TenantCustomerStatus[]'
+ */
+export type ListEnumTenantCustomerStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TenantCustomerStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Json'
+ */
+export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+/**
+ * Reference to a field of type 'QueryMode'
+ */
+export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+/**
  * Reference to a field of type 'Int'
  */
 export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -4968,20 +5205,6 @@ export type ListEnumFlightInstanceStatusFieldRefInput<$PrismaModel> = FieldRefIn
 
 
 /**
- * Reference to a field of type 'BookingDomain'
- */
-export type EnumBookingDomainFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BookingDomain'>
-    
-
-
-/**
- * Reference to a field of type 'BookingDomain[]'
- */
-export type ListEnumBookingDomainFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BookingDomain[]'>
-    
-
-
-/**
  * Reference to a field of type 'ReservationStatus'
  */
 export type EnumReservationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReservationStatus'>
@@ -5006,20 +5229,6 @@ export type EnumBookingStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Pr
  * Reference to a field of type 'BookingStatus[]'
  */
 export type ListEnumBookingStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BookingStatus[]'>
-    
-
-
-/**
- * Reference to a field of type 'Json'
- */
-export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
-    
-
-
-/**
- * Reference to a field of type 'QueryMode'
- */
-export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 
@@ -5252,6 +5461,8 @@ export type GlobalOmitConfig = {
   apiKey?: Prisma.ApiKeyOmit
   organization?: Prisma.OrganizationOmit
   organizationMember?: Prisma.OrganizationMemberOmit
+  tenantDomainSubscription?: Prisma.TenantDomainSubscriptionOmit
+  tenantCustomer?: Prisma.TenantCustomerOmit
   venue?: Prisma.VenueOmit
   venueSection?: Prisma.VenueSectionOmit
   venueRow?: Prisma.VenueRowOmit

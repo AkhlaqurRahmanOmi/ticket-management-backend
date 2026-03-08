@@ -60,6 +60,8 @@ export class JwtAuthGuard implements CanActivate {
       ? await authorizationProvider.getUserAuthorizationContext(payload.sub)
       : undefined;
 
+    // `request.user` always represents the authenticated global User.
+    // Tenant-local customer identity remains outside the IAM guard path.
     request.user = {
       id: payload.sub,
       email: payload.email,

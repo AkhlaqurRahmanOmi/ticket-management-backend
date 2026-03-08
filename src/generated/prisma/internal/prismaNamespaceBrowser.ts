@@ -60,6 +60,8 @@ export const ModelName = {
   ApiKey: 'ApiKey',
   Organization: 'Organization',
   OrganizationMember: 'OrganizationMember',
+  TenantDomainSubscription: 'TenantDomainSubscription',
+  TenantCustomer: 'TenantCustomer',
   Venue: 'Venue',
   VenueSection: 'VenueSection',
   VenueRow: 'VenueRow',
@@ -220,6 +222,37 @@ export const OrganizationMemberScalarFieldEnum = {
 } as const
 
 export type OrganizationMemberScalarFieldEnum = (typeof OrganizationMemberScalarFieldEnum)[keyof typeof OrganizationMemberScalarFieldEnum]
+
+
+export const TenantDomainSubscriptionScalarFieldEnum = {
+  id: 'id',
+  orgId: 'orgId',
+  domain: 'domain',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  activatedAt: 'activatedAt',
+  disabledAt: 'disabledAt'
+} as const
+
+export type TenantDomainSubscriptionScalarFieldEnum = (typeof TenantDomainSubscriptionScalarFieldEnum)[keyof typeof TenantDomainSubscriptionScalarFieldEnum]
+
+
+export const TenantCustomerScalarFieldEnum = {
+  id: 'id',
+  orgId: 'orgId',
+  email: 'email',
+  displayName: 'displayName',
+  phone: 'phone',
+  status: 'status',
+  metadata: 'metadata',
+  firstSeenAt: 'firstSeenAt',
+  lastSeenAt: 'lastSeenAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TenantCustomerScalarFieldEnum = (typeof TenantCustomerScalarFieldEnum)[keyof typeof TenantCustomerScalarFieldEnum]
 
 
 export const VenueScalarFieldEnum = {

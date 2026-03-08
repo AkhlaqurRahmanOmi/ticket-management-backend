@@ -83,6 +83,16 @@ export type Organization = Prisma.OrganizationModel
  */
 export type OrganizationMember = Prisma.OrganizationMemberModel
 /**
+ * Model TenantDomainSubscription
+ * 
+ */
+export type TenantDomainSubscription = Prisma.TenantDomainSubscriptionModel
+/**
+ * Model TenantCustomer
+ * 
+ */
+export type TenantCustomer = Prisma.TenantCustomerModel
+/**
  * Model Venue
  * 
  */

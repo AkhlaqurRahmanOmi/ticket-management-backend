@@ -1,25 +1,31 @@
-import {
+﻿import {
   BadRequestException,
   Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { DomainRuntimeService } from '@/modules/domain-runtime/domain-runtime.service';
 import { AddOrgMemberDto } from '@/modules/iam/dto/add-org-member.dto';
 import { CreateOrganizationDto } from '@/modules/iam/dto/create-organization.dto';
-import {
-  ROLE_ASSIGNMENT_PROVIDER,
-  AUTHORIZATION_PROVIDER,
-} from '@/modules/iam/provider/token/tokens';
-import type { RoleAssignmentProvider } from '@/modules/iam/provider/authorization/role-assignment.provider.contract';
 import type { AuthorizationProvider } from '@/modules/iam/provider/authorization/authorization-provider.contract';
-import { OrganizationsRepository } from './organizations.repository';
+import type { RoleAssignmentProvider } from '@/modules/iam/provider/authorization/role-assignment.provider.contract';
+import {
+  AUTHORIZATION_PROVIDER,
+  ROLE_ASSIGNMENT_PROVIDER,
+} from '@/modules/iam/provider/token/tokens';
+import { CreateTenantSubscriptionDto } from '@/modules/tenant-subscriptions/dto/create-tenant-subscription.dto';
+import { UpdateTenantSubscriptionDto } from '@/modules/tenant-subscriptions/dto/update-tenant-subscription.dto';
+import { TenantSubscriptionsService } from '@/modules/tenant-subscriptions/tenant-subscriptions.service';
 import { OrganizationMembersRepository } from './organization-members.repository';
+import { OrganizationsRepository } from './organizations.repository';
 
 @Injectable()
 export class OrganizationsService {
   constructor(
     private readonly organizationsRepository: OrganizationsRepository,
     private readonly organizationMembersRepository: OrganizationMembersRepository,
+    private readonly tenantSubscriptionsService: TenantSubscriptionsService,
+    private readonly domainRuntimeService: DomainRuntimeService,
     @Inject(ROLE_ASSIGNMENT_PROVIDER)
     private readonly roleAssignmentProvider: RoleAssignmentProvider,
     @Inject(AUTHORIZATION_PROVIDER)
@@ -40,6 +46,11 @@ export class OrganizationsService {
     await this.organizationMembersRepository.createOrgAdminMembership(
       organization.id,
       actorUserId,
+    );
+
+    await this.tenantSubscriptionsService.enableSubscription(
+      organization.id,
+      this.domainRuntimeService.getActiveDomain(),
     );
 
     await this.roleAssignmentProvider.assignRoleByName(actorUserId, 'ORG_ADMIN');
@@ -87,5 +98,34 @@ export class OrganizationsService {
       userId: dto.userId,
       role: dto.role,
     };
+  }
+
+  async listTenantSubscriptions(orgId: string) {
+    await this.assertOrganizationExists(orgId);
+    return this.tenantSubscriptionsService.listSubscriptions(orgId);
+  }
+
+  async createTenantSubscription(
+    orgId: string,
+    dto: CreateTenantSubscriptionDto,
+  ) {
+    await this.assertOrganizationExists(orgId);
+    return this.tenantSubscriptionsService.createSubscription(orgId, dto);
+  }
+
+  async updateTenantSubscription(
+    orgId: string,
+    domain: string,
+    dto: UpdateTenantSubscriptionDto,
+  ) {
+    await this.assertOrganizationExists(orgId);
+    return this.tenantSubscriptionsService.updateSubscription(orgId, domain, dto);
+  }
+
+  private async assertOrganizationExists(orgId: string) {
+    const org = await this.organizationsRepository.findById(orgId);
+    if (!org) {
+      throw new NotFoundException('Organization not found.');
+    }
   }
 }
