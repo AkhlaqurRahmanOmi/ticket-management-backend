@@ -34,6 +34,7 @@ export class AirReadRepository extends BaseRepository {
   }
 
   async searchFlights(
+    orgId: string,
     query: SearchFlightsQueryDto,
   ): Promise<FlightSearchResult> {
     const { skip, take, page, limit } = this.getPagination(query);
@@ -75,6 +76,7 @@ export class AirReadRepository extends BaseRepository {
           INNER JOIN "FlightLegInstance" destination_leg ON destination_leg."flightInstanceId" = fi."id"
           INNER JOIN "Airport" destination_airport ON destination_airport."id" = destination_leg."destinationAirportId"
           WHERE origin_airport."code" = ${query.originCode}
+            AND fi."orgId" = ${orgId}::uuid
             AND destination_airport."code" = ${query.destinationCode}
             AND origin_leg."sequence" <= destination_leg."sequence"
             AND fi."departsAt" >= ${travelDateWindow.start}
@@ -94,6 +96,7 @@ export class AirReadRepository extends BaseRepository {
           INNER JOIN "Airport" origin_airport ON origin_airport."id" = fi."originAirportId"
           INNER JOIN "Airport" destination_airport ON destination_airport."id" = fi."destinationAirportId"
           WHERE origin_airport."code" = ${query.originCode}
+            AND fi."orgId" = ${orgId}::uuid
             AND destination_airport."code" = ${query.destinationCode}
             AND NOT EXISTS (
               SELECT 1
@@ -285,6 +288,7 @@ export class AirReadRepository extends BaseRepository {
   }
 
   async findFlightById(
+    orgId: string,
     flightInstanceId: string,
   ): Promise<FlightInstanceSummary | null> {
     const rows = await this.prisma.$queryRaw<FlightSummaryRow[]>(Prisma.sql`
@@ -317,13 +321,17 @@ export class AirReadRepository extends BaseRepository {
       INNER JOIN "Airport" origin_airport ON origin_airport."id" = fi."originAirportId"
       INNER JOIN "Airport" destination_airport ON destination_airport."id" = fi."destinationAirportId"
       WHERE fi."id" = ${flightInstanceId}::uuid
+        AND fi."orgId" = ${orgId}::uuid
       LIMIT 1
     `);
 
     return rows[0] ? this.mapFlightSummary(rows[0]) : null;
   }
 
-  async findFlightLegs(flightInstanceId: string): Promise<FlightLegSummary[]> {
+  async findFlightLegs(
+    orgId: string,
+    flightInstanceId: string,
+  ): Promise<FlightLegSummary[]> {
     const rows = await this.prisma.$queryRaw<FlightLegRow[]>(Prisma.sql`
       SELECT
         leg."id",
@@ -341,9 +349,11 @@ export class AirReadRepository extends BaseRepository {
         destination_airport."city" AS "destinationCity",
         destination_airport."country" AS "destinationCountry"
       FROM "FlightLegInstance" leg
+      INNER JOIN "FlightInstance" fi ON fi."id" = leg."flightInstanceId"
       INNER JOIN "Airport" origin_airport ON origin_airport."id" = leg."originAirportId"
       INNER JOIN "Airport" destination_airport ON destination_airport."id" = leg."destinationAirportId"
       WHERE leg."flightInstanceId" = ${flightInstanceId}::uuid
+        AND fi."orgId" = ${orgId}::uuid
       ORDER BY leg."sequence" ASC
     `);
 
@@ -370,6 +380,7 @@ export class AirReadRepository extends BaseRepository {
   }
 
   async resolveFlightLegRangeByAirportCodes(
+    orgId: string,
     flightInstanceId: string,
     originCode: string,
     destinationCode: string,
@@ -384,10 +395,12 @@ export class AirReadRepository extends BaseRepository {
               ORDER BY origin_leg."sequence" ASC, destination_leg."sequence" ASC
             ) AS "rangeRank"
           FROM "FlightLegInstance" origin_leg
+          INNER JOIN "FlightInstance" fi ON fi."id" = origin_leg."flightInstanceId"
           INNER JOIN "Airport" origin_airport ON origin_airport."id" = origin_leg."originAirportId"
           INNER JOIN "FlightLegInstance" destination_leg ON destination_leg."flightInstanceId" = origin_leg."flightInstanceId"
           INNER JOIN "Airport" destination_airport ON destination_airport."id" = destination_leg."destinationAirportId"
           WHERE origin_leg."flightInstanceId" = ${flightInstanceId}::uuid
+            AND fi."orgId" = ${orgId}::uuid
             AND origin_airport."code" = ${originCode}
             AND destination_airport."code" = ${destinationCode}
             AND origin_leg."sequence" <= destination_leg."sequence"
@@ -413,6 +426,7 @@ export class AirReadRepository extends BaseRepository {
       INNER JOIN "Airport" origin_airport ON origin_airport."id" = fi."originAirportId"
       INNER JOIN "Airport" destination_airport ON destination_airport."id" = fi."destinationAirportId"
       WHERE fi."id" = ${flightInstanceId}::uuid
+        AND fi."orgId" = ${orgId}::uuid
         AND origin_airport."code" = ${originCode}
         AND destination_airport."code" = ${destinationCode}
     `);
@@ -430,6 +444,7 @@ export class AirReadRepository extends BaseRepository {
   }
 
   async resolveFlightHoldLegRangeByAirportCodes(
+    orgId: string,
     flightInstanceId: string,
     originCode: string,
     destinationCode: string,
@@ -446,10 +461,12 @@ export class AirReadRepository extends BaseRepository {
               ORDER BY origin_leg."sequence" ASC, destination_leg."sequence" ASC
             ) AS "rangeRank"
           FROM "FlightLegInstance" origin_leg
+          INNER JOIN "FlightInstance" fi ON fi."id" = origin_leg."flightInstanceId"
           INNER JOIN "Airport" origin_airport ON origin_airport."id" = origin_leg."originAirportId"
           INNER JOIN "FlightLegInstance" destination_leg ON destination_leg."flightInstanceId" = origin_leg."flightInstanceId"
           INNER JOIN "Airport" destination_airport ON destination_airport."id" = destination_leg."destinationAirportId"
           WHERE origin_leg."flightInstanceId" = ${flightInstanceId}::uuid
+            AND fi."orgId" = ${orgId}::uuid
             AND origin_airport."code" = ${originCode}
             AND destination_airport."code" = ${destinationCode}
             AND origin_leg."sequence" <= destination_leg."sequence"
@@ -474,6 +491,7 @@ export class AirReadRepository extends BaseRepository {
       INNER JOIN "Airport" origin_airport ON origin_airport."id" = fi."originAirportId"
       INNER JOIN "Airport" destination_airport ON destination_airport."id" = fi."destinationAirportId"
       WHERE fi."id" = ${flightInstanceId}::uuid
+        AND fi."orgId" = ${orgId}::uuid
         AND origin_airport."code" = ${originCode}
         AND destination_airport."code" = ${destinationCode}
     `);
@@ -491,6 +509,7 @@ export class AirReadRepository extends BaseRepository {
   }
 
   async getFlightAvailability(
+    orgId: string,
     flightInstanceId: string,
     query: GetFlightAvailabilityQueryDto,
     requestedLegRange?: Pick<
@@ -522,7 +541,9 @@ export class AirReadRepository extends BaseRepository {
       this.prisma.$queryRaw<AirCountRow[]>(Prisma.sql`
         SELECT COUNT(ci."id")::bigint AS "total"
         FROM "FlightCabinInventory" ci
+        INNER JOIN "FlightInstance" fi ON fi."id" = ci."flightInstanceId"
         WHERE ci."flightInstanceId" = ${flightInstanceId}::uuid
+          AND fi."orgId" = ${orgId}::uuid
           ${cabinClause}
           ${fareClause}
       `),
@@ -542,6 +563,7 @@ export class AirReadRepository extends BaseRepository {
         FROM "FlightCabinInventory" ci
         INNER JOIN "FlightInstance" fi ON fi."id" = ci."flightInstanceId"
         WHERE ci."flightInstanceId" = ${flightInstanceId}::uuid
+          AND fi."orgId" = ${orgId}::uuid
           ${cabinClause}
           ${fareClause}
         ORDER BY ci."cabinCode" ASC, ci."fareClassCode" ASC, ci."id" ASC
@@ -555,7 +577,9 @@ export class AirReadRepository extends BaseRepository {
               COALESCE(SUM(aca."quantity"), 0)::int AS "reservedQuantity"
             FROM "AirCabinAllocation" aca
             INNER JOIN "Booking" b ON b."id" = aca."bookingId"
+            INNER JOIN "FlightInstance" fi ON fi."id" = aca."flightInstanceId"
             WHERE aca."flightInstanceId" = ${flightInstanceId}::uuid
+              AND fi."orgId" = ${orgId}::uuid
               AND aca."releasedAt" IS NULL
               AND aca."cancelledAt" IS NULL
               AND aca."expiredAt" IS NULL

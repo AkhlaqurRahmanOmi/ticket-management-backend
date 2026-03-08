@@ -16,6 +16,7 @@ import { PrismaModule } from '@/infra/prisma/prisma.module';
 import { PrismaAuthorizationProvider } from './provider/authorization/prisma-authorization.provider';
 import { PrismaRoleAssignmentProvider } from './provider/authorization/prisma-role-assignment.provider';
 import {
+  AirHoldReadPolicyProvider,
   EventCreatePolicyProvider,
   EventManagePolicyProvider,
   OrgMemberManagePolicyProvider,
@@ -24,6 +25,7 @@ import {
   TicketReadPolicyProvider,
 } from './provider/authorization/acl-policies.provider';
 import {
+  AIR_HOLD_READ_POLICY,
   EVENT_CREATE_POLICY,
   EVENT_MANAGE_POLICY,
   ORG_MEMBER_MANAGE_POLICY,
@@ -43,6 +45,7 @@ import {
     OrgMemberManagePolicyProvider,
     EventCreatePolicyProvider,
     EventManagePolicyProvider,
+    AirHoldReadPolicyProvider,
     RailHoldReadPolicyProvider,
     ReservationReadPolicyProvider,
     TicketReadPolicyProvider,
@@ -79,6 +82,10 @@ import {
       useExisting: EventManagePolicyProvider,
     },
     {
+      provide: AIR_HOLD_READ_POLICY,
+      useExisting: AirHoldReadPolicyProvider,
+    },
+    {
       provide: RAIL_HOLD_READ_POLICY,
       useExisting: RailHoldReadPolicyProvider,
     },
@@ -98,6 +105,7 @@ import {
     ORG_MEMBER_MANAGE_POLICY,
     EVENT_CREATE_POLICY,
     EVENT_MANAGE_POLICY,
+    AIR_HOLD_READ_POLICY,
     RAIL_HOLD_READ_POLICY,
     RESERVATION_READ_POLICY,
     TICKET_READ_POLICY,

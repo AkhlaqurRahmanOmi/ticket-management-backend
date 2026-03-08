@@ -32,10 +32,12 @@ export class AirInventoryProvider {
   constructor(private readonly airService: AirService) {}
 
   getSeatMap(
+    tenantOrgId: string,
     inventoryScopeId: string,
     query?: Record<string, unknown>,
   ) {
     return this.airService.getFlightAvailability(
+      tenantOrgId,
       inventoryScopeId,
       (query ?? {}) as never,
     );
@@ -52,11 +54,13 @@ export class AirInventoryProvider {
 
   createHold(
     userId: string,
+    tenantOrgId: string,
     dto: CreateAirHoldDto & { flightInstanceId: string },
     correlationId?: string,
   ) {
     return this.airService.createHold(
       userId,
+      tenantOrgId,
       dto.flightInstanceId,
       dto,
       correlationId,

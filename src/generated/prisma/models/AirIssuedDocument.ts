@@ -26,6 +26,7 @@ export type AggregateAirIssuedDocument = {
 
 export type AirIssuedDocumentMinAggregateOutputType = {
   id: string | null
+  orgId: string | null
   bookingId: string | null
   bookingItemId: string | null
   paymentId: string | null
@@ -43,6 +44,7 @@ export type AirIssuedDocumentMinAggregateOutputType = {
 
 export type AirIssuedDocumentMaxAggregateOutputType = {
   id: string | null
+  orgId: string | null
   bookingId: string | null
   bookingItemId: string | null
   paymentId: string | null
@@ -60,6 +62,7 @@ export type AirIssuedDocumentMaxAggregateOutputType = {
 
 export type AirIssuedDocumentCountAggregateOutputType = {
   id: number
+  orgId: number
   bookingId: number
   bookingItemId: number
   paymentId: number
@@ -80,6 +83,7 @@ export type AirIssuedDocumentCountAggregateOutputType = {
 
 export type AirIssuedDocumentMinAggregateInputType = {
   id?: true
+  orgId?: true
   bookingId?: true
   bookingItemId?: true
   paymentId?: true
@@ -97,6 +101,7 @@ export type AirIssuedDocumentMinAggregateInputType = {
 
 export type AirIssuedDocumentMaxAggregateInputType = {
   id?: true
+  orgId?: true
   bookingId?: true
   bookingItemId?: true
   paymentId?: true
@@ -114,6 +119,7 @@ export type AirIssuedDocumentMaxAggregateInputType = {
 
 export type AirIssuedDocumentCountAggregateInputType = {
   id?: true
+  orgId?: true
   bookingId?: true
   bookingItemId?: true
   paymentId?: true
@@ -205,6 +211,7 @@ export type AirIssuedDocumentGroupByArgs<ExtArgs extends runtime.Types.Extension
 
 export type AirIssuedDocumentGroupByOutputType = {
   id: string
+  orgId: string | null
   bookingId: string
   bookingItemId: string
   paymentId: string
@@ -244,6 +251,7 @@ export type AirIssuedDocumentWhereInput = {
   OR?: Prisma.AirIssuedDocumentWhereInput[]
   NOT?: Prisma.AirIssuedDocumentWhereInput | Prisma.AirIssuedDocumentWhereInput[]
   id?: Prisma.UuidFilter<"AirIssuedDocument"> | string
+  orgId?: Prisma.UuidNullableFilter<"AirIssuedDocument"> | string | null
   bookingId?: Prisma.UuidFilter<"AirIssuedDocument"> | string
   bookingItemId?: Prisma.UuidFilter<"AirIssuedDocument"> | string
   paymentId?: Prisma.UuidFilter<"AirIssuedDocument"> | string
@@ -258,6 +266,7 @@ export type AirIssuedDocumentWhereInput = {
   metadata?: Prisma.JsonNullableFilter<"AirIssuedDocument">
   createdAt?: Prisma.DateTimeFilter<"AirIssuedDocument"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"AirIssuedDocument"> | Date | string
+  org?: Prisma.XOR<Prisma.OrganizationNullableScalarRelationFilter, Prisma.OrganizationWhereInput> | null
   booking?: Prisma.XOR<Prisma.BookingScalarRelationFilter, Prisma.BookingWhereInput>
   bookingItem?: Prisma.XOR<Prisma.BookingItemScalarRelationFilter, Prisma.BookingItemWhereInput>
   payment?: Prisma.XOR<Prisma.PaymentScalarRelationFilter, Prisma.PaymentWhereInput>
@@ -268,6 +277,7 @@ export type AirIssuedDocumentWhereInput = {
 
 export type AirIssuedDocumentOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  orgId?: Prisma.SortOrderInput | Prisma.SortOrder
   bookingId?: Prisma.SortOrder
   bookingItemId?: Prisma.SortOrder
   paymentId?: Prisma.SortOrder
@@ -282,6 +292,7 @@ export type AirIssuedDocumentOrderByWithRelationInput = {
   metadata?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  org?: Prisma.OrganizationOrderByWithRelationInput
   booking?: Prisma.BookingOrderByWithRelationInput
   bookingItem?: Prisma.BookingItemOrderByWithRelationInput
   payment?: Prisma.PaymentOrderByWithRelationInput
@@ -296,6 +307,7 @@ export type AirIssuedDocumentWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.AirIssuedDocumentWhereInput | Prisma.AirIssuedDocumentWhereInput[]
   OR?: Prisma.AirIssuedDocumentWhereInput[]
   NOT?: Prisma.AirIssuedDocumentWhereInput | Prisma.AirIssuedDocumentWhereInput[]
+  orgId?: Prisma.UuidNullableFilter<"AirIssuedDocument"> | string | null
   bookingId?: Prisma.UuidFilter<"AirIssuedDocument"> | string
   bookingItemId?: Prisma.UuidFilter<"AirIssuedDocument"> | string
   paymentId?: Prisma.UuidFilter<"AirIssuedDocument"> | string
@@ -309,6 +321,7 @@ export type AirIssuedDocumentWhereUniqueInput = Prisma.AtLeast<{
   metadata?: Prisma.JsonNullableFilter<"AirIssuedDocument">
   createdAt?: Prisma.DateTimeFilter<"AirIssuedDocument"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"AirIssuedDocument"> | Date | string
+  org?: Prisma.XOR<Prisma.OrganizationNullableScalarRelationFilter, Prisma.OrganizationWhereInput> | null
   booking?: Prisma.XOR<Prisma.BookingScalarRelationFilter, Prisma.BookingWhereInput>
   bookingItem?: Prisma.XOR<Prisma.BookingItemScalarRelationFilter, Prisma.BookingItemWhereInput>
   payment?: Prisma.XOR<Prisma.PaymentScalarRelationFilter, Prisma.PaymentWhereInput>
@@ -319,6 +332,7 @@ export type AirIssuedDocumentWhereUniqueInput = Prisma.AtLeast<{
 
 export type AirIssuedDocumentOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  orgId?: Prisma.SortOrderInput | Prisma.SortOrder
   bookingId?: Prisma.SortOrder
   bookingItemId?: Prisma.SortOrder
   paymentId?: Prisma.SortOrder
@@ -343,6 +357,7 @@ export type AirIssuedDocumentScalarWhereWithAggregatesInput = {
   OR?: Prisma.AirIssuedDocumentScalarWhereWithAggregatesInput[]
   NOT?: Prisma.AirIssuedDocumentScalarWhereWithAggregatesInput | Prisma.AirIssuedDocumentScalarWhereWithAggregatesInput[]
   id?: Prisma.UuidWithAggregatesFilter<"AirIssuedDocument"> | string
+  orgId?: Prisma.UuidNullableWithAggregatesFilter<"AirIssuedDocument"> | string | null
   bookingId?: Prisma.UuidWithAggregatesFilter<"AirIssuedDocument"> | string
   bookingItemId?: Prisma.UuidWithAggregatesFilter<"AirIssuedDocument"> | string
   paymentId?: Prisma.UuidWithAggregatesFilter<"AirIssuedDocument"> | string
@@ -369,6 +384,7 @@ export type AirIssuedDocumentCreateInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  org?: Prisma.OrganizationCreateNestedOneWithoutAirIssuedDocumentsInput
   booking: Prisma.BookingCreateNestedOneWithoutAirIssuedDocumentsInput
   bookingItem: Prisma.BookingItemCreateNestedOneWithoutAirIssuedDocumentsInput
   payment: Prisma.PaymentCreateNestedOneWithoutAirIssuedDocumentsInput
@@ -379,6 +395,7 @@ export type AirIssuedDocumentCreateInput = {
 
 export type AirIssuedDocumentUncheckedCreateInput = {
   id?: string
+  orgId?: string | null
   bookingId: string
   bookingItemId: string
   paymentId: string
@@ -405,6 +422,7 @@ export type AirIssuedDocumentUpdateInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  org?: Prisma.OrganizationUpdateOneWithoutAirIssuedDocumentsNestedInput
   booking?: Prisma.BookingUpdateOneRequiredWithoutAirIssuedDocumentsNestedInput
   bookingItem?: Prisma.BookingItemUpdateOneRequiredWithoutAirIssuedDocumentsNestedInput
   payment?: Prisma.PaymentUpdateOneRequiredWithoutAirIssuedDocumentsNestedInput
@@ -415,6 +433,7 @@ export type AirIssuedDocumentUpdateInput = {
 
 export type AirIssuedDocumentUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  orgId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bookingId?: Prisma.StringFieldUpdateOperationsInput | string
   bookingItemId?: Prisma.StringFieldUpdateOperationsInput | string
   paymentId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -433,6 +452,7 @@ export type AirIssuedDocumentUncheckedUpdateInput = {
 
 export type AirIssuedDocumentCreateManyInput = {
   id?: string
+  orgId?: string | null
   bookingId: string
   bookingItemId: string
   paymentId: string
@@ -463,6 +483,7 @@ export type AirIssuedDocumentUpdateManyMutationInput = {
 
 export type AirIssuedDocumentUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  orgId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bookingId?: Prisma.StringFieldUpdateOperationsInput | string
   bookingItemId?: Prisma.StringFieldUpdateOperationsInput | string
   paymentId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -491,6 +512,7 @@ export type AirIssuedDocumentOrderByRelationAggregateInput = {
 
 export type AirIssuedDocumentCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  orgId?: Prisma.SortOrder
   bookingId?: Prisma.SortOrder
   bookingItemId?: Prisma.SortOrder
   paymentId?: Prisma.SortOrder
@@ -509,6 +531,7 @@ export type AirIssuedDocumentCountOrderByAggregateInput = {
 
 export type AirIssuedDocumentMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  orgId?: Prisma.SortOrder
   bookingId?: Prisma.SortOrder
   bookingItemId?: Prisma.SortOrder
   paymentId?: Prisma.SortOrder
@@ -526,6 +549,7 @@ export type AirIssuedDocumentMaxOrderByAggregateInput = {
 
 export type AirIssuedDocumentMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  orgId?: Prisma.SortOrder
   bookingId?: Prisma.SortOrder
   bookingItemId?: Prisma.SortOrder
   paymentId?: Prisma.SortOrder
@@ -580,6 +604,48 @@ export type AirIssuedDocumentUncheckedUpdateManyWithoutUserNestedInput = {
   connect?: Prisma.AirIssuedDocumentWhereUniqueInput | Prisma.AirIssuedDocumentWhereUniqueInput[]
   update?: Prisma.AirIssuedDocumentUpdateWithWhereUniqueWithoutUserInput | Prisma.AirIssuedDocumentUpdateWithWhereUniqueWithoutUserInput[]
   updateMany?: Prisma.AirIssuedDocumentUpdateManyWithWhereWithoutUserInput | Prisma.AirIssuedDocumentUpdateManyWithWhereWithoutUserInput[]
+  deleteMany?: Prisma.AirIssuedDocumentScalarWhereInput | Prisma.AirIssuedDocumentScalarWhereInput[]
+}
+
+export type AirIssuedDocumentCreateNestedManyWithoutOrgInput = {
+  create?: Prisma.XOR<Prisma.AirIssuedDocumentCreateWithoutOrgInput, Prisma.AirIssuedDocumentUncheckedCreateWithoutOrgInput> | Prisma.AirIssuedDocumentCreateWithoutOrgInput[] | Prisma.AirIssuedDocumentUncheckedCreateWithoutOrgInput[]
+  connectOrCreate?: Prisma.AirIssuedDocumentCreateOrConnectWithoutOrgInput | Prisma.AirIssuedDocumentCreateOrConnectWithoutOrgInput[]
+  createMany?: Prisma.AirIssuedDocumentCreateManyOrgInputEnvelope
+  connect?: Prisma.AirIssuedDocumentWhereUniqueInput | Prisma.AirIssuedDocumentWhereUniqueInput[]
+}
+
+export type AirIssuedDocumentUncheckedCreateNestedManyWithoutOrgInput = {
+  create?: Prisma.XOR<Prisma.AirIssuedDocumentCreateWithoutOrgInput, Prisma.AirIssuedDocumentUncheckedCreateWithoutOrgInput> | Prisma.AirIssuedDocumentCreateWithoutOrgInput[] | Prisma.AirIssuedDocumentUncheckedCreateWithoutOrgInput[]
+  connectOrCreate?: Prisma.AirIssuedDocumentCreateOrConnectWithoutOrgInput | Prisma.AirIssuedDocumentCreateOrConnectWithoutOrgInput[]
+  createMany?: Prisma.AirIssuedDocumentCreateManyOrgInputEnvelope
+  connect?: Prisma.AirIssuedDocumentWhereUniqueInput | Prisma.AirIssuedDocumentWhereUniqueInput[]
+}
+
+export type AirIssuedDocumentUpdateManyWithoutOrgNestedInput = {
+  create?: Prisma.XOR<Prisma.AirIssuedDocumentCreateWithoutOrgInput, Prisma.AirIssuedDocumentUncheckedCreateWithoutOrgInput> | Prisma.AirIssuedDocumentCreateWithoutOrgInput[] | Prisma.AirIssuedDocumentUncheckedCreateWithoutOrgInput[]
+  connectOrCreate?: Prisma.AirIssuedDocumentCreateOrConnectWithoutOrgInput | Prisma.AirIssuedDocumentCreateOrConnectWithoutOrgInput[]
+  upsert?: Prisma.AirIssuedDocumentUpsertWithWhereUniqueWithoutOrgInput | Prisma.AirIssuedDocumentUpsertWithWhereUniqueWithoutOrgInput[]
+  createMany?: Prisma.AirIssuedDocumentCreateManyOrgInputEnvelope
+  set?: Prisma.AirIssuedDocumentWhereUniqueInput | Prisma.AirIssuedDocumentWhereUniqueInput[]
+  disconnect?: Prisma.AirIssuedDocumentWhereUniqueInput | Prisma.AirIssuedDocumentWhereUniqueInput[]
+  delete?: Prisma.AirIssuedDocumentWhereUniqueInput | Prisma.AirIssuedDocumentWhereUniqueInput[]
+  connect?: Prisma.AirIssuedDocumentWhereUniqueInput | Prisma.AirIssuedDocumentWhereUniqueInput[]
+  update?: Prisma.AirIssuedDocumentUpdateWithWhereUniqueWithoutOrgInput | Prisma.AirIssuedDocumentUpdateWithWhereUniqueWithoutOrgInput[]
+  updateMany?: Prisma.AirIssuedDocumentUpdateManyWithWhereWithoutOrgInput | Prisma.AirIssuedDocumentUpdateManyWithWhereWithoutOrgInput[]
+  deleteMany?: Prisma.AirIssuedDocumentScalarWhereInput | Prisma.AirIssuedDocumentScalarWhereInput[]
+}
+
+export type AirIssuedDocumentUncheckedUpdateManyWithoutOrgNestedInput = {
+  create?: Prisma.XOR<Prisma.AirIssuedDocumentCreateWithoutOrgInput, Prisma.AirIssuedDocumentUncheckedCreateWithoutOrgInput> | Prisma.AirIssuedDocumentCreateWithoutOrgInput[] | Prisma.AirIssuedDocumentUncheckedCreateWithoutOrgInput[]
+  connectOrCreate?: Prisma.AirIssuedDocumentCreateOrConnectWithoutOrgInput | Prisma.AirIssuedDocumentCreateOrConnectWithoutOrgInput[]
+  upsert?: Prisma.AirIssuedDocumentUpsertWithWhereUniqueWithoutOrgInput | Prisma.AirIssuedDocumentUpsertWithWhereUniqueWithoutOrgInput[]
+  createMany?: Prisma.AirIssuedDocumentCreateManyOrgInputEnvelope
+  set?: Prisma.AirIssuedDocumentWhereUniqueInput | Prisma.AirIssuedDocumentWhereUniqueInput[]
+  disconnect?: Prisma.AirIssuedDocumentWhereUniqueInput | Prisma.AirIssuedDocumentWhereUniqueInput[]
+  delete?: Prisma.AirIssuedDocumentWhereUniqueInput | Prisma.AirIssuedDocumentWhereUniqueInput[]
+  connect?: Prisma.AirIssuedDocumentWhereUniqueInput | Prisma.AirIssuedDocumentWhereUniqueInput[]
+  update?: Prisma.AirIssuedDocumentUpdateWithWhereUniqueWithoutOrgInput | Prisma.AirIssuedDocumentUpdateWithWhereUniqueWithoutOrgInput[]
+  updateMany?: Prisma.AirIssuedDocumentUpdateManyWithWhereWithoutOrgInput | Prisma.AirIssuedDocumentUpdateManyWithWhereWithoutOrgInput[]
   deleteMany?: Prisma.AirIssuedDocumentScalarWhereInput | Prisma.AirIssuedDocumentScalarWhereInput[]
 }
 
@@ -803,6 +869,7 @@ export type AirIssuedDocumentCreateWithoutUserInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  org?: Prisma.OrganizationCreateNestedOneWithoutAirIssuedDocumentsInput
   booking: Prisma.BookingCreateNestedOneWithoutAirIssuedDocumentsInput
   bookingItem: Prisma.BookingItemCreateNestedOneWithoutAirIssuedDocumentsInput
   payment: Prisma.PaymentCreateNestedOneWithoutAirIssuedDocumentsInput
@@ -812,6 +879,7 @@ export type AirIssuedDocumentCreateWithoutUserInput = {
 
 export type AirIssuedDocumentUncheckedCreateWithoutUserInput = {
   id?: string
+  orgId?: string | null
   bookingId: string
   bookingItemId: string
   paymentId: string
@@ -858,6 +926,7 @@ export type AirIssuedDocumentScalarWhereInput = {
   OR?: Prisma.AirIssuedDocumentScalarWhereInput[]
   NOT?: Prisma.AirIssuedDocumentScalarWhereInput | Prisma.AirIssuedDocumentScalarWhereInput[]
   id?: Prisma.UuidFilter<"AirIssuedDocument"> | string
+  orgId?: Prisma.UuidNullableFilter<"AirIssuedDocument"> | string | null
   bookingId?: Prisma.UuidFilter<"AirIssuedDocument"> | string
   bookingItemId?: Prisma.UuidFilter<"AirIssuedDocument"> | string
   paymentId?: Prisma.UuidFilter<"AirIssuedDocument"> | string
@@ -874,7 +943,7 @@ export type AirIssuedDocumentScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"AirIssuedDocument"> | Date | string
 }
 
-export type AirIssuedDocumentCreateWithoutFlightInstanceInput = {
+export type AirIssuedDocumentCreateWithoutOrgInput = {
   id?: string
   status?: $Enums.TicketStatus
   code: string
@@ -888,11 +957,75 @@ export type AirIssuedDocumentCreateWithoutFlightInstanceInput = {
   bookingItem: Prisma.BookingItemCreateNestedOneWithoutAirIssuedDocumentsInput
   payment: Prisma.PaymentCreateNestedOneWithoutAirIssuedDocumentsInput
   user: Prisma.UserCreateNestedOneWithoutAirIssuedDocumentsInput
+  flightInstance: Prisma.FlightInstanceCreateNestedOneWithoutAirIssuedDocumentsInput
+  flightCabinInventory: Prisma.FlightCabinInventoryCreateNestedOneWithoutAirIssuedDocumentsInput
+}
+
+export type AirIssuedDocumentUncheckedCreateWithoutOrgInput = {
+  id?: string
+  bookingId: string
+  bookingItemId: string
+  paymentId: string
+  userId: string
+  flightInstanceId: string
+  flightCabinInventoryId: string
+  status?: $Enums.TicketStatus
+  code: string
+  issuedAt?: Date | string
+  voidedAt?: Date | string | null
+  refundedAt?: Date | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type AirIssuedDocumentCreateOrConnectWithoutOrgInput = {
+  where: Prisma.AirIssuedDocumentWhereUniqueInput
+  create: Prisma.XOR<Prisma.AirIssuedDocumentCreateWithoutOrgInput, Prisma.AirIssuedDocumentUncheckedCreateWithoutOrgInput>
+}
+
+export type AirIssuedDocumentCreateManyOrgInputEnvelope = {
+  data: Prisma.AirIssuedDocumentCreateManyOrgInput | Prisma.AirIssuedDocumentCreateManyOrgInput[]
+  skipDuplicates?: boolean
+}
+
+export type AirIssuedDocumentUpsertWithWhereUniqueWithoutOrgInput = {
+  where: Prisma.AirIssuedDocumentWhereUniqueInput
+  update: Prisma.XOR<Prisma.AirIssuedDocumentUpdateWithoutOrgInput, Prisma.AirIssuedDocumentUncheckedUpdateWithoutOrgInput>
+  create: Prisma.XOR<Prisma.AirIssuedDocumentCreateWithoutOrgInput, Prisma.AirIssuedDocumentUncheckedCreateWithoutOrgInput>
+}
+
+export type AirIssuedDocumentUpdateWithWhereUniqueWithoutOrgInput = {
+  where: Prisma.AirIssuedDocumentWhereUniqueInput
+  data: Prisma.XOR<Prisma.AirIssuedDocumentUpdateWithoutOrgInput, Prisma.AirIssuedDocumentUncheckedUpdateWithoutOrgInput>
+}
+
+export type AirIssuedDocumentUpdateManyWithWhereWithoutOrgInput = {
+  where: Prisma.AirIssuedDocumentScalarWhereInput
+  data: Prisma.XOR<Prisma.AirIssuedDocumentUpdateManyMutationInput, Prisma.AirIssuedDocumentUncheckedUpdateManyWithoutOrgInput>
+}
+
+export type AirIssuedDocumentCreateWithoutFlightInstanceInput = {
+  id?: string
+  status?: $Enums.TicketStatus
+  code: string
+  issuedAt?: Date | string
+  voidedAt?: Date | string | null
+  refundedAt?: Date | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  org?: Prisma.OrganizationCreateNestedOneWithoutAirIssuedDocumentsInput
+  booking: Prisma.BookingCreateNestedOneWithoutAirIssuedDocumentsInput
+  bookingItem: Prisma.BookingItemCreateNestedOneWithoutAirIssuedDocumentsInput
+  payment: Prisma.PaymentCreateNestedOneWithoutAirIssuedDocumentsInput
+  user: Prisma.UserCreateNestedOneWithoutAirIssuedDocumentsInput
   flightCabinInventory: Prisma.FlightCabinInventoryCreateNestedOneWithoutAirIssuedDocumentsInput
 }
 
 export type AirIssuedDocumentUncheckedCreateWithoutFlightInstanceInput = {
   id?: string
+  orgId?: string | null
   bookingId: string
   bookingItemId: string
   paymentId: string
@@ -944,6 +1077,7 @@ export type AirIssuedDocumentCreateWithoutFlightCabinInventoryInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  org?: Prisma.OrganizationCreateNestedOneWithoutAirIssuedDocumentsInput
   booking: Prisma.BookingCreateNestedOneWithoutAirIssuedDocumentsInput
   bookingItem: Prisma.BookingItemCreateNestedOneWithoutAirIssuedDocumentsInput
   payment: Prisma.PaymentCreateNestedOneWithoutAirIssuedDocumentsInput
@@ -953,6 +1087,7 @@ export type AirIssuedDocumentCreateWithoutFlightCabinInventoryInput = {
 
 export type AirIssuedDocumentUncheckedCreateWithoutFlightCabinInventoryInput = {
   id?: string
+  orgId?: string | null
   bookingId: string
   bookingItemId: string
   paymentId: string
@@ -1004,6 +1139,7 @@ export type AirIssuedDocumentCreateWithoutBookingInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  org?: Prisma.OrganizationCreateNestedOneWithoutAirIssuedDocumentsInput
   bookingItem: Prisma.BookingItemCreateNestedOneWithoutAirIssuedDocumentsInput
   payment: Prisma.PaymentCreateNestedOneWithoutAirIssuedDocumentsInput
   user: Prisma.UserCreateNestedOneWithoutAirIssuedDocumentsInput
@@ -1013,6 +1149,7 @@ export type AirIssuedDocumentCreateWithoutBookingInput = {
 
 export type AirIssuedDocumentUncheckedCreateWithoutBookingInput = {
   id?: string
+  orgId?: string | null
   bookingItemId: string
   paymentId: string
   userId: string
@@ -1064,6 +1201,7 @@ export type AirIssuedDocumentCreateWithoutBookingItemInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  org?: Prisma.OrganizationCreateNestedOneWithoutAirIssuedDocumentsInput
   booking: Prisma.BookingCreateNestedOneWithoutAirIssuedDocumentsInput
   payment: Prisma.PaymentCreateNestedOneWithoutAirIssuedDocumentsInput
   user: Prisma.UserCreateNestedOneWithoutAirIssuedDocumentsInput
@@ -1073,6 +1211,7 @@ export type AirIssuedDocumentCreateWithoutBookingItemInput = {
 
 export type AirIssuedDocumentUncheckedCreateWithoutBookingItemInput = {
   id?: string
+  orgId?: string | null
   bookingId: string
   paymentId: string
   userId: string
@@ -1124,6 +1263,7 @@ export type AirIssuedDocumentCreateWithoutPaymentInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  org?: Prisma.OrganizationCreateNestedOneWithoutAirIssuedDocumentsInput
   booking: Prisma.BookingCreateNestedOneWithoutAirIssuedDocumentsInput
   bookingItem: Prisma.BookingItemCreateNestedOneWithoutAirIssuedDocumentsInput
   user: Prisma.UserCreateNestedOneWithoutAirIssuedDocumentsInput
@@ -1133,6 +1273,7 @@ export type AirIssuedDocumentCreateWithoutPaymentInput = {
 
 export type AirIssuedDocumentUncheckedCreateWithoutPaymentInput = {
   id?: string
+  orgId?: string | null
   bookingId: string
   bookingItemId: string
   userId: string
@@ -1176,6 +1317,7 @@ export type AirIssuedDocumentUpdateManyWithWhereWithoutPaymentInput = {
 
 export type AirIssuedDocumentCreateManyUserInput = {
   id?: string
+  orgId?: string | null
   bookingId: string
   bookingItemId: string
   paymentId: string
@@ -1201,6 +1343,7 @@ export type AirIssuedDocumentUpdateWithoutUserInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  org?: Prisma.OrganizationUpdateOneWithoutAirIssuedDocumentsNestedInput
   booking?: Prisma.BookingUpdateOneRequiredWithoutAirIssuedDocumentsNestedInput
   bookingItem?: Prisma.BookingItemUpdateOneRequiredWithoutAirIssuedDocumentsNestedInput
   payment?: Prisma.PaymentUpdateOneRequiredWithoutAirIssuedDocumentsNestedInput
@@ -1210,6 +1353,7 @@ export type AirIssuedDocumentUpdateWithoutUserInput = {
 
 export type AirIssuedDocumentUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  orgId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bookingId?: Prisma.StringFieldUpdateOperationsInput | string
   bookingItemId?: Prisma.StringFieldUpdateOperationsInput | string
   paymentId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1227,6 +1371,7 @@ export type AirIssuedDocumentUncheckedUpdateWithoutUserInput = {
 
 export type AirIssuedDocumentUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  orgId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bookingId?: Prisma.StringFieldUpdateOperationsInput | string
   bookingItemId?: Prisma.StringFieldUpdateOperationsInput | string
   paymentId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1242,8 +1387,81 @@ export type AirIssuedDocumentUncheckedUpdateManyWithoutUserInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type AirIssuedDocumentCreateManyOrgInput = {
+  id?: string
+  bookingId: string
+  bookingItemId: string
+  paymentId: string
+  userId: string
+  flightInstanceId: string
+  flightCabinInventoryId: string
+  status?: $Enums.TicketStatus
+  code: string
+  issuedAt?: Date | string
+  voidedAt?: Date | string | null
+  refundedAt?: Date | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type AirIssuedDocumentUpdateWithoutOrgInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTicketStatusFieldUpdateOperationsInput | $Enums.TicketStatus
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  issuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  voidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  booking?: Prisma.BookingUpdateOneRequiredWithoutAirIssuedDocumentsNestedInput
+  bookingItem?: Prisma.BookingItemUpdateOneRequiredWithoutAirIssuedDocumentsNestedInput
+  payment?: Prisma.PaymentUpdateOneRequiredWithoutAirIssuedDocumentsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutAirIssuedDocumentsNestedInput
+  flightInstance?: Prisma.FlightInstanceUpdateOneRequiredWithoutAirIssuedDocumentsNestedInput
+  flightCabinInventory?: Prisma.FlightCabinInventoryUpdateOneRequiredWithoutAirIssuedDocumentsNestedInput
+}
+
+export type AirIssuedDocumentUncheckedUpdateWithoutOrgInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  bookingId?: Prisma.StringFieldUpdateOperationsInput | string
+  bookingItemId?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  flightInstanceId?: Prisma.StringFieldUpdateOperationsInput | string
+  flightCabinInventoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTicketStatusFieldUpdateOperationsInput | $Enums.TicketStatus
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  issuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  voidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type AirIssuedDocumentUncheckedUpdateManyWithoutOrgInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  bookingId?: Prisma.StringFieldUpdateOperationsInput | string
+  bookingItemId?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  flightInstanceId?: Prisma.StringFieldUpdateOperationsInput | string
+  flightCabinInventoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTicketStatusFieldUpdateOperationsInput | $Enums.TicketStatus
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  issuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  voidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 export type AirIssuedDocumentCreateManyFlightInstanceInput = {
   id?: string
+  orgId?: string | null
   bookingId: string
   bookingItemId: string
   paymentId: string
@@ -1269,6 +1487,7 @@ export type AirIssuedDocumentUpdateWithoutFlightInstanceInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  org?: Prisma.OrganizationUpdateOneWithoutAirIssuedDocumentsNestedInput
   booking?: Prisma.BookingUpdateOneRequiredWithoutAirIssuedDocumentsNestedInput
   bookingItem?: Prisma.BookingItemUpdateOneRequiredWithoutAirIssuedDocumentsNestedInput
   payment?: Prisma.PaymentUpdateOneRequiredWithoutAirIssuedDocumentsNestedInput
@@ -1278,6 +1497,7 @@ export type AirIssuedDocumentUpdateWithoutFlightInstanceInput = {
 
 export type AirIssuedDocumentUncheckedUpdateWithoutFlightInstanceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  orgId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bookingId?: Prisma.StringFieldUpdateOperationsInput | string
   bookingItemId?: Prisma.StringFieldUpdateOperationsInput | string
   paymentId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1295,6 +1515,7 @@ export type AirIssuedDocumentUncheckedUpdateWithoutFlightInstanceInput = {
 
 export type AirIssuedDocumentUncheckedUpdateManyWithoutFlightInstanceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  orgId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bookingId?: Prisma.StringFieldUpdateOperationsInput | string
   bookingItemId?: Prisma.StringFieldUpdateOperationsInput | string
   paymentId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1312,6 +1533,7 @@ export type AirIssuedDocumentUncheckedUpdateManyWithoutFlightInstanceInput = {
 
 export type AirIssuedDocumentCreateManyFlightCabinInventoryInput = {
   id?: string
+  orgId?: string | null
   bookingId: string
   bookingItemId: string
   paymentId: string
@@ -1337,6 +1559,7 @@ export type AirIssuedDocumentUpdateWithoutFlightCabinInventoryInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  org?: Prisma.OrganizationUpdateOneWithoutAirIssuedDocumentsNestedInput
   booking?: Prisma.BookingUpdateOneRequiredWithoutAirIssuedDocumentsNestedInput
   bookingItem?: Prisma.BookingItemUpdateOneRequiredWithoutAirIssuedDocumentsNestedInput
   payment?: Prisma.PaymentUpdateOneRequiredWithoutAirIssuedDocumentsNestedInput
@@ -1346,6 +1569,7 @@ export type AirIssuedDocumentUpdateWithoutFlightCabinInventoryInput = {
 
 export type AirIssuedDocumentUncheckedUpdateWithoutFlightCabinInventoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  orgId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bookingId?: Prisma.StringFieldUpdateOperationsInput | string
   bookingItemId?: Prisma.StringFieldUpdateOperationsInput | string
   paymentId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1363,6 +1587,7 @@ export type AirIssuedDocumentUncheckedUpdateWithoutFlightCabinInventoryInput = {
 
 export type AirIssuedDocumentUncheckedUpdateManyWithoutFlightCabinInventoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  orgId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bookingId?: Prisma.StringFieldUpdateOperationsInput | string
   bookingItemId?: Prisma.StringFieldUpdateOperationsInput | string
   paymentId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1380,6 +1605,7 @@ export type AirIssuedDocumentUncheckedUpdateManyWithoutFlightCabinInventoryInput
 
 export type AirIssuedDocumentCreateManyBookingInput = {
   id?: string
+  orgId?: string | null
   bookingItemId: string
   paymentId: string
   userId: string
@@ -1405,6 +1631,7 @@ export type AirIssuedDocumentUpdateWithoutBookingInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  org?: Prisma.OrganizationUpdateOneWithoutAirIssuedDocumentsNestedInput
   bookingItem?: Prisma.BookingItemUpdateOneRequiredWithoutAirIssuedDocumentsNestedInput
   payment?: Prisma.PaymentUpdateOneRequiredWithoutAirIssuedDocumentsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutAirIssuedDocumentsNestedInput
@@ -1414,6 +1641,7 @@ export type AirIssuedDocumentUpdateWithoutBookingInput = {
 
 export type AirIssuedDocumentUncheckedUpdateWithoutBookingInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  orgId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bookingItemId?: Prisma.StringFieldUpdateOperationsInput | string
   paymentId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1431,6 +1659,7 @@ export type AirIssuedDocumentUncheckedUpdateWithoutBookingInput = {
 
 export type AirIssuedDocumentUncheckedUpdateManyWithoutBookingInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  orgId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bookingItemId?: Prisma.StringFieldUpdateOperationsInput | string
   paymentId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1448,6 +1677,7 @@ export type AirIssuedDocumentUncheckedUpdateManyWithoutBookingInput = {
 
 export type AirIssuedDocumentCreateManyBookingItemInput = {
   id?: string
+  orgId?: string | null
   bookingId: string
   paymentId: string
   userId: string
@@ -1473,6 +1703,7 @@ export type AirIssuedDocumentUpdateWithoutBookingItemInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  org?: Prisma.OrganizationUpdateOneWithoutAirIssuedDocumentsNestedInput
   booking?: Prisma.BookingUpdateOneRequiredWithoutAirIssuedDocumentsNestedInput
   payment?: Prisma.PaymentUpdateOneRequiredWithoutAirIssuedDocumentsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutAirIssuedDocumentsNestedInput
@@ -1482,6 +1713,7 @@ export type AirIssuedDocumentUpdateWithoutBookingItemInput = {
 
 export type AirIssuedDocumentUncheckedUpdateWithoutBookingItemInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  orgId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bookingId?: Prisma.StringFieldUpdateOperationsInput | string
   paymentId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1499,6 +1731,7 @@ export type AirIssuedDocumentUncheckedUpdateWithoutBookingItemInput = {
 
 export type AirIssuedDocumentUncheckedUpdateManyWithoutBookingItemInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  orgId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bookingId?: Prisma.StringFieldUpdateOperationsInput | string
   paymentId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1516,6 +1749,7 @@ export type AirIssuedDocumentUncheckedUpdateManyWithoutBookingItemInput = {
 
 export type AirIssuedDocumentCreateManyPaymentInput = {
   id?: string
+  orgId?: string | null
   bookingId: string
   bookingItemId: string
   userId: string
@@ -1541,6 +1775,7 @@ export type AirIssuedDocumentUpdateWithoutPaymentInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  org?: Prisma.OrganizationUpdateOneWithoutAirIssuedDocumentsNestedInput
   booking?: Prisma.BookingUpdateOneRequiredWithoutAirIssuedDocumentsNestedInput
   bookingItem?: Prisma.BookingItemUpdateOneRequiredWithoutAirIssuedDocumentsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutAirIssuedDocumentsNestedInput
@@ -1550,6 +1785,7 @@ export type AirIssuedDocumentUpdateWithoutPaymentInput = {
 
 export type AirIssuedDocumentUncheckedUpdateWithoutPaymentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  orgId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bookingId?: Prisma.StringFieldUpdateOperationsInput | string
   bookingItemId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1567,6 +1803,7 @@ export type AirIssuedDocumentUncheckedUpdateWithoutPaymentInput = {
 
 export type AirIssuedDocumentUncheckedUpdateManyWithoutPaymentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  orgId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bookingId?: Prisma.StringFieldUpdateOperationsInput | string
   bookingItemId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1586,6 +1823,7 @@ export type AirIssuedDocumentUncheckedUpdateManyWithoutPaymentInput = {
 
 export type AirIssuedDocumentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  orgId?: boolean
   bookingId?: boolean
   bookingItemId?: boolean
   paymentId?: boolean
@@ -1600,6 +1838,7 @@ export type AirIssuedDocumentSelect<ExtArgs extends runtime.Types.Extensions.Int
   metadata?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  org?: boolean | Prisma.AirIssuedDocument$orgArgs<ExtArgs>
   booking?: boolean | Prisma.BookingDefaultArgs<ExtArgs>
   bookingItem?: boolean | Prisma.BookingItemDefaultArgs<ExtArgs>
   payment?: boolean | Prisma.PaymentDefaultArgs<ExtArgs>
@@ -1610,6 +1849,7 @@ export type AirIssuedDocumentSelect<ExtArgs extends runtime.Types.Extensions.Int
 
 export type AirIssuedDocumentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  orgId?: boolean
   bookingId?: boolean
   bookingItemId?: boolean
   paymentId?: boolean
@@ -1624,6 +1864,7 @@ export type AirIssuedDocumentSelectCreateManyAndReturn<ExtArgs extends runtime.T
   metadata?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  org?: boolean | Prisma.AirIssuedDocument$orgArgs<ExtArgs>
   booking?: boolean | Prisma.BookingDefaultArgs<ExtArgs>
   bookingItem?: boolean | Prisma.BookingItemDefaultArgs<ExtArgs>
   payment?: boolean | Prisma.PaymentDefaultArgs<ExtArgs>
@@ -1634,6 +1875,7 @@ export type AirIssuedDocumentSelectCreateManyAndReturn<ExtArgs extends runtime.T
 
 export type AirIssuedDocumentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  orgId?: boolean
   bookingId?: boolean
   bookingItemId?: boolean
   paymentId?: boolean
@@ -1648,6 +1890,7 @@ export type AirIssuedDocumentSelectUpdateManyAndReturn<ExtArgs extends runtime.T
   metadata?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  org?: boolean | Prisma.AirIssuedDocument$orgArgs<ExtArgs>
   booking?: boolean | Prisma.BookingDefaultArgs<ExtArgs>
   bookingItem?: boolean | Prisma.BookingItemDefaultArgs<ExtArgs>
   payment?: boolean | Prisma.PaymentDefaultArgs<ExtArgs>
@@ -1658,6 +1901,7 @@ export type AirIssuedDocumentSelectUpdateManyAndReturn<ExtArgs extends runtime.T
 
 export type AirIssuedDocumentSelectScalar = {
   id?: boolean
+  orgId?: boolean
   bookingId?: boolean
   bookingItemId?: boolean
   paymentId?: boolean
@@ -1674,8 +1918,9 @@ export type AirIssuedDocumentSelectScalar = {
   updatedAt?: boolean
 }
 
-export type AirIssuedDocumentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "bookingId" | "bookingItemId" | "paymentId" | "userId" | "flightInstanceId" | "flightCabinInventoryId" | "status" | "code" | "issuedAt" | "voidedAt" | "refundedAt" | "metadata" | "createdAt" | "updatedAt", ExtArgs["result"]["airIssuedDocument"]>
+export type AirIssuedDocumentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orgId" | "bookingId" | "bookingItemId" | "paymentId" | "userId" | "flightInstanceId" | "flightCabinInventoryId" | "status" | "code" | "issuedAt" | "voidedAt" | "refundedAt" | "metadata" | "createdAt" | "updatedAt", ExtArgs["result"]["airIssuedDocument"]>
 export type AirIssuedDocumentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  org?: boolean | Prisma.AirIssuedDocument$orgArgs<ExtArgs>
   booking?: boolean | Prisma.BookingDefaultArgs<ExtArgs>
   bookingItem?: boolean | Prisma.BookingItemDefaultArgs<ExtArgs>
   payment?: boolean | Prisma.PaymentDefaultArgs<ExtArgs>
@@ -1684,6 +1929,7 @@ export type AirIssuedDocumentInclude<ExtArgs extends runtime.Types.Extensions.In
   flightCabinInventory?: boolean | Prisma.FlightCabinInventoryDefaultArgs<ExtArgs>
 }
 export type AirIssuedDocumentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  org?: boolean | Prisma.AirIssuedDocument$orgArgs<ExtArgs>
   booking?: boolean | Prisma.BookingDefaultArgs<ExtArgs>
   bookingItem?: boolean | Prisma.BookingItemDefaultArgs<ExtArgs>
   payment?: boolean | Prisma.PaymentDefaultArgs<ExtArgs>
@@ -1692,6 +1938,7 @@ export type AirIssuedDocumentIncludeCreateManyAndReturn<ExtArgs extends runtime.
   flightCabinInventory?: boolean | Prisma.FlightCabinInventoryDefaultArgs<ExtArgs>
 }
 export type AirIssuedDocumentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  org?: boolean | Prisma.AirIssuedDocument$orgArgs<ExtArgs>
   booking?: boolean | Prisma.BookingDefaultArgs<ExtArgs>
   bookingItem?: boolean | Prisma.BookingItemDefaultArgs<ExtArgs>
   payment?: boolean | Prisma.PaymentDefaultArgs<ExtArgs>
@@ -1703,6 +1950,7 @@ export type AirIssuedDocumentIncludeUpdateManyAndReturn<ExtArgs extends runtime.
 export type $AirIssuedDocumentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "AirIssuedDocument"
   objects: {
+    org: Prisma.$OrganizationPayload<ExtArgs> | null
     booking: Prisma.$BookingPayload<ExtArgs>
     bookingItem: Prisma.$BookingItemPayload<ExtArgs>
     payment: Prisma.$PaymentPayload<ExtArgs>
@@ -1712,6 +1960,7 @@ export type $AirIssuedDocumentPayload<ExtArgs extends runtime.Types.Extensions.I
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
+    orgId: string | null
     bookingId: string
     bookingItemId: string
     paymentId: string
@@ -2120,6 +2369,7 @@ readonly fields: AirIssuedDocumentFieldRefs;
  */
 export interface Prisma__AirIssuedDocumentClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  org<T extends Prisma.AirIssuedDocument$orgArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AirIssuedDocument$orgArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   booking<T extends Prisma.BookingDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.BookingDefaultArgs<ExtArgs>>): Prisma.Prisma__BookingClient<runtime.Types.Result.GetResult<Prisma.$BookingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   bookingItem<T extends Prisma.BookingItemDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.BookingItemDefaultArgs<ExtArgs>>): Prisma.Prisma__BookingItemClient<runtime.Types.Result.GetResult<Prisma.$BookingItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   payment<T extends Prisma.PaymentDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PaymentDefaultArgs<ExtArgs>>): Prisma.Prisma__PaymentClient<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
@@ -2156,6 +2406,7 @@ export interface Prisma__AirIssuedDocumentClient<T, Null = never, ExtArgs extend
  */
 export interface AirIssuedDocumentFieldRefs {
   readonly id: Prisma.FieldRef<"AirIssuedDocument", 'String'>
+  readonly orgId: Prisma.FieldRef<"AirIssuedDocument", 'String'>
   readonly bookingId: Prisma.FieldRef<"AirIssuedDocument", 'String'>
   readonly bookingItemId: Prisma.FieldRef<"AirIssuedDocument", 'String'>
   readonly paymentId: Prisma.FieldRef<"AirIssuedDocument", 'String'>
@@ -2563,6 +2814,25 @@ export type AirIssuedDocumentDeleteManyArgs<ExtArgs extends runtime.Types.Extens
    * Limit how many AirIssuedDocuments to delete.
    */
   limit?: number
+}
+
+/**
+ * AirIssuedDocument.org
+ */
+export type AirIssuedDocument$orgArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Organization
+   */
+  select?: Prisma.OrganizationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Organization
+   */
+  omit?: Prisma.OrganizationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrganizationInclude<ExtArgs> | null
+  where?: Prisma.OrganizationWhereInput
 }
 
 /**

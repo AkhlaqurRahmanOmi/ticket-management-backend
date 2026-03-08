@@ -219,3 +219,39 @@ export class RailHoldReadPolicyProvider implements PolicyHandler {
     return hasTenantStaffAccess(authz, hold.orgId);
   }
 }
+
+@Injectable()
+export class AirHoldReadPolicyProvider implements PolicyHandler {
+  constructor(
+    private readonly prisma: PrismaService,
+    @Inject(AUTHORIZATION_PROVIDER)
+    private readonly authorizationProvider: AuthorizationProvider,
+  ) {}
+
+  async handle({ user, request }: PolicyContext): Promise<boolean> {
+    const holdId = getRouteParam(request.params?.holdId);
+    if (!holdId) return false;
+
+    const hold = await this.prisma.booking.findFirst({
+      where: {
+        id: holdId,
+        domainType: 'AIR',
+      },
+      select: {
+        userId: true,
+        orgId: true,
+      },
+    });
+
+    if (!hold?.orgId) return false;
+    if (!tenantMatchesResolvedContext(request, hold.orgId)) return false;
+    if (hold.userId === user.id) return true;
+
+    const authz = await this.authorizationProvider.getUserAuthorizationContext(
+      user.id,
+    );
+    if (authz.roles.includes('SUPER_ADMIN')) return true;
+
+    return hasTenantStaffAccess(authz, hold.orgId);
+  }
+}

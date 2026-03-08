@@ -300,7 +300,7 @@ export type RailTripWhereInput = {
   feesCents?: Prisma.IntFilter<"RailTrip"> | number
   createdAt?: Prisma.DateTimeFilter<"RailTrip"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"RailTrip"> | Date | string
-  org?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
+  org?: Prisma.XOR<Prisma.OrganizationNullableScalarRelationFilter, Prisma.OrganizationWhereInput> | null
   route?: Prisma.XOR<Prisma.RailRouteNullableScalarRelationFilter, Prisma.RailRouteWhereInput> | null
   originStation?: Prisma.XOR<Prisma.RailStationScalarRelationFilter, Prisma.RailStationWhereInput>
   destinationStation?: Prisma.XOR<Prisma.RailStationScalarRelationFilter, Prisma.RailStationWhereInput>
@@ -357,7 +357,7 @@ export type RailTripWhereUniqueInput = Prisma.AtLeast<{
   feesCents?: Prisma.IntFilter<"RailTrip"> | number
   createdAt?: Prisma.DateTimeFilter<"RailTrip"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"RailTrip"> | Date | string
-  org?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
+  org?: Prisma.XOR<Prisma.OrganizationNullableScalarRelationFilter, Prisma.OrganizationWhereInput> | null
   route?: Prisma.XOR<Prisma.RailRouteNullableScalarRelationFilter, Prisma.RailRouteWhereInput> | null
   originStation?: Prisma.XOR<Prisma.RailStationScalarRelationFilter, Prisma.RailStationWhereInput>
   destinationStation?: Prisma.XOR<Prisma.RailStationScalarRelationFilter, Prisma.RailStationWhereInput>
@@ -424,7 +424,7 @@ export type RailTripCreateInput = {
   feesCents?: number
   createdAt?: Date | string
   updatedAt?: Date | string
-  org: Prisma.OrganizationCreateNestedOneWithoutRailTripsInput
+  org?: Prisma.OrganizationCreateNestedOneWithoutRailTripsInput
   route?: Prisma.RailRouteCreateNestedOneWithoutTripsInput
   originStation: Prisma.RailStationCreateNestedOneWithoutOriginTripsInput
   destinationStation: Prisma.RailStationCreateNestedOneWithoutDestinationTripsInput
@@ -470,7 +470,7 @@ export type RailTripUpdateInput = {
   feesCents?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  org?: Prisma.OrganizationUpdateOneRequiredWithoutRailTripsNestedInput
+  org?: Prisma.OrganizationUpdateOneWithoutRailTripsNestedInput
   route?: Prisma.RailRouteUpdateOneWithoutTripsNestedInput
   originStation?: Prisma.RailStationUpdateOneRequiredWithoutOriginTripsNestedInput
   destinationStation?: Prisma.RailStationUpdateOneRequiredWithoutDestinationTripsNestedInput
@@ -978,7 +978,7 @@ export type RailTripCreateWithoutOriginStationInput = {
   feesCents?: number
   createdAt?: Date | string
   updatedAt?: Date | string
-  org: Prisma.OrganizationCreateNestedOneWithoutRailTripsInput
+  org?: Prisma.OrganizationCreateNestedOneWithoutRailTripsInput
   route?: Prisma.RailRouteCreateNestedOneWithoutTripsInput
   destinationStation: Prisma.RailStationCreateNestedOneWithoutDestinationTripsInput
   coaches?: Prisma.RailCoachCreateNestedManyWithoutTripInput
@@ -1032,7 +1032,7 @@ export type RailTripCreateWithoutDestinationStationInput = {
   feesCents?: number
   createdAt?: Date | string
   updatedAt?: Date | string
-  org: Prisma.OrganizationCreateNestedOneWithoutRailTripsInput
+  org?: Prisma.OrganizationCreateNestedOneWithoutRailTripsInput
   route?: Prisma.RailRouteCreateNestedOneWithoutTripsInput
   originStation: Prisma.RailStationCreateNestedOneWithoutOriginTripsInput
   coaches?: Prisma.RailCoachCreateNestedManyWithoutTripInput
@@ -1118,7 +1118,7 @@ export type RailTripCreateWithoutRouteInput = {
   feesCents?: number
   createdAt?: Date | string
   updatedAt?: Date | string
-  org: Prisma.OrganizationCreateNestedOneWithoutRailTripsInput
+  org?: Prisma.OrganizationCreateNestedOneWithoutRailTripsInput
   originStation: Prisma.RailStationCreateNestedOneWithoutOriginTripsInput
   destinationStation: Prisma.RailStationCreateNestedOneWithoutDestinationTripsInput
   coaches?: Prisma.RailCoachCreateNestedManyWithoutTripInput
@@ -1188,7 +1188,7 @@ export type RailTripCreateWithoutStopsInput = {
   feesCents?: number
   createdAt?: Date | string
   updatedAt?: Date | string
-  org: Prisma.OrganizationCreateNestedOneWithoutRailTripsInput
+  org?: Prisma.OrganizationCreateNestedOneWithoutRailTripsInput
   route?: Prisma.RailRouteCreateNestedOneWithoutTripsInput
   originStation: Prisma.RailStationCreateNestedOneWithoutOriginTripsInput
   destinationStation: Prisma.RailStationCreateNestedOneWithoutDestinationTripsInput
@@ -1248,7 +1248,7 @@ export type RailTripUpdateWithoutStopsInput = {
   feesCents?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  org?: Prisma.OrganizationUpdateOneRequiredWithoutRailTripsNestedInput
+  org?: Prisma.OrganizationUpdateOneWithoutRailTripsNestedInput
   route?: Prisma.RailRouteUpdateOneWithoutTripsNestedInput
   originStation?: Prisma.RailStationUpdateOneRequiredWithoutOriginTripsNestedInput
   destinationStation?: Prisma.RailStationUpdateOneRequiredWithoutDestinationTripsNestedInput
@@ -1292,7 +1292,7 @@ export type RailTripCreateWithoutCoachesInput = {
   feesCents?: number
   createdAt?: Date | string
   updatedAt?: Date | string
-  org: Prisma.OrganizationCreateNestedOneWithoutRailTripsInput
+  org?: Prisma.OrganizationCreateNestedOneWithoutRailTripsInput
   route?: Prisma.RailRouteCreateNestedOneWithoutTripsInput
   originStation: Prisma.RailStationCreateNestedOneWithoutOriginTripsInput
   destinationStation: Prisma.RailStationCreateNestedOneWithoutDestinationTripsInput
@@ -1352,7 +1352,7 @@ export type RailTripUpdateWithoutCoachesInput = {
   feesCents?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  org?: Prisma.OrganizationUpdateOneRequiredWithoutRailTripsNestedInput
+  org?: Prisma.OrganizationUpdateOneWithoutRailTripsNestedInput
   route?: Prisma.RailRouteUpdateOneWithoutTripsNestedInput
   originStation?: Prisma.RailStationUpdateOneRequiredWithoutOriginTripsNestedInput
   destinationStation?: Prisma.RailStationUpdateOneRequiredWithoutDestinationTripsNestedInput
@@ -1396,7 +1396,7 @@ export type RailTripCreateWithoutSeatInventoryInput = {
   feesCents?: number
   createdAt?: Date | string
   updatedAt?: Date | string
-  org: Prisma.OrganizationCreateNestedOneWithoutRailTripsInput
+  org?: Prisma.OrganizationCreateNestedOneWithoutRailTripsInput
   route?: Prisma.RailRouteCreateNestedOneWithoutTripsInput
   originStation: Prisma.RailStationCreateNestedOneWithoutOriginTripsInput
   destinationStation: Prisma.RailStationCreateNestedOneWithoutDestinationTripsInput
@@ -1456,7 +1456,7 @@ export type RailTripUpdateWithoutSeatInventoryInput = {
   feesCents?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  org?: Prisma.OrganizationUpdateOneRequiredWithoutRailTripsNestedInput
+  org?: Prisma.OrganizationUpdateOneWithoutRailTripsNestedInput
   route?: Prisma.RailRouteUpdateOneWithoutTripsNestedInput
   originStation?: Prisma.RailStationUpdateOneRequiredWithoutOriginTripsNestedInput
   destinationStation?: Prisma.RailStationUpdateOneRequiredWithoutDestinationTripsNestedInput
@@ -1500,7 +1500,7 @@ export type RailTripCreateWithoutSeatAllocationsInput = {
   feesCents?: number
   createdAt?: Date | string
   updatedAt?: Date | string
-  org: Prisma.OrganizationCreateNestedOneWithoutRailTripsInput
+  org?: Prisma.OrganizationCreateNestedOneWithoutRailTripsInput
   route?: Prisma.RailRouteCreateNestedOneWithoutTripsInput
   originStation: Prisma.RailStationCreateNestedOneWithoutOriginTripsInput
   destinationStation: Prisma.RailStationCreateNestedOneWithoutDestinationTripsInput
@@ -1560,7 +1560,7 @@ export type RailTripUpdateWithoutSeatAllocationsInput = {
   feesCents?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  org?: Prisma.OrganizationUpdateOneRequiredWithoutRailTripsNestedInput
+  org?: Prisma.OrganizationUpdateOneWithoutRailTripsNestedInput
   route?: Prisma.RailRouteUpdateOneWithoutTripsNestedInput
   originStation?: Prisma.RailStationUpdateOneRequiredWithoutOriginTripsNestedInput
   destinationStation?: Prisma.RailStationUpdateOneRequiredWithoutDestinationTripsNestedInput
@@ -1604,7 +1604,7 @@ export type RailTripCreateWithoutIssuedDocumentsInput = {
   feesCents?: number
   createdAt?: Date | string
   updatedAt?: Date | string
-  org: Prisma.OrganizationCreateNestedOneWithoutRailTripsInput
+  org?: Prisma.OrganizationCreateNestedOneWithoutRailTripsInput
   route?: Prisma.RailRouteCreateNestedOneWithoutTripsInput
   originStation: Prisma.RailStationCreateNestedOneWithoutOriginTripsInput
   destinationStation: Prisma.RailStationCreateNestedOneWithoutDestinationTripsInput
@@ -1664,7 +1664,7 @@ export type RailTripUpdateWithoutIssuedDocumentsInput = {
   feesCents?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  org?: Prisma.OrganizationUpdateOneRequiredWithoutRailTripsNestedInput
+  org?: Prisma.OrganizationUpdateOneWithoutRailTripsNestedInput
   route?: Prisma.RailRouteUpdateOneWithoutTripsNestedInput
   originStation?: Prisma.RailStationUpdateOneRequiredWithoutOriginTripsNestedInput
   destinationStation?: Prisma.RailStationUpdateOneRequiredWithoutDestinationTripsNestedInput
@@ -1820,7 +1820,7 @@ export type RailTripUpdateWithoutOriginStationInput = {
   feesCents?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  org?: Prisma.OrganizationUpdateOneRequiredWithoutRailTripsNestedInput
+  org?: Prisma.OrganizationUpdateOneWithoutRailTripsNestedInput
   route?: Prisma.RailRouteUpdateOneWithoutTripsNestedInput
   destinationStation?: Prisma.RailStationUpdateOneRequiredWithoutDestinationTripsNestedInput
   coaches?: Prisma.RailCoachUpdateManyWithoutTripNestedInput
@@ -1881,7 +1881,7 @@ export type RailTripUpdateWithoutDestinationStationInput = {
   feesCents?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  org?: Prisma.OrganizationUpdateOneRequiredWithoutRailTripsNestedInput
+  org?: Prisma.OrganizationUpdateOneWithoutRailTripsNestedInput
   route?: Prisma.RailRouteUpdateOneWithoutTripsNestedInput
   originStation?: Prisma.RailStationUpdateOneRequiredWithoutOriginTripsNestedInput
   coaches?: Prisma.RailCoachUpdateManyWithoutTripNestedInput
@@ -1959,7 +1959,7 @@ export type RailTripUpdateWithoutRouteInput = {
   feesCents?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  org?: Prisma.OrganizationUpdateOneRequiredWithoutRailTripsNestedInput
+  org?: Prisma.OrganizationUpdateOneWithoutRailTripsNestedInput
   originStation?: Prisma.RailStationUpdateOneRequiredWithoutOriginTripsNestedInput
   destinationStation?: Prisma.RailStationUpdateOneRequiredWithoutDestinationTripsNestedInput
   coaches?: Prisma.RailCoachUpdateManyWithoutTripNestedInput
@@ -2091,7 +2091,7 @@ export type RailTripSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   feesCents?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  org?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  org?: boolean | Prisma.RailTrip$orgArgs<ExtArgs>
   route?: boolean | Prisma.RailTrip$routeArgs<ExtArgs>
   originStation?: boolean | Prisma.RailStationDefaultArgs<ExtArgs>
   destinationStation?: boolean | Prisma.RailStationDefaultArgs<ExtArgs>
@@ -2119,7 +2119,7 @@ export type RailTripSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   feesCents?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  org?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  org?: boolean | Prisma.RailTrip$orgArgs<ExtArgs>
   route?: boolean | Prisma.RailTrip$routeArgs<ExtArgs>
   originStation?: boolean | Prisma.RailStationDefaultArgs<ExtArgs>
   destinationStation?: boolean | Prisma.RailStationDefaultArgs<ExtArgs>
@@ -2141,7 +2141,7 @@ export type RailTripSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   feesCents?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  org?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  org?: boolean | Prisma.RailTrip$orgArgs<ExtArgs>
   route?: boolean | Prisma.RailTrip$routeArgs<ExtArgs>
   originStation?: boolean | Prisma.RailStationDefaultArgs<ExtArgs>
   destinationStation?: boolean | Prisma.RailStationDefaultArgs<ExtArgs>
@@ -2167,7 +2167,7 @@ export type RailTripSelectScalar = {
 
 export type RailTripOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orgId" | "routeId" | "originStationId" | "destinationStationId" | "tripNumber" | "title" | "departsAt" | "arrivesAt" | "status" | "currency" | "basePriceCents" | "feesCents" | "createdAt" | "updatedAt", ExtArgs["result"]["railTrip"]>
 export type RailTripInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  org?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  org?: boolean | Prisma.RailTrip$orgArgs<ExtArgs>
   route?: boolean | Prisma.RailTrip$routeArgs<ExtArgs>
   originStation?: boolean | Prisma.RailStationDefaultArgs<ExtArgs>
   destinationStation?: boolean | Prisma.RailStationDefaultArgs<ExtArgs>
@@ -2179,13 +2179,13 @@ export type RailTripInclude<ExtArgs extends runtime.Types.Extensions.InternalArg
   _count?: boolean | Prisma.RailTripCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type RailTripIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  org?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  org?: boolean | Prisma.RailTrip$orgArgs<ExtArgs>
   route?: boolean | Prisma.RailTrip$routeArgs<ExtArgs>
   originStation?: boolean | Prisma.RailStationDefaultArgs<ExtArgs>
   destinationStation?: boolean | Prisma.RailStationDefaultArgs<ExtArgs>
 }
 export type RailTripIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  org?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  org?: boolean | Prisma.RailTrip$orgArgs<ExtArgs>
   route?: boolean | Prisma.RailTrip$routeArgs<ExtArgs>
   originStation?: boolean | Prisma.RailStationDefaultArgs<ExtArgs>
   destinationStation?: boolean | Prisma.RailStationDefaultArgs<ExtArgs>
@@ -2194,7 +2194,7 @@ export type RailTripIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
 export type $RailTripPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "RailTrip"
   objects: {
-    org: Prisma.$OrganizationPayload<ExtArgs>
+    org: Prisma.$OrganizationPayload<ExtArgs> | null
     route: Prisma.$RailRoutePayload<ExtArgs> | null
     originStation: Prisma.$RailStationPayload<ExtArgs>
     destinationStation: Prisma.$RailStationPayload<ExtArgs>
@@ -2614,7 +2614,7 @@ readonly fields: RailTripFieldRefs;
  */
 export interface Prisma__RailTripClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  org<T extends Prisma.OrganizationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrganizationDefaultArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  org<T extends Prisma.RailTrip$orgArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RailTrip$orgArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   route<T extends Prisma.RailTrip$routeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RailTrip$routeArgs<ExtArgs>>): Prisma.Prisma__RailRouteClient<runtime.Types.Result.GetResult<Prisma.$RailRoutePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   originStation<T extends Prisma.RailStationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RailStationDefaultArgs<ExtArgs>>): Prisma.Prisma__RailStationClient<runtime.Types.Result.GetResult<Prisma.$RailStationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   destinationStation<T extends Prisma.RailStationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RailStationDefaultArgs<ExtArgs>>): Prisma.Prisma__RailStationClient<runtime.Types.Result.GetResult<Prisma.$RailStationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
@@ -3060,6 +3060,25 @@ export type RailTripDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Limit how many RailTrips to delete.
    */
   limit?: number
+}
+
+/**
+ * RailTrip.org
+ */
+export type RailTrip$orgArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Organization
+   */
+  select?: Prisma.OrganizationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Organization
+   */
+  omit?: Prisma.OrganizationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrganizationInclude<ExtArgs> | null
+  where?: Prisma.OrganizationWhereInput
 }
 
 /**

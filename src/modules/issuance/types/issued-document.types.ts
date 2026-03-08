@@ -75,6 +75,7 @@ export type RailIssuedDocumentRow = {
 
 export type AirIssuedDocumentRow = {
   id: string;
+  orgId: string | null;
   status: 'ISSUED' | 'VOIDED' | 'REFUNDED';
   code: string;
   issuedAt: Date;
