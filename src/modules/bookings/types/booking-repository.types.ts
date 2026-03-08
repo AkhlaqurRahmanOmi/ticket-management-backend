@@ -27,6 +27,7 @@ export type BookingPaymentTargetRow = {
   id: string;
   domainType: 'EVENT' | 'RAIL' | 'AIR';
   userId: string;
+  orgId: string | null;
   status: string;
   holdExpiresAt: Date | null;
   currency: string;

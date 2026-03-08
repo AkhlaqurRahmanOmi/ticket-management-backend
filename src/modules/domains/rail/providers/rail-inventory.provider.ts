@@ -8,10 +8,15 @@ export class RailInventoryProvider {
   constructor(private readonly railService: RailService) {}
 
   getSeatMap(
+    tenantOrgId: string,
     inventoryScopeId: string,
     query?: GetRailTripAvailabilityQueryDto,
   ) {
-    return this.railService.getTripSeatAvailability(inventoryScopeId, query ?? {});
+    return this.railService.getTripSeatAvailability(
+      tenantOrgId,
+      inventoryScopeId,
+      query ?? {},
+    );
   }
 
   syncSeatInventory(
@@ -25,10 +30,17 @@ export class RailInventoryProvider {
 
   createHold(
     userId: string,
+    tenantOrgId: string,
     dto: CreateRailHoldDto & { tripId: string },
     correlationId?: string,
   ) {
-    return this.railService.createHold(userId, dto.tripId, dto, correlationId);
+    return this.railService.createHold(
+      userId,
+      tenantOrgId,
+      dto.tripId,
+      dto,
+      correlationId,
+    );
   }
 
   getHold(holdId: string) {

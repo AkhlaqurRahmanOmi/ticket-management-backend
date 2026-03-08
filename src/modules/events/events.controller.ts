@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CheckPolicies } from '@/common/decorators/check-policies.decorator';
+import { CurrentTenant } from '@/common/decorators/current-tenant.decorator';
 import { CurrentUser } from '@/common/decorators/current-user.decorator';
 import { Roles } from '@/common/decorators/roles.decorator';
 import { TenantAccess } from '@/common/decorators/tenant-access.decorator';
@@ -44,9 +45,10 @@ export class EventsController {
   @CheckPolicies(EVENT_CREATE_POLICY)
   createEvent(
     @CurrentUser('id') actorUserId: string,
+    @CurrentTenant('orgId') tenantOrgId: string,
     @Body() dto: CreateEventDto,
   ) {
-    return this.eventsService.createEvent(actorUserId, dto);
+    return this.eventsService.createEvent(actorUserId, tenantOrgId, dto);
   }
 
   @Patch(':eventId')
@@ -60,10 +62,11 @@ export class EventsController {
   @CheckPolicies(EVENT_MANAGE_POLICY)
   updateEvent(
     @CurrentUser('id') actorUserId: string,
+    @CurrentTenant('orgId') tenantOrgId: string,
     @Param('eventId', ParseUUIDPipe) eventId: string,
     @Body() dto: UpdateEventDto,
   ) {
-    return this.eventsService.updateEvent(actorUserId, eventId, dto);
+    return this.eventsService.updateEvent(actorUserId, tenantOrgId, eventId, dto);
   }
 
   @Post(':eventId/seats/sync')
@@ -77,16 +80,25 @@ export class EventsController {
   @CheckPolicies(EVENT_MANAGE_POLICY)
   syncEventSeats(
     @CurrentUser('id') actorUserId: string,
+    @CurrentTenant('orgId') tenantOrgId: string,
     @Param('eventId', ParseUUIDPipe) eventId: string,
   ) {
-    return this.eventsService.syncEventSeats(actorUserId, eventId);
+    return this.eventsService.syncEventSeats(actorUserId, tenantOrgId, eventId);
   }
 
   @Get(':eventId/seats')
+  @UseGuards(JwtAuthGuard, TenantAccessGuard, RolesGuard)
+  @Roles('USER', 'ORG_STAFF', 'ORG_ADMIN', 'SUPER_ADMIN')
+  @TenantAccess({
+    requireResolvedTenant: true,
+    requireActiveDomainSubscription: true,
+  })
+  @TenantHeaderDoc()
   getEventSeats(
+    @CurrentTenant('orgId') tenantOrgId: string,
     @Param('eventId', ParseUUIDPipe) eventId: string,
     @Query() query: GetEventSeatsQueryDto,
   ) {
-    return this.eventsService.getEventSeats(eventId, query);
+    return this.eventsService.getEventSeats(tenantOrgId, eventId, query);
   }
 }

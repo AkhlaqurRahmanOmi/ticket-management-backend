@@ -31,10 +31,13 @@ export class RailRepository extends BaseRepository {
     super(prisma, unitOfWork);
   }
 
-  findTripById(tripId: string): Promise<RailTripSummary | null> {
+  findTripByIdAndOrgId(
+    tripId: string,
+    orgId: string,
+  ): Promise<RailTripSummary | null> {
     return this.prisma.railTrip
-      .findUnique({
-        where: { id: tripId },
+      .findFirst({
+        where: { id: tripId, orgId },
         select: {
           id: true,
           tripNumber: true,
@@ -87,6 +90,7 @@ export class RailRepository extends BaseRepository {
   }
 
   async searchTrips(
+    orgId: string,
     query: SearchRailTripsQueryDto,
   ): Promise<RailTripSearchResult> {
     const { skip, take, page, limit } = this.getPagination(query);
@@ -104,6 +108,7 @@ export class RailRepository extends BaseRepository {
         INNER JOIN "RailTripStop" drop_stop ON drop_stop."tripId" = t."id"
         INNER JOIN "RailStation" drop_station ON drop_station."id" = drop_stop."stationId"
         WHERE boarding_station."code" = ${query.originCode}
+          AND t."orgId" = ${orgId}::uuid
           AND drop_station."code" = ${query.destinationCode}
           AND boarding_stop."sequence" < drop_stop."sequence"
           AND t."departsAt" >= ${travelDateWindow.start}
@@ -127,6 +132,7 @@ export class RailRepository extends BaseRepository {
           INNER JOIN "RailTripStop" drop_stop ON drop_stop."tripId" = t."id"
           INNER JOIN "RailStation" drop_station ON drop_station."id" = drop_stop."stationId"
           WHERE boarding_station."code" = ${query.originCode}
+            AND t."orgId" = ${orgId}::uuid
             AND drop_station."code" = ${query.destinationCode}
             AND boarding_stop."sequence" < drop_stop."sequence"
             AND t."departsAt" >= ${travelDateWindow.start}
@@ -151,6 +157,7 @@ export class RailRepository extends BaseRepository {
         ? Promise.resolve([])
         : this.prisma.railTrip.findMany({
             where: {
+              orgId,
               id: {
                 in: tripIds,
               },
@@ -280,6 +287,7 @@ export class RailRepository extends BaseRepository {
   }
 
   async getTripSeatAvailability(
+    orgId: string,
     tripId: string,
     query: GetRailTripAvailabilityQueryDto,
     resolvedSegment?: RailResolvedTripStopSegment | null,
@@ -287,6 +295,11 @@ export class RailRepository extends BaseRepository {
     const { skip, take, page, limit } = this.getPagination(query);
     const whereClause: Record<string, unknown> = {
       tripId,
+      trip: {
+        is: {
+          orgId,
+        },
+      },
     };
 
     if (query.status) {
@@ -357,6 +370,11 @@ export class RailRepository extends BaseRepository {
               tripId,
               tripSeatId: {
                 in: seats.map((seat) => seat.id),
+              },
+              trip: {
+                is: {
+                  orgId,
+                },
               },
               releasedAt: null,
               cancelledAt: null,
@@ -434,6 +452,7 @@ export class RailRepository extends BaseRepository {
   }
 
   async resolveTripStopSegmentByStationCodes(
+    orgId: string,
     tripId: string,
     boardingStationCode: string,
     dropStationCode: string,
@@ -441,6 +460,11 @@ export class RailRepository extends BaseRepository {
     const stops = await this.prisma.railTripStop.findMany({
       where: {
         tripId,
+        trip: {
+          is: {
+            orgId,
+          },
+        },
         station: {
           code: {
             in: [boardingStationCode, dropStationCode],
@@ -485,11 +509,13 @@ export class RailRepository extends BaseRepository {
   }
 
   async resolveTripSegmentByStationCodes(
+    orgId: string,
     tripId: string,
     boardingStationCode: string,
     dropStationCode: string,
   ): Promise<RailResolvedSegment | null> {
     const segment = await this.resolveTripStopSegmentByStationCodes(
+      orgId,
       tripId,
       boardingStationCode,
       dropStationCode,

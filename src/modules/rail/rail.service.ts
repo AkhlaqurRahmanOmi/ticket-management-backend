@@ -18,18 +18,22 @@ export class RailService {
     private readonly bookingsService: BookingsService,
   ) {}
 
-  searchTrips(query: SearchRailTripsQueryDto) {
+  searchTrips(tenantOrgId: string, query: SearchRailTripsQueryDto) {
     this.assertValidDepartureDate(query.departureDate);
     this.assertDistinctStations(query.originCode, query.destinationCode);
 
-    return this.railRepository.searchTrips(query);
+    return this.railRepository.searchTrips(tenantOrgId, query);
   }
 
   async getTripSeatAvailability(
+    tenantOrgId: string,
     tripId: string,
     query: GetRailTripAvailabilityQueryDto,
   ) {
-    const trip = await this.railRepository.findTripById(tripId);
+    const trip = await this.railRepository.findTripByIdAndOrgId(
+      tripId,
+      tenantOrgId,
+    );
     if (!trip) {
       throw new NotFoundException('Rail trip not found.');
     }
@@ -37,6 +41,7 @@ export class RailService {
     const requestedSegment = this.resolveRequestedSegment(query);
     const resolvedSegment = requestedSegment
       ? await this.railRepository.resolveTripStopSegmentByStationCodes(
+          tenantOrgId,
           tripId,
           requestedSegment.boardingStationCode,
           requestedSegment.dropStationCode,
@@ -51,6 +56,7 @@ export class RailService {
 
     const seatAvailability =
       await this.railRepository.getTripSeatAvailability(
+        tenantOrgId,
         tripId,
         query,
         resolvedSegment,
@@ -73,12 +79,14 @@ export class RailService {
 
   async createHold(
     userId: string,
+    tenantOrgId: string,
     tripId: string,
     dto: CreateRailHoldDto,
     correlationId?: string,
   ) {
     const resolvedSegment =
       await this.railRepository.resolveTripStopSegmentByStationCodes(
+        tenantOrgId,
         tripId,
         dto.boardingStationCode,
         dto.dropStationCode,

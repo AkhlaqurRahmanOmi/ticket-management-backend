@@ -33,6 +33,7 @@ export class PaymentsService {
 
   async createPayment(
     userId: string,
+    tenantOrgId: string,
     dto: CreatePaymentDto,
     correlationId?: string,
   ) {
@@ -51,6 +52,15 @@ export class PaymentsService {
 
       if (booking.userId !== userId) {
         throw new ForbiddenException('You can only pay for your own booking.');
+      }
+
+      if (
+        (booking.domainType === 'event' || booking.domainType === 'rail') &&
+        booking.orgId !== tenantOrgId
+      ) {
+        throw new ForbiddenException(
+          'Booking does not belong to the resolved tenant.',
+        );
       }
 
       const now = new Date();

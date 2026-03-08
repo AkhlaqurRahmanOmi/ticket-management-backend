@@ -12,6 +12,7 @@ import {
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import type { Request } from 'express';
 import { CheckPolicies } from '@/common/decorators/check-policies.decorator';
+import { CurrentTenant } from '@/common/decorators/current-tenant.decorator';
 import { CurrentUser } from '@/common/decorators/current-user.decorator';
 import { RateLimit } from '@/common/decorators/rate-limit.decorator';
 import { Roles } from '@/common/decorators/roles.decorator';
@@ -35,16 +36,32 @@ export class RailController {
   constructor(private readonly railService: RailService) {}
 
   @Get('search')
-  searchTrips(@Query() query: SearchRailTripsQueryDto) {
-    return this.railService.searchTrips(query);
+  @UseGuards(TenantAccessGuard)
+  @TenantAccess({
+    requireResolvedTenant: true,
+    requireActiveDomainSubscription: true,
+  })
+  @TenantHeaderDoc()
+  searchTrips(
+    @CurrentTenant('orgId') tenantOrgId: string,
+    @Query() query: SearchRailTripsQueryDto,
+  ) {
+    return this.railService.searchTrips(tenantOrgId, query);
   }
 
   @Get(':tripId/availability')
+  @UseGuards(TenantAccessGuard)
+  @TenantAccess({
+    requireResolvedTenant: true,
+    requireActiveDomainSubscription: true,
+  })
+  @TenantHeaderDoc()
   getTripSeatAvailability(
+    @CurrentTenant('orgId') tenantOrgId: string,
     @Param('tripId', ParseUUIDPipe) tripId: string,
     @Query() query: GetRailTripAvailabilityQueryDto,
   ) {
-    return this.railService.getTripSeatAvailability(tripId, query);
+    return this.railService.getTripSeatAvailability(tenantOrgId, tripId, query);
   }
 
   @Post(':tripId/holds')
@@ -58,11 +75,18 @@ export class RailController {
   @RateLimit({ limit: 15, windowSeconds: 60, keyPrefix: 'rail:holds:create' })
   createHold(
     @CurrentUser('id') userId: string,
+    @CurrentTenant('orgId') tenantOrgId: string,
     @Param('tripId', ParseUUIDPipe) tripId: string,
     @Body() dto: CreateRailHoldDto,
     @Req() request: Request,
   ) {
-    return this.railService.createHold(userId, tripId, dto, request.requestId);
+    return this.railService.createHold(
+      userId,
+      tenantOrgId,
+      tripId,
+      dto,
+      request.requestId,
+    );
   }
 
   @Get('holds/:holdId')

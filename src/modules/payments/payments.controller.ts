@@ -1,6 +1,7 @@
 import { Body, Controller, Headers, Post, Req, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import type { Request } from 'express';
+import { CurrentTenant } from '@/common/decorators/current-tenant.decorator';
 import { CurrentUser } from '@/common/decorators/current-user.decorator';
 import { RateLimit } from '@/common/decorators/rate-limit.decorator';
 import { Roles } from '@/common/decorators/roles.decorator';
@@ -31,10 +32,16 @@ export class PaymentsController {
   @RateLimit({ limit: 10, windowSeconds: 60, keyPrefix: 'payments:create' })
   createPayment(
     @CurrentUser('id') userId: string,
+    @CurrentTenant('orgId') tenantOrgId: string,
     @Body() dto: CreatePaymentDto,
     @Req() request: Request,
   ) {
-    return this.paymentsService.createPayment(userId, dto, request.requestId);
+    return this.paymentsService.createPayment(
+      userId,
+      tenantOrgId,
+      dto,
+      request.requestId,
+    );
   }
 
   @Post('webhook')

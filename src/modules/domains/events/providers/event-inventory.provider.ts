@@ -11,21 +11,23 @@ export class EventInventoryProvider {
     private readonly eventReservationsService: EventReservationsService,
   ) {}
 
-  getSeatMap(eventId: string, query: GetEventSeatsQueryDto) {
-    return this.eventsService.getEventSeats(eventId, query);
+  getSeatMap(tenantOrgId: string, eventId: string, query: GetEventSeatsQueryDto) {
+    return this.eventsService.getEventSeats(tenantOrgId, eventId, query);
   }
 
-  syncSeatInventory(actorUserId: string, eventId: string) {
-    return this.eventsService.syncEventSeats(actorUserId, eventId);
+  syncSeatInventory(actorUserId: string, tenantOrgId: string, eventId: string) {
+    return this.eventsService.syncEventSeats(actorUserId, tenantOrgId, eventId);
   }
 
   createHold(
     userId: string,
+    tenantOrgId: string,
     dto: CreateEventReservationDto,
     correlationId?: string,
   ) {
     return this.eventReservationsService.createReservation(
       userId,
+      tenantOrgId,
       dto,
       correlationId,
     );

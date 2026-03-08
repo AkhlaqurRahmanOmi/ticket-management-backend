@@ -28,6 +28,16 @@ export class EventsRepository extends BaseRepository {
     });
   }
 
+  findEventTenantById(eventId: string) {
+    return this.prisma.event.findUnique({
+      where: { id: eventId },
+      select: {
+        id: true,
+        orgId: true,
+      },
+    });
+  }
+
   findVenueById(venueId: string) {
     return this.prisma.venue.findUnique({
       where: { id: venueId },

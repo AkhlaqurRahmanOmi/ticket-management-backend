@@ -1,10 +1,16 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { MetricsProvider } from '@/common/providers/metrics.provider';
 import { buildLogContext } from '@/common/utils/log-context';
 import { BookingsService } from '@/modules/bookings/bookings.service';
 import { RealtimeService } from '@/modules/realtime/realtime.service';
 import { CreateEventReservationDto } from './dto/create-event-reservation.dto';
+import { EventsRepository } from './events.repository';
 
 @Injectable()
 export class EventReservationsService {
@@ -12,18 +18,30 @@ export class EventReservationsService {
 
   constructor(
     private readonly bookingsService: BookingsService,
+    private readonly eventsRepository: EventsRepository,
     private readonly realtimeService: RealtimeService,
     private readonly metricsProvider: MetricsProvider,
   ) {}
 
   async createReservation(
     userId: string,
+    tenantOrgId: string,
     dto: CreateEventReservationDto,
     correlationId?: string,
   ) {
     const startTime = Date.now();
 
     try {
+      const event = await this.eventsRepository.findEventTenantById(dto.eventId);
+      if (!event) {
+        throw new NotFoundException('Event not found.');
+      }
+      if (event.orgId !== tenantOrgId) {
+        throw new ForbiddenException(
+          'Event does not belong to the resolved tenant.',
+        );
+      }
+
       const result = await this.bookingsService.createSeatHold(
         userId,
         {

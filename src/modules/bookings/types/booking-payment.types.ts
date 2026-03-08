@@ -13,6 +13,7 @@ export type BookingPaymentTarget = {
   id: string;
   domainType: BookingDomain;
   userId: string;
+  orgId: string | null;
   status: string;
   holdExpiresAt: Date | null;
   currency: string;

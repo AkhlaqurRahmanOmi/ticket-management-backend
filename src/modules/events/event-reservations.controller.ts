@@ -11,6 +11,7 @@ import {
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import type { Request } from 'express';
 import { CheckPolicies } from '@/common/decorators/check-policies.decorator';
+import { CurrentTenant } from '@/common/decorators/current-tenant.decorator';
 import { CurrentUser } from '@/common/decorators/current-user.decorator';
 import { RateLimit } from '@/common/decorators/rate-limit.decorator';
 import { Roles } from '@/common/decorators/roles.decorator';
@@ -44,11 +45,13 @@ export class EventReservationsController {
   @RateLimit({ limit: 15, windowSeconds: 60, keyPrefix: 'reservations:create' })
   createReservation(
     @CurrentUser('id') userId: string,
+    @CurrentTenant('orgId') tenantOrgId: string,
     @Body() dto: CreateEventReservationDto,
     @Req() request: Request,
   ) {
     return this.eventReservationsService.createReservation(
       userId,
+      tenantOrgId,
       dto,
       request.requestId,
     );
