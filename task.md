@@ -37,7 +37,7 @@ Suggested task result format:
 ## Current Status
 
 - Overall status: `in_progress`
-- Active phase: `Phase 10`
+- Active phase: `Phase 12`
 - Active domain during migration: `event`
 - Default client profile during migration: `default`
 
@@ -1213,8 +1213,28 @@ Goal: make authorization tenant-aware across all protected flows.
 
 ### Task 12.1 Add tenant access checks before domain authorization
 
-Status: `planned`
-Dev server check: `not_run`
+Status: done
+Dev server check: pass
+
+Notes:
+
+- Added src/common/decorators/tenant-header-doc.decorator.ts to document required X-Tenant-Slug usage for header-based tenant resolution.
+- Expanded TenantAccessGuard usage to the selected tenant-bound protected write/admin routes in:
+  - src/modules/events/events.controller.ts
+  - src/modules/events/event-reservations.controller.ts
+  - src/modules/payments/payments.controller.ts
+  - src/modules/rail/rail.controller.ts
+  - src/modules/air/air.controller.ts
+- Guard ordering now places tenant access after authentication and before the downstream role/policy authorization layer on those routes.
+- Kept read/detail routes out of scope for this phase so resource-aware tenant scoping can be handled later.
+- Fixed feature-module DI for TenantAccessGuard by importing TenantSubscriptionsModule and registering the guard in:
+  - src/modules/payments/payments.module.ts
+  - src/modules/events/events.module.ts
+  - src/modules/rail/rail.module.ts
+  - src/modules/air/air.module.ts
+- No schema, service, or repository behavior was changed in this phase.
+- cmd /c npx tsc -p tsconfig.json --noEmit --incremental false passed.
+- Dev server boot was verified by the user with no startup errors.
 
 Work:
 
@@ -1230,8 +1250,8 @@ Acceptance criteria:
 
 ### Task 12.2 Add tenant-scoped RBAC and subscription checks
 
-Status: `planned`
-Dev server check: `not_run`
+Status: `done`
+Dev server check: `pass`
 
 Work:
 
@@ -1244,6 +1264,14 @@ Acceptance criteria:
 - tenant membership and tenant subscription are enforced
 - cross-tenant access is blocked by default
 - tenant employee permissions are evaluated in tenant context
+
+Notes:
+
+- `RolesGuard` now scopes tenant membership roles to the resolved `tenantContext.orgId`
+- `TenantAccessGuard` now enforces active-domain subscription on in-scope routes and allows `SUPER_ADMIN` bypass
+- in-scope event, reservation, payment, rail-hold, and air-hold routes now require active tenant-domain subscription
+- compile check passed with `cmd /c npx tsc -p tsconfig.json --noEmit --incremental false`
+- dev server boot verified after the tenant-guard module wiring issue was resolved
 
 ### Task 12.3 Keep policy and resource checks layered on top
 
@@ -1443,6 +1471,7 @@ Acceptance criteria:
 - legacy bridges are removed only when domain-safe replacements exist
 - the final multi-tenant shape no longer depends on transitional compatibility paths
 - cleanup does not break verified tenant-safe flows
+
 
 
 

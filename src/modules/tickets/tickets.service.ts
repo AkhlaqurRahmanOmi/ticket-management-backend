@@ -9,8 +9,11 @@ export class TicketsService {
     return this.findTicketOrThrow(ticketId);
   }
 
-  getMyTickets(userId: string) {
-    return this.ticketsRepository.findTicketsByUserId(userId);
+  getMyTickets(userId: string, tenantOrgId: string) {
+    return this.ticketsRepository.findTicketsByUserIdAndOrgId(
+      userId,
+      tenantOrgId,
+    );
   }
 
   private async findTicketOrThrow(ticketId: string) {

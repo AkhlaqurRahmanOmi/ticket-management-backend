@@ -10,9 +10,12 @@ import { MeTicketsController } from './me-tickets.controller';
 import { TicketsController } from './tickets.controller';
 import { TicketsRepository } from './tickets.repository';
 import { TicketsService } from './tickets.service';
+import { TenantRuntimeModule } from '@/modules/tenant-runtime/tenant-runtime.module';
+import { TenantSubscriptionsModule } from '@/modules/tenant-subscriptions/tenant-subscriptions.module';
+import { TenantAccessGuard } from '@/common/guards/tenant-access.guard';
 
 @Module({
-  imports: [PrismaModule, JwtModule, IamModule, RealtimeModule],
+  imports: [PrismaModule, JwtModule, IamModule, RealtimeModule, TenantRuntimeModule, TenantSubscriptionsModule],
   controllers: [TicketsController, MeTicketsController],
   providers: [
     TicketsService,
@@ -20,6 +23,7 @@ import { TicketsService } from './tickets.service';
     JwtAuthGuard,
     PolicyGuard,
     RolesGuard,
+    TenantAccessGuard
   ],
   exports: [TicketsService],
 })

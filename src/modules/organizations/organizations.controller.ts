@@ -38,7 +38,7 @@ export class OrganizationsController {
   }
 
   @Post(':orgId/members')
-  @UseGuards(JwtAuthGuard, RolesGuard, TenantAccessGuard, PolicyGuard)
+  @UseGuards(JwtAuthGuard, TenantAccessGuard, RolesGuard, PolicyGuard)
   @Roles('ORG_ADMIN', 'SUPER_ADMIN')
   @TenantAccess({ requireResolvedTenant: true })
   @CheckPolicies(ORG_MEMBER_MANAGE_POLICY)
@@ -51,7 +51,7 @@ export class OrganizationsController {
   }
 
   @Get(':orgId/subscriptions')
-  @UseGuards(JwtAuthGuard, RolesGuard, TenantAccessGuard, PolicyGuard)
+  @UseGuards(JwtAuthGuard, TenantAccessGuard, RolesGuard, PolicyGuard)
   @Roles('ORG_ADMIN', 'SUPER_ADMIN')
   @TenantAccess({ requireResolvedTenant: true })
   @CheckPolicies(ORG_MEMBER_MANAGE_POLICY)
@@ -60,7 +60,7 @@ export class OrganizationsController {
   }
 
   @Post(':orgId/subscriptions')
-  @UseGuards(JwtAuthGuard, RolesGuard, TenantAccessGuard, PolicyGuard)
+  @UseGuards(JwtAuthGuard, TenantAccessGuard, RolesGuard, PolicyGuard)
   @Roles('ORG_ADMIN', 'SUPER_ADMIN')
   @TenantAccess({ requireResolvedTenant: true })
   @CheckPolicies(ORG_MEMBER_MANAGE_POLICY)
@@ -72,7 +72,7 @@ export class OrganizationsController {
   }
 
   @Patch(':orgId/subscriptions/:domain')
-  @UseGuards(JwtAuthGuard, RolesGuard, TenantAccessGuard, PolicyGuard)
+  @UseGuards(JwtAuthGuard, TenantAccessGuard, RolesGuard, PolicyGuard)
   @Roles('ORG_ADMIN', 'SUPER_ADMIN')
   @TenantAccess({ requireResolvedTenant: true })
   @CheckPolicies(ORG_MEMBER_MANAGE_POLICY)

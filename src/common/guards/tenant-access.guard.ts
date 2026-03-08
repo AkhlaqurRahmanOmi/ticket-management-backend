@@ -59,6 +59,10 @@ export class TenantAccessGuard implements CanActivate {
       );
     }
 
+    if (request.user?.roles?.includes('SUPER_ADMIN')) {
+      return true;
+    }
+
     const hasActiveSubscription =
       await this.tenantSubscriptionsService.isDomainEnabled(
         tenantContext.orgId,

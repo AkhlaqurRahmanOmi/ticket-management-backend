@@ -19,6 +19,7 @@ import {
   EventCreatePolicyProvider,
   EventManagePolicyProvider,
   OrgMemberManagePolicyProvider,
+  RailHoldReadPolicyProvider,
   ReservationReadPolicyProvider,
   TicketReadPolicyProvider,
 } from './provider/authorization/acl-policies.provider';
@@ -26,6 +27,7 @@ import {
   EVENT_CREATE_POLICY,
   EVENT_MANAGE_POLICY,
   ORG_MEMBER_MANAGE_POLICY,
+  RAIL_HOLD_READ_POLICY,
   RESERVATION_READ_POLICY,
   TICKET_READ_POLICY,
 } from './provider/authorization/policy-tokens';
@@ -41,6 +43,7 @@ import {
     OrgMemberManagePolicyProvider,
     EventCreatePolicyProvider,
     EventManagePolicyProvider,
+    RailHoldReadPolicyProvider,
     ReservationReadPolicyProvider,
     TicketReadPolicyProvider,
     {
@@ -76,6 +79,10 @@ import {
       useExisting: EventManagePolicyProvider,
     },
     {
+      provide: RAIL_HOLD_READ_POLICY,
+      useExisting: RailHoldReadPolicyProvider,
+    },
+    {
       provide: RESERVATION_READ_POLICY,
       useExisting: ReservationReadPolicyProvider,
     },
@@ -91,6 +98,7 @@ import {
     ORG_MEMBER_MANAGE_POLICY,
     EVENT_CREATE_POLICY,
     EVENT_MANAGE_POLICY,
+    RAIL_HOLD_READ_POLICY,
     RESERVATION_READ_POLICY,
     TICKET_READ_POLICY,
   ],

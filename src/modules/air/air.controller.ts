@@ -14,9 +14,12 @@ import type { Request } from 'express';
 import { CurrentUser } from '@/common/decorators/current-user.decorator';
 import { RateLimit } from '@/common/decorators/rate-limit.decorator';
 import { Roles } from '@/common/decorators/roles.decorator';
+import { TenantAccess } from '@/common/decorators/tenant-access.decorator';
+import { TenantHeaderDoc } from '@/common/decorators/tenant-header-doc.decorator';
 import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
 import { RateLimitGuard } from '@/common/guards/rate-limit.guard';
 import { RolesGuard } from '@/common/guards/roles.guard';
+import { TenantAccessGuard } from '@/common/guards/tenant-access.guard';
 import { CreateAirHoldDto } from './dto/create-air-hold.dto';
 import { GetFlightAvailabilityQueryDto } from './dto/get-flight-availability.query.dto';
 import { SearchFlightsQueryDto } from './dto/search-flights.query.dto';
@@ -42,8 +45,13 @@ export class AirController {
   }
 
   @Post(':flightInstanceId/holds')
-  @UseGuards(JwtAuthGuard, RolesGuard, RateLimitGuard)
+  @UseGuards(JwtAuthGuard, TenantAccessGuard, RolesGuard, RateLimitGuard)
   @Roles('USER')
+  @TenantAccess({
+    requireResolvedTenant: true,
+    requireActiveDomainSubscription: true,
+  })
+  @TenantHeaderDoc()
   @RateLimit({ limit: 15, windowSeconds: 60, keyPrefix: 'air:holds:create' })
   createHold(
     @CurrentUser('id') userId: string,

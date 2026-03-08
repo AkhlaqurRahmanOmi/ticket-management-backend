@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -106,13 +105,8 @@ export class RailService {
     return result.hold;
   }
 
-  async getHold(userId: string, holdId: string) {
-    const hold = await this.getHoldById(holdId);
-    if (hold.userId !== userId) {
-      throw new ForbiddenException('You can only access your own rail hold.');
-    }
-
-    return hold;
+  async getHold(holdId: string) {
+    return this.getHoldById(holdId);
   }
 
   getHoldById(holdId: string) {

@@ -1,9 +1,12 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
+import { TenantAccessGuard } from '@/common/guards/tenant-access.guard';
 import { RedisModule } from '@/infra/redis/redis.module';
 import { IamModule } from '@/modules/iam/iam.module';
 import { BookingsModule } from '@/modules/bookings/bookings.module';
 import { RealtimeModule } from '@/modules/realtime/realtime.module';
+import { TenantSubscriptionsModule } from '@/modules/tenant-subscriptions/tenant-subscriptions.module';
+import { TenantRuntimeModule } from '@/modules/tenant-runtime/tenant-runtime.module';
 import { OutboxModule } from '@/infra/outbox/outbox.module';
 import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
 import { RolesGuard } from '@/common/guards/roles.guard';
@@ -23,6 +26,8 @@ import { EventsService } from './events.service';
     BookingsModule,
     RealtimeModule,
     RedisModule,
+    TenantRuntimeModule,
+    TenantSubscriptionsModule,
   ],
   controllers: [EventsController, EventReservationsController],
   providers: [
@@ -30,6 +35,7 @@ import { EventsService } from './events.service';
     EventReservationsService,
     EventsRepository,
     JwtAuthGuard,
+    TenantAccessGuard,
     RolesGuard,
     PolicyGuard,
     RateLimitGuard,

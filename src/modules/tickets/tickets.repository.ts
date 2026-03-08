@@ -29,9 +29,14 @@ export class TicketsRepository extends BaseRepository {
     });
   }
 
-  findTicketsByUserId(userId: string) {
+  findTicketsByUserIdAndOrgId(userId: string, tenantOrgId: string) {
     return this.prisma.ticket.findMany({
-      where: { userId },
+      where: {
+        userId,
+        event: {
+          orgId: tenantOrgId,
+        },
+      },
       select: {
         id: true,
         code: true,

@@ -13,9 +13,12 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CheckPolicies } from '@/common/decorators/check-policies.decorator';
 import { CurrentUser } from '@/common/decorators/current-user.decorator';
 import { Roles } from '@/common/decorators/roles.decorator';
+import { TenantAccess } from '@/common/decorators/tenant-access.decorator';
+import { TenantHeaderDoc } from '@/common/decorators/tenant-header-doc.decorator';
 import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
 import { PolicyGuard } from '@/common/guards/policy.guard';
 import { RolesGuard } from '@/common/guards/roles.guard';
+import { TenantAccessGuard } from '@/common/guards/tenant-access.guard';
 import {
   EVENT_CREATE_POLICY,
   EVENT_MANAGE_POLICY,
@@ -32,8 +35,12 @@ export class EventsController {
   constructor(private readonly eventsService: EventsService) {}
 
   @Post()
-  @UseGuards(JwtAuthGuard, RolesGuard, PolicyGuard)
+  @UseGuards(JwtAuthGuard, TenantAccessGuard, RolesGuard, PolicyGuard)
   @Roles('ORG_STAFF', 'ORG_ADMIN', 'SUPER_ADMIN')
+  @TenantAccess({
+    requireResolvedTenant: true,
+    requireActiveDomainSubscription: true,
+  })
   @CheckPolicies(EVENT_CREATE_POLICY)
   createEvent(
     @CurrentUser('id') actorUserId: string,
@@ -43,8 +50,13 @@ export class EventsController {
   }
 
   @Patch(':eventId')
-  @UseGuards(JwtAuthGuard, RolesGuard, PolicyGuard)
+  @UseGuards(JwtAuthGuard, TenantAccessGuard, RolesGuard, PolicyGuard)
   @Roles('ORG_STAFF', 'ORG_ADMIN', 'SUPER_ADMIN')
+  @TenantAccess({
+    requireResolvedTenant: true,
+    requireActiveDomainSubscription: true,
+  })
+  @TenantHeaderDoc()
   @CheckPolicies(EVENT_MANAGE_POLICY)
   updateEvent(
     @CurrentUser('id') actorUserId: string,
@@ -55,8 +67,13 @@ export class EventsController {
   }
 
   @Post(':eventId/seats/sync')
-  @UseGuards(JwtAuthGuard, RolesGuard, PolicyGuard)
+  @UseGuards(JwtAuthGuard, TenantAccessGuard, RolesGuard, PolicyGuard)
   @Roles('ORG_STAFF', 'ORG_ADMIN', 'SUPER_ADMIN')
+  @TenantAccess({
+    requireResolvedTenant: true,
+    requireActiveDomainSubscription: true,
+  })
+  @TenantHeaderDoc()
   @CheckPolicies(EVENT_MANAGE_POLICY)
   syncEventSeats(
     @CurrentUser('id') actorUserId: string,
